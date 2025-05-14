@@ -1,0 +1,69 @@
+{
+  "name": "@bodc/plot-n-flag",
+  "version": "0.1.0",
+  "main": "dist/cjs/index.js",
+  "module": "dist/esm/index.js",
+  "types": "dist/types.d.ts",
+  "scripts": {
+    "lint": "npx eslint src",
+    "rollup": "rollup -c --bundleConfigAsCjs",
+    "storybook": "storybook dev -p 6006",
+    "build-storybook": "storybook build"
+  },
+  "dependencies": {
+    "uplot": "^1.6.32",
+    "uplot-react": "^1.2.2"
+  },
+  "devDependencies": {
+    "@chromatic-com/storybook": "^3.2.6",
+    "@rollup/plugin-commonjs": "^25.0.7",
+    "@rollup/plugin-node-resolve": "^15.2.3",
+    "@rollup/plugin-terser": "^0.4.4",
+    "@rollup/plugin-typescript": "^11.1.6",
+    "@storybook/addon-essentials": "^8.6.12",
+    "@storybook/blocks": "^8.6.12",
+    "@storybook/experimental-nextjs-vite": "^8.6.12",
+    "@storybook/react": "^8.6.12",
+    "@storybook/test": "^8.6.12",
+    "@tailwindcss/postcss": "^4",
+    "@types/lodash": "^4.17.16",
+    "@types/node": "^20",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "eslint-config-bodc": "^1.2.1",
+    "eslint-plugin-storybook": "^0.12.0",
+    "lodash": "^4.17.21",
+    "next": "15.3.1",
+    "playwright": "^1.52.0",
+    "react": "^18.0.0",
+    "react-dom": "^18.0.0",
+    "rollup": "^4.12.0",
+    "rollup-plugin-dts": "^6.1.0",
+    "rollup-plugin-import-css": "^3.5.8",
+    "rollup-plugin-peer-deps-external": "^2.2.4",
+    "rollup-plugin-postcss": "^4.0.2",
+    "rollup-plugin-preserve-directives": "^0.4.0",
+    "storybook": "^8.6.12",
+    "tailwindcss": "^4",
+    "typescript": "^5"
+  },
+  "eslintConfig": {
+    "extends": [
+      "bodc",
+      "plugin:storybook/recommended"
+    ],
+    "rules": {
+      "react/react-in-jsx-scope": "off",
+      "react/jsx-uses-react": "off",
+      "@typescript-eslint/no-non-null-assertion": "off",
+      "no-relative-import-paths/no-relative-import-paths": [
+        "error",
+        {
+          "allowSameFolder": true,
+          "rootDir": "frontend",
+          "prefix": ""
+        }
+      ]
+    }
+  }
+}
