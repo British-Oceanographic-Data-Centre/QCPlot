@@ -1,6 +1,7 @@
 default:
   tags:
     - "jasmin"
+  image: node
 
 pages:
   stage: deploy
