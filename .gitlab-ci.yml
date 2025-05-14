@@ -1,0 +1,15 @@
+default:
+  tags:
+    - "jasmin"
+
+pages:
+  stage: deploy
+  script:
+    - npm ci
+    - npm run build-storybook
+    - mv storybook-static public
+  artifacts:
+    paths:
+      - public
+  rules:
+    - if: $CI_COMMIT_BRANCH == "main"
