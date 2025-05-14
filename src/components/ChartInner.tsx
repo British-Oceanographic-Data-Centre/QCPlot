@@ -6,11 +6,11 @@ import UplotReact from 'uplot-react'
 
 import { Button } from './Button'
 import { onKeyDown } from '../eventHandlers'
-import { seriesPointsPlugin } from '../plugins'
 import type { IndexedFlaggedPoint, ISelectedPoints, InnerChartProps } from '../types'
 import { seriesFromData } from '../utils'
 import { ChartContext } from '@/ChartContext'
 import { FLAGS } from '@/constants'
+import { renderFlagsPlugin, scrollZoomPlugin } from '@/plugins'
 
 const initHook = (u: uPlot, flagMode: boolean) => {
   u.over.tabIndex = -1 // required for key handlers
@@ -162,7 +162,8 @@ export const ChartInner = ({ data, flags, flagCallback }: InnerChartProps) => {
       // setSelect: flagMode ? [onFlag] : []
     },
     plugins: [
-      seriesPointsPlugin(flags)
+      renderFlagsPlugin(flags),
+      scrollZoomPlugin()
     ],
     series,
     scales: {

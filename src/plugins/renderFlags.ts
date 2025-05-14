@@ -1,9 +1,9 @@
 import uPlot, { Options } from 'uplot'
 
-import { IndexedFlaggedPoint } from './types'
-import { getFlagForPoint } from './utils'
+import { IndexedFlaggedPoint } from '../types'
+import { getFlagForPoint } from '../utils'
 
-export const seriesPointsPlugin = (flags: IndexedFlaggedPoint[] = []): uPlot.Plugin => {
+export const renderFlagsPlugin = (flags: IndexedFlaggedPoint[] = []): uPlot.Plugin => {
   const drawFlagMarker = (ctx: CanvasRenderingContext2D, cx: number, cy: number) => {
     const shapeSize = 6
 
