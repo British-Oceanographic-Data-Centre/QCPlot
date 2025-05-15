@@ -16,7 +16,8 @@ export const Chart = ({ data, flags, ...props }: ChartProps) => {
     <ChartContext.Provider
       value={{
         colours: props.plotColours || DEFAULT_COLOURS,
-        buttonClassname: props.buttonClassname || ''
+        buttonClassname: props.buttonClassname || '',
+        flagCallback: props.flagCallback
       }}
     >
       <ChartInner {...props} data={data} flags={indexedFlags} />

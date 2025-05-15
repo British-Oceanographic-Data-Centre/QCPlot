@@ -36,6 +36,7 @@ export interface InnerChartProps extends ChartProps {
 export interface ChartContextValue {
   colours: string[]
   buttonClassname: string
+  flagCallback?: (flags: FlaggedPoint[]) => void
 }
 
 export interface ISelectedPoints {
