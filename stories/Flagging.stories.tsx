@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 
-import type { Meta, StoryObj } from '@storybook/react'
+import type { Meta } from '@storybook/react'
 
 import { Chart } from '@/Chart'
 import type { Data, FlaggedPoint } from '@/types'
@@ -26,10 +26,6 @@ const simpleData: Data = {
 export const FlaggingDemo = (args, context) => {
   const [flags, setFlags] = useState<FlaggedPoint>([{ seriesName: 'PARAM01', pointIndex: 2, flag: 'X' }])
 
-  const onFlagUpdate = (newFlags: FlaggedPoint[]) => {
-    setFlags(prev => prev.concat(newFlags))
-  }
-
   return (
     <Chart
       data={simpleData}
@@ -38,10 +34,3 @@ export const FlaggingDemo = (args, context) => {
     />
   )
 }
-
-// export const FlaggingDemo: Story = {
-//   args: {
-//     data: simpleData,
-//     flags: []
-//   }
-// }

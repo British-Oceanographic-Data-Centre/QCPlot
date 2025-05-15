@@ -7,7 +7,10 @@ import { Data } from '@/types'
 import './styles.css'
 
 const meta: Meta<typeof Chart> = {
-  component: Chart
+  component: Chart,
+  args: {
+    flagCallback: console.log
+  }
 }
 
 export default meta
@@ -55,5 +58,29 @@ export const CustomButtonStyle: Story = {
   args: {
     data: simpleData,
     buttonClassname: 'styled-button'
+  }
+}
+
+export const DuplicateXValues: Story = {
+  args: {
+    data: {
+      xValues: [1, 2, 3, 3, 4],
+      series: [
+        { name: 'PARAM01', values: [10, 20, 30, 40, 50] },
+        { name: 'PARAM02', values: [5, 4, 60, 20, 14] }
+      ]
+    }
+  }
+}
+
+export const UnorderedData: Story = {
+  args: {
+    data: {
+      xValues: [1, 2, 3, 5, 4],
+      series: [
+        { name: 'PARAM01', values: [10, 20, 30, 40, 50] },
+        { name: 'PARAM02', values: [5, 4, 60, 20, 14] }
+      ]
+    }
   }
 }
