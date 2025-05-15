@@ -11,7 +11,10 @@ export const Button = ({ children, onClick }: ButtonProps) => {
   const { buttonClassname } = useContext(ChartContext)
 
   return (
-    <button className={buttonClassname} onClick={onClick}>
+    <button
+      className={buttonClassname || 'button'}
+      onClick={onClick}
+    >
       {children}
     </button>
   )

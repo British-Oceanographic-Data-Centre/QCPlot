@@ -10,5 +10,24 @@
 .flag-select {
     border-width: 1px;
     border-style: dashed;
-    background-color: rgba(0, 255, 255, 0.2)!important;
+    background-color: rgba(255, 0, 255, 0.2)!important;
+}
+
+.button {
+    background-color: #00b5ff;
+    border: none;
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+    height: 1.5rem;
+    border-radius: 6px;
+}
+
+.control-bar-outer {
+    display: flex;
+    justify-content: space-between;
+}
+
+.button-bar {
+    display: flex;
+    gap: 10px;
 }

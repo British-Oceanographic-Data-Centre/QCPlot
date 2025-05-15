@@ -1,13 +1,17 @@
 export const DEFAULT_COLOURS = [
-  '#e60049',
-  '#0bb4ff',
-  '#50e991',
-  '#e6d800',
-  '#9b19f5',
-  '#ffa300',
-  '#dc0ab4',
-  '#b3d4ff',
-  '#00bfa0'
+  '#00b5ff',
+  '#ff82ff',
+  '#5ed496',
+  '#ffe50a',
+  '#eb1f24',
+  '#a82ba3',
+  '#1e7f3f',
+  '#ffaf0a',
+  '#777777',
+  '#ff8700',
+  '#004c96',
+  '#804f4d',
+  '#858080'
 ]
 
 export const FLAGS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ<>'.split('')

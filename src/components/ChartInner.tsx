@@ -16,7 +16,10 @@ const initHook = (u: uPlot, flagMode: boolean) => {
   u.over.tabIndex = -1 // required for key handlers
 
   if (flagMode) {
-    u.root.querySelector('.u-select')?.classList.add('flag-select')
+    const selectBox = u.root.querySelector('.u-select')
+    if (selectBox && selectBox.clientWidth > 0) {
+      selectBox.classList.add('flag-select')
+    }
   }
 
   u.over.addEventListener(
@@ -159,7 +162,6 @@ export const ChartInner = ({ data, flags, flagCallback }: InnerChartProps) => {
     },
     hooks: {
       init: [(u) => initHook(u, flagMode)]
-      // setSelect: flagMode ? [onFlag] : []
     },
     plugins: [
       renderFlagsPlugin(flags),
@@ -191,25 +193,22 @@ export const ChartInner = ({ data, flags, flagCallback }: InnerChartProps) => {
   }
 
   return (
-    <div
-      ref={containerDiv}
-      style={{ width: '100%' }}
-    >
+    <div ref={containerDiv} className='w-full'>
       {/* Control bar */}
-      <div>
-        <Button onClick={() => setFlagMode(!flagMode)}>
-          Toggle Flag Mode - {flagMode ? 'on' : 'off'}
-        </Button>
-        <Button onClick={onUnZoom}>
-          Reset Zoom
-        </Button>
-        <Button onClick={toggleDark}>
-          Toggle Dark Mode
-        </Button>
-      </div>
-      <div>
+      <div className='control-bar-outer'>
+        <div className='button-bar'>
+          <Button onClick={() => setFlagMode(!flagMode)}>
+            Toggle Flag Mode - {flagMode ? 'on' : 'off'}
+          </Button>
+          <Button onClick={onUnZoom}>
+            Reset Zoom
+          </Button>
+          <Button onClick={toggleDark}>
+            Toggle Dark Mode
+          </Button>
+        </div>
         {flagMode &&
-          <div>
+          <div className='button-bar' style={{ marginTop: '5px' }}>
             <select ref={flagSelect}>
               <option></option>
               {FLAGS.map(x => <option key={x}>{x}</option>)}
