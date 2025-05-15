@@ -78,7 +78,7 @@ export const UnorderedData: Story = {
     data: {
       xValues: [1, 2, 3, 5, 4],
       series: [
-        { name: 'PARAM01', values: [10, 20, 30, 40, 50] },
+        { name: 'PARAM01', values: [10, 20, 30, 100, 50] },
         { name: 'PARAM02', values: [5, 4, 60, 20, 14] }
       ]
     }

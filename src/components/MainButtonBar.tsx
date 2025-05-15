@@ -1,23 +1,15 @@
 import { RefObject } from 'react'
 
-import type uPlot from 'uplot'
-
 import { Button } from './Button'
 
 interface MainButtonBarProps {
   flagMode: boolean
   setFlagMode: (val: boolean) => void
-  plotRef: RefObject<uPlot | null>
+  onUnZoom: () => void
   containerRef: RefObject<HTMLDivElement | null>
 }
 
-export const MainButtonBar = ({ flagMode, setFlagMode, plotRef, containerRef }: MainButtonBarProps) => {
-  const onUnZoom = () => {
-    const u = plotRef.current
-    if (!u) return
-    u.setScale('x', { min: u.data[0][0], max: u.data[0][u.data[0].length - 1] })
-  }
-
+export const MainButtonBar = ({ flagMode, setFlagMode, onUnZoom, containerRef }: MainButtonBarProps) => {
   const toggleDark = () => {
     if (!containerRef.current) return
     if (containerRef.current.className.includes('dark-mode')) {

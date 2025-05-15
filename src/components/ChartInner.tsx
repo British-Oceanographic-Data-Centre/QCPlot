@@ -5,7 +5,7 @@ import type { Options } from 'uplot'
 import UplotReact from 'uplot-react'
 
 import { onKeyDown } from '../eventHandlers'
-import type { InnerChartProps } from '../types'
+import type { Data, InnerChartProps } from '../types'
 import { seriesFromData } from '../utils'
 import { FlagButtonBar } from './FlagButtonBar'
 import { MainButtonBar } from './MainButtonBar'
@@ -66,6 +66,16 @@ export const ChartInner = ({ data, flags }: InnerChartProps) => {
     }
   }
 
+  const getXMinMax = (data: Data) => {
+    return { min: Math.min(...data.xValues), max: Math.max(...data.xValues) }
+  }
+
+  const onUnZoom = () => {
+    const u = plotRef.current
+    if (!u) return
+    u.setScale('x', getXMinMax(data))
+  }
+
   const opts: Options = {
     width: containerRef.current ? containerRef.current.clientWidth : 800,
     height: 600,
@@ -95,6 +105,7 @@ export const ChartInner = ({ data, flags }: InnerChartProps) => {
           return e => {
             handler(e)
             u.root.querySelector('.u-select')?.classList.remove('flag-select')
+            onUnZoom()
             return null
           }
         }
@@ -111,8 +122,8 @@ export const ChartInner = ({ data, flags }: InnerChartProps) => {
     scales: {
       x: {
         time: false,
-        min: plotRef.current ? plotRef.current.scales.x.min : undefined,
-        max: plotRef.current ? plotRef.current.scales.x.max : undefined
+        min: plotRef.current ? plotRef.current.scales.x.min : getXMinMax(data).min,
+        max: plotRef.current ? plotRef.current.scales.x.max : getXMinMax(data).max
       },
       y: {
         min: plotRef.current ? plotRef.current.scales.y.min : undefined,
@@ -131,7 +142,10 @@ export const ChartInner = ({ data, flags }: InnerChartProps) => {
       {/* Control bar */}
       <div className='control-bar-outer'>
         <MainButtonBar
-          flagMode={flagMode} setFlagMode={setFlagMode} plotRef={plotRef} containerRef={containerRef}
+          flagMode={flagMode}
+          setFlagMode={setFlagMode}
+          onUnZoom={onUnZoom}
+          containerRef={containerRef}
         />
         {flagMode &&
           <FlagButtonBar
