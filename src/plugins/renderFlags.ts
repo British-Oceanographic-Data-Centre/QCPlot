@@ -19,6 +19,12 @@ export const renderFlagsPlugin = (flags: IndexedFlaggedPoint[] = []): uPlot.Plug
   }
 
   const drawFlaggedPoints = (u: uPlot, i: number, i0: number, i1: number) => {
+    const thisSeries = u.series[i]
+    const visiblePoints = thisSeries.idxs![1] - thisSeries.idxs![0]
+    // If return is true then all points are rendered - breaks if too many!
+    // Do this check at the top as rendering flagged points with too many on screen also caused problems
+    if (visiblePoints >= 10_000) return false
+
     const { ctx } = u
     // const { _stroke, scale } = u.series[i];
     const { scale } = u.series[i]
@@ -34,19 +40,18 @@ export const renderFlagsPlugin = (flags: IndexedFlaggedPoint[] = []): uPlot.Plug
     const seriesFlags = flags.filter(x => x.seriesIndex === i)
     while (j <= i1) {
       if (getFlagForPoint(seriesFlags, j)) {
-        const val = u.data[i][j]
-        const cx = Math.round(u.valToPos(u.data[0][j], 'x', true))
-        const cy = Math.round(u.valToPos(val!, scale!, true))
-        drawFlagMarker(ctx, cx, cy)
+        const val = u.data[i][j]!
+        if (val >= u.scales.y.min! && val <= u.scales.y.max!) {
+          const cx = Math.round(u.valToPos(u.data[0][j], 'x', true))
+          const cy = Math.round(u.valToPos(val!, scale!, true))
+          drawFlagMarker(ctx, cx, cy)
+        }
       }
       j++
     }
 
     ctx.restore()
 
-    const thisSeries = u.series[i]
-    const visiblePoints = thisSeries.idxs![1] - thisSeries.idxs![0]
-    // If return is true then all points are rendered - breaks if too many!
     return visiblePoints <= 10_000
   }
 
