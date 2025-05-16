@@ -11,7 +11,7 @@ export const getFlagForPoint = (flags: IndexedFlaggedPoint[], pointIndex: number
     const thisFlag = flags[i]
     if (thisFlag.endIndex === undefined) {
       if (thisFlag.pointIndex === pointIndex) return thisFlag.flag
-    } else if (pointIndex >= thisFlag.pointIndex && pointIndex < thisFlag.endIndex) {
+    } else if (pointIndex >= thisFlag.pointIndex && pointIndex <= thisFlag.endIndex) {
       return thisFlag.flag
     }
   }

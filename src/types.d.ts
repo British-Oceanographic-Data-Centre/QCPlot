@@ -1,7 +1,7 @@
 export interface FlaggedPoint {
   seriesName: string
   pointIndex: number
-  endIndex?: number
+  endIndex?: number // endIndex is inclusive
   flag: string
 }
 

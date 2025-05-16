@@ -24,7 +24,10 @@ const simpleData: Data = {
 }
 
 export const FlaggingDemo = (args, context) => {
-  const [flags, setFlags] = useState<FlaggedPoint>([{ seriesName: 'PARAM01', pointIndex: 2, flag: 'X' }])
+  const [flags, setFlags] = useState<FlaggedPoint>([
+    { seriesName: 'PARAM01', pointIndex: 2, endIndex: 3, flag: 'X' },
+    { seriesName: 'PARAM02', pointIndex: 1, flag: 'Z' }
+  ])
 
   return (
     <Chart
