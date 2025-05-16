@@ -1,12 +1,12 @@
 import type { Meta, StoryObj } from '@storybook/react'
 
-import { Chart } from '@/Chart'
-
 import { simpleData, bigData } from './data'
+import { Chart } from '@/Chart'
 
 import './styles.css'
 
 const meta: Meta<typeof Chart> = {
+  title: 'Plots Only',
   component: Chart,
   args: {
     flagCallback: console.log

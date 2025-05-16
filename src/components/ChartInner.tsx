@@ -26,7 +26,7 @@ const initHook = (u: uPlot, flagMode: boolean) => {
   )
 }
 
-export const ChartInner = ({ data, flags }: InnerChartProps) => {
+export const ChartInner = ({ data, flags, enableFlagging }: InnerChartProps) => {
   const [flagMode, setFlagMode] = useState(false)
 
   const { colours: plotColours } = useContext(ChartContext)
@@ -142,6 +142,7 @@ export const ChartInner = ({ data, flags }: InnerChartProps) => {
           setFlagMode={setFlagMode}
           onUnZoom={onUnZoom}
           containerRef={containerRef}
+          enableFlagging={enableFlagging}
         />
         {flagMode &&
           <FlagButtonBar
