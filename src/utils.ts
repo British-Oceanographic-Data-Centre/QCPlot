@@ -41,3 +41,13 @@ export const seriesFromData = (data: Data, flags: IndexedFlaggedPoint[], colours
 
   return seriesArray
 }
+
+export const getArrayMinMax = (arr: number[]) => {
+  let min = Infinity
+  let max = -Infinity
+  arr.forEach(x => {
+    if (x < min) min = x
+    if (x > max) max = x
+  })
+  return { min, max }
+}

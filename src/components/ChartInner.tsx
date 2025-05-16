@@ -5,8 +5,8 @@ import type { Options } from 'uplot'
 import UplotReact from 'uplot-react'
 
 import { onKeyDown } from '../eventHandlers'
-import type { Data, InnerChartProps } from '../types'
-import { seriesFromData } from '../utils'
+import type { InnerChartProps } from '../types'
+import { getArrayMinMax, seriesFromData } from '../utils'
 import { FlagButtonBar } from './FlagButtonBar'
 import { MainButtonBar } from './MainButtonBar'
 import { ChartContext } from '@/ChartContext'
@@ -66,14 +66,10 @@ export const ChartInner = ({ data, flags }: InnerChartProps) => {
     }
   }
 
-  const getXMinMax = (data: Data) => {
-    return { min: Math.min(...data.xValues), max: Math.max(...data.xValues) }
-  }
-
   const onUnZoom = () => {
     const u = plotRef.current
     if (!u) return
-    u.setScale('x', getXMinMax(data))
+    u.setScale('x', getArrayMinMax(data.xValues))
   }
 
   const opts: Options = {
@@ -122,8 +118,8 @@ export const ChartInner = ({ data, flags }: InnerChartProps) => {
     scales: {
       x: {
         time: false,
-        min: plotRef.current ? plotRef.current.scales.x.min : getXMinMax(data).min,
-        max: plotRef.current ? plotRef.current.scales.x.max : getXMinMax(data).max
+        min: plotRef.current ? plotRef.current.scales.x.min : undefined,
+        max: plotRef.current ? plotRef.current.scales.x.max : undefined
       },
       y: {
         min: plotRef.current ? plotRef.current.scales.y.min : undefined,
@@ -164,7 +160,10 @@ export const ChartInner = ({ data, flags }: InnerChartProps) => {
           data.xValues,
           ...data.series.map(s => s.values)
         ]}
-        onCreate={(chart) => { plotRef.current = chart }}
+        onCreate={(chart) => {
+          plotRef.current = chart
+          onUnZoom()
+        }}
       />
     </div>
   )
