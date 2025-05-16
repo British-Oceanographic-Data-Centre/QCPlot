@@ -22,6 +22,7 @@ export interface Data {
 
 export interface ChartProps {
   data: Data
+  enableFlagging: boolean
   flags?: FlaggedPoint[]
   plotColours?: string[]
   buttonClassname?: string

@@ -2,10 +2,9 @@ import React, { useState } from 'react'
 
 import type { Meta } from '@storybook/react'
 
+import { bigData, simpleData } from './data'
 import { Chart } from '@/Chart'
 import type { FlaggedPoint } from '@/types'
-
-import { bigData, simpleData } from './data'
 
 import './styles.css'
 
@@ -26,6 +25,7 @@ export const FlaggingDemo = (args, context) => {
       data={simpleData}
       flags={flags}
       flagCallback={setFlags}
+      enableFlagging
     />
   )
 }
@@ -38,6 +38,7 @@ export const FlaggingDemoBigData = (args, context) => {
       data={bigData}
       flags={flags}
       flagCallback={setFlags}
+      enableFlagging
     />
   )
 }
