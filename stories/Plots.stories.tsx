@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react'
 
-import { simpleData, bigData } from './data'
+import { simpleData, bigData, timeData } from './data'
 import { Chart } from '@/Chart'
 
 import './styles.css'
@@ -26,6 +26,13 @@ export const SmallDataset: Story = {
 export const LargeDataset: Story = {
   args: {
     data: bigData
+  }
+}
+
+export const TimeData: Story = {
+  args: {
+    data: timeData,
+    xTimeAxis: true
   }
 }
 

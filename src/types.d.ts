@@ -27,6 +27,7 @@ export interface ChartProps {
   plotColours?: string[]
   buttonClassname?: string
   flagCallback?: (flags: FlaggedPoint[]) => void
+  xTimeAxis: boolean
 }
 
 export interface InnerChartProps extends ChartProps {

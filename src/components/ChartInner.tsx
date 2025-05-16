@@ -1,5 +1,6 @@
 import React, { useContext, useEffect, useRef, useState } from 'react'
 
+import dayjs from 'dayjs'
 import type uPlot from 'uplot'
 import type { Options } from 'uplot'
 import UplotReact from 'uplot-react'
@@ -26,7 +27,7 @@ const initHook = (u: uPlot, flagMode: boolean) => {
   )
 }
 
-export const ChartInner = ({ data, flags, enableFlagging }: InnerChartProps) => {
+export const ChartInner = ({ data, flags, enableFlagging, xTimeAxis = false }: InnerChartProps) => {
   const [flagMode, setFlagMode] = useState(false)
 
   const { colours: plotColours } = useContext(ChartContext)
@@ -69,7 +70,8 @@ export const ChartInner = ({ data, flags, enableFlagging }: InnerChartProps) => 
   const onUnZoom = () => {
     const u = plotRef.current
     if (!u) return
-    u.setScale('x', getArrayMinMax(data.xValues))
+    const { min, max } = getArrayMinMax(xTimeAxis ? data.xValues.map(x => dayjs(x).unix()) : data.xValues)
+    u.setScale('x', { min, max })
   }
 
   const opts: Options = {
@@ -117,7 +119,7 @@ export const ChartInner = ({ data, flags, enableFlagging }: InnerChartProps) => 
     series,
     scales: {
       x: {
-        time: false,
+        time: xTimeAxis,
         min: plotRef.current ? plotRef.current.scales.x.min : undefined,
         max: plotRef.current ? plotRef.current.scales.x.max : undefined
       },
@@ -158,7 +160,7 @@ export const ChartInner = ({ data, flags, enableFlagging }: InnerChartProps) => 
       <UplotReact
         options={opts}
         data={[
-          data.xValues,
+          xTimeAxis ? data.xValues.map(x => dayjs(x).unix()) : data.xValues,
           ...data.series.map(s => s.values)
         ]}
         onCreate={(chart) => {

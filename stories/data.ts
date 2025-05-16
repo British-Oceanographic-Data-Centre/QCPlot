@@ -19,3 +19,10 @@ export const bigData: Data = {
     { name: 'PRES', values: range(500_000).map(i => 5 * Math.cos(i / 500)) }
   ]
 }
+
+export const timeData: Data = {
+  xValues: ['2025-01-01T00:00:00.000Z', '2025-01-01T01:00:00.000Z', '2025-01-01T03:00:00.000Z'],
+  series: [
+    { name: 'PARAM01', values: [10, 30, 15] }
+  ]
+}
