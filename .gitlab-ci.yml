@@ -3,6 +3,57 @@ default:
     - "jasmin"
   image: node
 
+.set-npm-config: &set-npm-config
+  - npm set email bodcsoft@noc.ac.uk --location project
+  - npm set //registry.npmjs.org/:_authToken=$PUBLIC_NPM_TOKEN
+  - npm config set access public
+
+lint:
+  stage: test
+  before_script:
+    - npm ci
+  script:
+    - npm run lint
+  rules:
+    - if: $CI_MERGE_REQUEST_ID
+
+deploy-dry-run:
+  stage: test
+  before_script:
+    - npm ci
+  script:
+    - *set-npm-config
+    - npm run rollup
+    - npm config list
+    - npm version "v0.0.0" --no-git-tag-version
+    - npm publish --dry-run
+  rules:
+    - if: $CI_MERGE_REQUEST_ID
+
+.deploy:
+  stage: deploy
+  before_script:
+    - npm ci
+  script:
+    - *set-npm-config
+    - npm run rollup
+    - npm version "$CI_COMMIT_TAG" --no-git-tag-version
+    - npm publish --tag ${TAG}
+
+deploy-alpha:
+  extends: .deploy
+  variables:
+    TAG: alpha
+  rules:
+    - if: '$CI_COMMIT_TAG =~ /^v\d+\.\d+\.\d+\-alpha\.\d+$/'
+
+deploy:
+  extends: .deploy
+  variables:
+    TAG: latest
+  rules:
+    - if: '$CI_COMMIT_TAG =~ /^v\d+\.\d+\.\d+$/'
+
 pages:
   stage: deploy
   script:

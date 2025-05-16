@@ -7,9 +7,12 @@ interface MainButtonBarProps {
   setFlagMode: (val: boolean) => void
   onUnZoom: () => void
   containerRef: RefObject<HTMLDivElement | null>
+  enableFlagging: boolean
 }
 
-export const MainButtonBar = ({ flagMode, setFlagMode, onUnZoom, containerRef }: MainButtonBarProps) => {
+export const MainButtonBar = ({
+  flagMode, setFlagMode, onUnZoom, containerRef, enableFlagging
+}: MainButtonBarProps) => {
   const toggleDark = () => {
     if (!containerRef.current) return
     if (containerRef.current.className.includes('dark-mode')) {
@@ -21,9 +24,11 @@ export const MainButtonBar = ({ flagMode, setFlagMode, onUnZoom, containerRef }:
 
   return (
     <div className='button-bar'>
-      <Button onClick={() => setFlagMode(!flagMode)}>
-        Toggle Flag Mode - {flagMode ? 'on' : 'off'}
-      </Button>
+      {enableFlagging &&
+        <Button onClick={() => setFlagMode(!flagMode)}>
+          Toggle Flag Mode - {flagMode ? 'on' : 'off'}
+        </Button>
+      }
       <Button onClick={onUnZoom}>
         Reset Zoom
       </Button>
