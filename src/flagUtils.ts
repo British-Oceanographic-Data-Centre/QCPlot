@@ -1,6 +1,7 @@
 import type uPlot from 'uplot'
 
-import { Data, FlaggedPoint, IndexedFlaggedPoint, ISelectedPoints } from './types'
+import { Data, FlaggedPoint, ISelectedPoints } from './types'
+import { getSeriesName, isNil } from './utils'
 
 export const getPointsForSelection = (u: uPlot) => {
   const lft = u.select.left
@@ -20,7 +21,7 @@ export const getPointsForSelection = (u: uPlot) => {
       const xPos = u.valToPos(u.data[0][i], 'x')
       if (xPos < lft || xPos > rgt) continue
       const val = x[i]
-      if (val === undefined || val === null) continue
+      if (isNil(val)) continue
       if (val >= bottomVal && val <= topVal) {
         selectedPoints[seriesIndex + 1].push(i)
       }
@@ -32,19 +33,19 @@ export const getPointsForSelection = (u: uPlot) => {
 interface updateFlagsProps {
   selectedPoints: ISelectedPoints,
   flag: string | null,
-  existingFlags: IndexedFlaggedPoint[],
+  existingFlags: FlaggedPoint[],
   data: Data,
   flagCallback?: (flags: FlaggedPoint[]) => void
 }
 
 export const updateFlags = ({ selectedPoints, flag, existingFlags, data, flagCallback }: updateFlagsProps) => {
   // TODO: Don't really want to split/combine on series that aren't being touched
-  let updatedFlags: IndexedFlaggedPoint[] = splitRanges(existingFlags)
+  let updatedFlags: FlaggedPoint[] = splitRanges(existingFlags)
 
   // Remove selected points from the current flag list
   Object.keys(selectedPoints).forEach(idx => {
     const seriesIndex = Number(idx)
-    const seriesName = data.series[seriesIndex - 1].name
+    const seriesName = getSeriesName(data.series[seriesIndex - 1])
     updatedFlags = updatedFlags.filter(x =>
       !(x.seriesName === seriesName && selectedPoints[seriesIndex].includes(x.pointIndex))
     )
@@ -54,10 +55,9 @@ export const updateFlags = ({ selectedPoints, flag, existingFlags, data, flagCal
   if (flag) {
     Object.keys(selectedPoints).forEach(idx => {
       const seriesIndex = Number(idx)
-      const seriesName = data.series[seriesIndex - 1].name
+      const seriesName = getSeriesName(data.series[seriesIndex - 1])
       selectedPoints[seriesIndex].forEach(pointIndex => {
         updatedFlags.push({
-          seriesIndex: seriesIndex + 1,
           seriesName,
           pointIndex,
           flag
@@ -92,10 +92,10 @@ export const getPointRanges = (points: number[]) => {
   }))
 }
 
-export const splitRanges = (flags: IndexedFlaggedPoint[]) => {
-  const splitFlags: IndexedFlaggedPoint[] = []
+export const splitRanges = (flags: FlaggedPoint[]) => {
+  const splitFlags: FlaggedPoint[] = []
   flags.forEach(flagObj => {
-    if (flagObj.endIndex === undefined || flagObj.endIndex === null) {
+    if (isNil(flagObj.endIndex)) {
       splitFlags.push(flagObj)
     } else {
       for (let i = flagObj.pointIndex; i <= flagObj.endIndex; i++) {
@@ -110,10 +110,10 @@ export const splitRanges = (flags: IndexedFlaggedPoint[]) => {
   return splitFlags
 }
 
-export const combineRanges = (flags: IndexedFlaggedPoint[]) => {
-  const combined: IndexedFlaggedPoint[] = []
+export const combineRanges = (flags: FlaggedPoint[]) => {
+  const combined: FlaggedPoint[] = []
 
-  const keyedBySeriesName: {[key: string]: IndexedFlaggedPoint[]} = {}
+  const keyedBySeriesName: {[key: string]: FlaggedPoint[]} = {}
   flags.forEach(flag => {
     if (!keyedBySeriesName[flag.seriesName]) {
       keyedBySeriesName[flag.seriesName] = []
@@ -122,7 +122,7 @@ export const combineRanges = (flags: IndexedFlaggedPoint[]) => {
   })
 
   Object.values(keyedBySeriesName).forEach(seriesFlags => {
-    const keyed: {[key: string]: IndexedFlaggedPoint[]} = {}
+    const keyed: {[key: string]: FlaggedPoint[]} = {}
     seriesFlags.forEach(flag => {
       if (!keyed[flag.flag]) {
         keyed[flag.flag] = []
@@ -136,7 +136,6 @@ export const combineRanges = (flags: IndexedFlaggedPoint[]) => {
       ranges.forEach(idxRange => {
         combined.push({
           seriesName: flags[0].seriesName,
-          seriesIndex: flags[0].seriesIndex,
           pointIndex: idxRange.start,
           endIndex: idxRange.end,
           flag: flags[0].flag

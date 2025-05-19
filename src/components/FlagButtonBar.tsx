@@ -6,13 +6,13 @@ import { Button } from './Button'
 import { ChartContext } from '@/ChartContext'
 import { FLAGS } from '@/constants'
 import { getPointsForSelection, updateFlags } from '@/flagUtils'
-import { Data, IndexedFlaggedPoint } from '@/types'
+import { Data, FlaggedPoint } from '@/types'
 
 interface FlagButtonBarProps {
   plotRef: RefObject<uPlot | null>
   clearSelection: () => void
   data: Data
-  flags: IndexedFlaggedPoint[]
+  flags: FlaggedPoint[]
 }
 
 export const FlagButtonBar = ({ clearSelection, plotRef, flags, data }: FlagButtonBarProps) => {

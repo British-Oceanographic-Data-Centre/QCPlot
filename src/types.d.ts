@@ -1,3 +1,7 @@
+import type React from 'react'
+
+import type { Series } from 'uplot'
+
 export interface FlaggedPoint {
   seriesName: string
   pointIndex: number
@@ -5,13 +9,10 @@ export interface FlaggedPoint {
   flag: string
 }
 
-export interface IndexedFlaggedPoint extends FlaggedPoint {
-  seriesIndex: number
-}
-
 export interface DataSeries {
-  name: string
-  label?: string // if no label provided then name is used
+  id: string
+  formattedId?: string
+  parameter: string
   values: number[]
 }
 
@@ -28,19 +29,23 @@ export interface ChartProps {
   buttonClassname?: string
   flagCallback?: (flags: FlaggedPoint[]) => void
   xTimeAxis: boolean
-}
-
-export interface InnerChartProps extends ChartProps {
-  data: Data
-  flags: IndexedFlaggedPoint[]
+  defaultShowAll?: boolean
 }
 
 export interface ChartContextValue {
   colours: string[]
   buttonClassname: string
   flagCallback?: (flags: FlaggedPoint[]) => void
+  activeIds: string[]
+  setActiveIds: React.Dispatch<React.SetStateAction<string[]>>
+  activeParams: string[]
+  setActiveParams: React.Dispatch<React.SetStateAction<string[]>>
 }
 
 export interface ISelectedPoints {
   [seriesIndex: number]: number[] // array of point indices
+}
+
+export interface NamedSeries extends Series {
+  name: string
 }

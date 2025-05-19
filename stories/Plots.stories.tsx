@@ -9,7 +9,8 @@ const meta: Meta<typeof Chart> = {
   title: 'Plots Only',
   component: Chart,
   args: {
-    flagCallback: console.log
+    flagCallback: console.log,
+    defaultShowAll: true
   }
 }
 
@@ -19,7 +20,7 @@ type Story = StoryObj<typeof Chart>;
 export const SmallDataset: Story = {
   args: {
     data: simpleData,
-    flags: [{ seriesName: 'PARAM01', pointIndex: 1, endIndex: 4, flag: 'X' }]
+    flags: [{ seriesName: '1-PARAM01', pointIndex: 1, endIndex: 4, flag: 'X' }]
   }
 }
 
