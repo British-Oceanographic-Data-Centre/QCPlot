@@ -6,10 +6,11 @@ import type { Options } from 'uplot'
 import UplotReact from 'uplot-react'
 
 import { onKeyDown } from '../eventHandlers'
-import type { InnerChartProps } from '../types'
+import type { ChartProps } from '../types'
 import { getArrayMinMax, seriesFromData } from '../utils'
 import { FlagButtonBar } from './FlagButtonBar'
 import { MainButtonBar } from './MainButtonBar'
+import { MenuBar } from './MenuBar'
 import { ChartContext } from '@/ChartContext'
 import { renderFlagsPlugin, scrollZoomPlugin } from '@/plugins'
 
@@ -27,10 +28,10 @@ const initHook = (u: uPlot, flagMode: boolean) => {
   )
 }
 
-export const ChartInner = ({ data, flags, enableFlagging, xTimeAxis = false }: InnerChartProps) => {
+export const ChartInner = ({ data, flags = [], enableFlagging, xTimeAxis = false }: ChartProps) => {
   const [flagMode, setFlagMode] = useState(false)
 
-  const { colours: plotColours } = useContext(ChartContext)
+  const { colours: plotColours, activeIds, activeParams } = useContext(ChartContext)
 
   const containerRef = useRef<HTMLDivElement>(null)
   const plotRef = useRef<uPlot>(null)
@@ -58,7 +59,7 @@ export const ChartInner = ({ data, flags, enableFlagging, xTimeAxis = false }: I
     }
   }, [flagMode])
 
-  const series = seriesFromData(data, flags, plotColours)
+  const series = seriesFromData(data, flags, plotColours, activeIds, activeParams)
 
   const clearSelection = () => {
     if (plotRef.current) {
@@ -136,7 +137,9 @@ export const ChartInner = ({ data, flags, enableFlagging, xTimeAxis = false }: I
   }
 
   return (
-    <div ref={containerRef} className='w-full'>
+    <div ref={containerRef} className='container'>
+      <MenuBar data={data} flaggedPoints={flags} />
+
       {/* Control bar */}
       <div className='control-bar-outer'>
         <MainButtonBar
@@ -157,17 +160,22 @@ export const ChartInner = ({ data, flags, enableFlagging, xTimeAxis = false }: I
       </div>
       {/* End control bar  */}
 
-      <UplotReact
-        options={opts}
-        data={[
-          xTimeAxis ? data.xValues.map(x => dayjs(x).unix()) : data.xValues,
-          ...data.series.map(s => s.values)
-        ]}
-        onCreate={(chart) => {
-          plotRef.current = chart
-          onUnZoom()
-        }}
-      />
+      {(activeIds.length === 0 && activeParams.length === 0)
+        ? <div>Nothing selected to plot</div>
+        : <UplotReact
+            options={opts}
+            data={[
+              xTimeAxis ? data.xValues.map(x => dayjs(x).unix()) : data.xValues,
+              ...data.series
+                .filter(s => activeIds.includes(s.id) && activeParams.includes(s.parameter))
+                .map(s => s.values)
+            ]}
+            onCreate={(chart) => {
+              plotRef.current = chart
+              onUnZoom()
+            }}
+          />
+      }
     </div>
   )
 }

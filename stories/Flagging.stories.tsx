@@ -16,8 +16,9 @@ export default meta
 
 export const FlaggingDemo = (args, context) => {
   const [flags, setFlags] = useState<FlaggedPoint>([
-    { seriesName: 'PARAM01', pointIndex: 2, endIndex: 3, flag: 'X' },
-    { seriesName: 'PARAM02', pointIndex: 1, flag: 'Z' }
+    { seriesName: '1-PARAM02', pointIndex: 3, flag: 'Z' },
+    { seriesName: '1-PARAM01', pointIndex: 2, endIndex: 3, flag: 'X' },
+    { seriesName: '1-PARAM02', pointIndex: 1, flag: 'Z' }
   ])
 
   return (
@@ -26,6 +27,7 @@ export const FlaggingDemo = (args, context) => {
       flags={flags}
       flagCallback={setFlags}
       enableFlagging
+      defaultShowAll
     />
   )
 }
@@ -39,6 +41,7 @@ export const FlaggingDemoBigData = (args, context) => {
       flags={flags}
       flagCallback={setFlags}
       enableFlagging
+      defaultShowAll
     />
   )
 }

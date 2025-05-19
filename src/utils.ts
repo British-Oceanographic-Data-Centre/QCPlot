@@ -1,12 +1,24 @@
 import uPlot from 'uplot'
 
-import { Data, IndexedFlaggedPoint } from './types'
+import { Data, DataSeries, FlaggedPoint, NamedSeries } from './types'
+
+export const isNil = (val: unknown) => {
+  return val === undefined || val === null
+}
 
 export const invertHex = (hex: string) => {
   return '#' + (Number(`0x1${hex.replace('#', '')}`) ^ 0xFFFFFF).toString(16).substring(1).toUpperCase()
 }
 
-export const getFlagForPoint = (flags: IndexedFlaggedPoint[], pointIndex: number) => {
+export const getSeriesName = (series: DataSeries) => {
+  return `${series.id}-${series.parameter}`
+}
+
+export const getSeriesLabel = (series: DataSeries) => {
+  return `${series.formattedId || series.id}-${series.parameter}`
+}
+
+export const getFlagForPoint = (flags: FlaggedPoint[], pointIndex: number) => {
   for (let i = 0; i < flags.length; i++) {
     const thisFlag = flags[i]
     if (thisFlag.endIndex === undefined) {
@@ -17,12 +29,20 @@ export const getFlagForPoint = (flags: IndexedFlaggedPoint[], pointIndex: number
   }
 }
 
-export const seriesFromData = (data: Data, flags: IndexedFlaggedPoint[], colours: string[]) => {
+export const seriesFromData = (
+  data: Data,
+  flags: FlaggedPoint[],
+  colours: string[],
+  activeIds: string[],
+  activeParams: string[]
+) => {
   const seriesArray = [{}]
 
-  const applyFlag = (value: number | null, seriesIdx: number, pointIndex: number) => {
+  const applyFlag = (u: uPlot, value: number | null, seriesIdx: number, pointIndex: number) => {
     if (value === null) return null
-    const seriesFlags = flags.filter(x => x.seriesIndex === seriesIdx)
+
+    const seriesName = (u.series[seriesIdx] as NamedSeries).name
+    const seriesFlags = flags.filter(x => x.seriesName === seriesName)
     const flag = getFlagForPoint(seriesFlags, pointIndex)
     if (flag) {
       return `${value} (${flag})`
@@ -31,12 +51,15 @@ export const seriesFromData = (data: Data, flags: IndexedFlaggedPoint[], colours
   }
 
   data.series.forEach((series, i) => {
-    seriesArray.push({
-      label: series.label || series.name,
-      scale: 'y',
-      value: (u: uPlot, v: number, seriesIdx: number, pointIndex: number) => applyFlag(v, seriesIdx, pointIndex),
-      stroke: colours[i % colours.length]
-    })
+    if (activeIds.includes(series.id) && activeParams.includes(series.parameter)) {
+      seriesArray.push({
+        name: `${series.id}-${series.parameter}`,
+        label: `${series.formattedId || series.id}-${series.parameter}`,
+        scale: 'y',
+        value: (u: uPlot, v: number, seriesIdx: number, pointIndex: number) => applyFlag(u, v, seriesIdx, pointIndex),
+        stroke: colours[i % colours.length]
+      })
+    }
   })
 
   return seriesArray
