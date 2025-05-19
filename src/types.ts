@@ -17,7 +17,7 @@ export interface DataSeries {
 }
 
 export interface Data {
-  xValues: number[]
+  xValues: (number | string)[]
   series: DataSeries[]
 }
 

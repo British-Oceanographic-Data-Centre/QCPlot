@@ -15,7 +15,9 @@
     "incremental": true,
     "paths": {
       "@/*": ["./src/*"]
-    }
+    },
+    "declaration": true,
+    "outDir": "types.d.ts"
   },
   "include": ["**/*.ts", "**/*.tsx"],
   "exclude": ["node_modules", "stories", "**/*.stories.tsx"]
