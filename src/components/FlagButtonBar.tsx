@@ -39,8 +39,8 @@ export const FlagButtonBar = ({ clearSelection, plotRef, flaggedPoints, data }: 
         <option></option>
         {FLAGS.map(x => <option key={x}>{x}</option>)}
       </select>
-      <Button onClick={() => applyFlags()}>Apply flags</Button>
-      <Button onClick={() => removeFlags()}>Remove flags</Button>
+      <Button onClick={applyFlags}>Apply flags</Button>
+      <Button onClick={removeFlags}>Remove flags</Button>
       <Button onClick={clearSelection}>Clear selection</Button>
     </div>
   )

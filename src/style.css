@@ -81,3 +81,7 @@
     user-select: none;
     cursor: pointer;
 }
+
+.pnf-check-label input {
+    margin-right: 0.75em;
+}

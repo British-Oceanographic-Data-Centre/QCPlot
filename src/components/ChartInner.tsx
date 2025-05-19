@@ -173,7 +173,10 @@ export const ChartInner = ({ data, flaggedPoints = [], enableFlagging, xTimeAxis
             onCreate={(chart) => {
               if (!plotRef.current) {
                 plotRef.current = chart
+                // Only do the unzoom if this is the first time through
                 onUnZoom()
+              } else {
+                plotRef.current = chart
               }
             }}
           />
