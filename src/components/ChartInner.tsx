@@ -171,8 +171,10 @@ export const ChartInner = ({ data, flaggedPoints = [], enableFlagging, xTimeAxis
                 .map(s => s.values)
             ]}
             onCreate={(chart) => {
-              plotRef.current = chart
-              onUnZoom()
+              if (!plotRef.current) {
+                plotRef.current = chart
+                onUnZoom()
+              }
             }}
           />
       }

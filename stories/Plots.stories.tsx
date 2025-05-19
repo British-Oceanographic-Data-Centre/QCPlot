@@ -20,7 +20,7 @@ type Story = StoryObj<typeof Chart>;
 export const SmallDataset: Story = {
   args: {
     data: simpleData,
-    flags: [{ seriesName: '1-PARAM01', pointIndex: 1, endIndex: 4, flag: 'X' }]
+    flaggedPoints: [{ seriesName: 'INSTRUMENT_1-PARAM01', pointIndex: 1, endIndex: 4, flag: 'X' }]
   }
 }
 

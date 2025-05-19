@@ -70,6 +70,7 @@
 .pnf-table, .pnf-table th, .pnf-table td {
     border: 1px solid;
     border-collapse: collapse;
+    text-align: left;
 }
 
 .pnf-table th, .pnf-table td {

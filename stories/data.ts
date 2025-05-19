@@ -5,10 +5,10 @@ import { Data } from '@/types'
 export const simpleData: Data = {
   xValues: [11, 12, 13, 14, 15],
   series: [
-    { id: '1', parameter: 'PARAM01', values: [10, 20, 30, 40, 50] },
-    { id: '1', parameter: 'PARAM02', values: [5, 4, 60, 20, 14] },
-    { id: '1', parameter: 'PARAM03', values: [46, 15, 43, 5, 27] },
-    { id: '1', parameter: 'PARAM04', values: [1, 2, 3, 4, 5] }
+    { id: 'INSTRUMENT_1', parameter: 'PARAM01', values: [10, 20, 30, 40, 50] },
+    { id: 'INSTRUMENT_1', parameter: 'PARAM02', values: [5, 4, 60, 20, 14] },
+    { id: 'INSTRUMENT_1', parameter: 'PARAM03', values: [46, 15, 43, 5, 27] },
+    { id: 'INSTRUMENT_1', parameter: 'PARAM04', values: [1, 2, 3, 4, 5] }
   ]
 }
 
