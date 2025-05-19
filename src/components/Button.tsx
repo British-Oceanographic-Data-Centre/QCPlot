@@ -12,7 +12,7 @@ export const Button = ({ children, onClick }: ButtonProps) => {
 
   return (
     <button
-      className={buttonClassname || 'button'}
+      className={buttonClassname || 'pnf-button'}
       onClick={onClick}
     >
       {children}

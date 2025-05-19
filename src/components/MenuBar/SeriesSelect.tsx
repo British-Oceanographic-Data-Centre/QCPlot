@@ -38,7 +38,7 @@ export const SeriesSelect = ({ dataSeries }: SeriesSelectProps) => {
   }
 
   return (
-    <table className='table'>
+    <table className='pnf-table'>
       <thead>
         <tr>
           <th>

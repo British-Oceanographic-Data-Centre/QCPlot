@@ -15,15 +15,15 @@ export const MainButtonBar = ({
 }: MainButtonBarProps) => {
   const toggleDark = () => {
     if (!containerRef.current) return
-    if (containerRef.current.className.includes('dark-mode')) {
-      containerRef.current.classList.remove('dark-mode')
+    if (containerRef.current.className.includes('pnf-dark-mode')) {
+      containerRef.current.classList.remove('pnf-dark-mode')
     } else {
-      containerRef.current.classList.add('dark-mode')
+      containerRef.current.classList.add('pnf-dark-mode')
     }
   }
 
   return (
-    <div className='button-bar'>
+    <div className='pnf-button-bar'>
       {enableFlagging &&
         <Button onClick={() => setFlagMode(!flagMode)}>
           Toggle Flag Mode - {flagMode ? 'on' : 'off'}

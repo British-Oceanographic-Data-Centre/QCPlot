@@ -34,7 +34,7 @@ export const FlagButtonBar = ({ clearSelection, plotRef, flaggedPoints, data }: 
   }
 
   return (
-    <div className='button-bar' style={{ marginTop: '5px' }}>
+    <div className='pnf-button-bar'>
       <select ref={flagSelect}>
         <option></option>
         {FLAGS.map(x => <option key={x}>{x}</option>)}

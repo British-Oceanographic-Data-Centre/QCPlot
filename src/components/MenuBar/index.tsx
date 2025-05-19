@@ -16,7 +16,7 @@ interface MenuBarProps {
 
 const TabButton = ({ children, onClick, active }: {children: ReactNode, onClick: () => void, active: boolean}) => {
   return (
-    <button onClick={onClick} className={active ? 'tab-button-active' : 'tab-button'}>
+    <button onClick={onClick} className={active ? 'pnf-tab-button-active' : 'pnf-tab-button'}>
       {children}
     </button>
   )
@@ -26,7 +26,7 @@ export const MenuBar = ({ flaggedPoints, data }: MenuBarProps) => {
   const [activeSection, setActiveSection] = useState<string | null>(Sections.SERIES)
 
   return (
-    <div className={activeSection ? 'menu-bar menu-bar-open' : 'menu-bar'}>
+    <div className={activeSection ? 'pnf-menu-bar pnf-menu-bar-open' : 'pnf-menu-bar'}>
       {Object.values(Sections).map(section =>
         <TabButton
           key={section}

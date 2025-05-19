@@ -8,7 +8,7 @@ interface CheckableLabelProps {
 
 export const CheckableLabel = ({ checked, onChange, children }: CheckableLabelProps) => (
   <div>
-    <label className='check-label'>
+    <label className='pnf-check-label'>
       <input type='checkbox' onChange={e => onChange(e.target.checked)} checked={checked} />
       {children}
     </label>

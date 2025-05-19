@@ -1,31 +1,31 @@
-.container {
+.pnf-container {
     width: 100%;
     height: 100%;
 }
 
-.inner-container {
+.pnf-inner-container {
     height: 100%;
     position: relative;
     display: flex;
     max-width: 100%;
 }
 
-.menu-bar {
+.pnf-menu-bar {
     margin-bottom: 2em;
 }
 
-.dark-mode {
+.pnf-dark-mode {
     background-color: #ededed;
     filter: invert(100%);
 }
 
-.flag-select {
+.pnf-flag-select {
     border-width: 1px;
     border-style: dashed;
     background-color: rgba(255, 0, 255, 0.2)!important;
 }
 
-.button {
+.pnf-button {
     background-color: #00b5ff;
     border: none;
     padding-left: 0.5rem;
@@ -35,7 +35,7 @@
     cursor: pointer;
 }
 
-.tab-button-active {
+.pnf-tab-button-active {
     background-color: #00b5ff;
     border: none;
     padding-left: 0.5rem;
@@ -45,7 +45,7 @@
     cursor: pointer;
 }
 
-.tab-button {
+.pnf-tab-button {
     background-color: #fff;
     border: 1px solid #00b5ff;
     padding-left: 0.5rem;
@@ -56,26 +56,27 @@
     cursor: pointer;
 }
 
-.control-bar-outer {
+.pnf-control-bar-outer {
     display: flex;
     justify-content: space-between;
 }
 
-.button-bar {
+.pnf-button-bar {
     display: flex;
     gap: 10px;
+    margin-top: 5px;
 }
 
-.table, .table th, .table td {
+.pnf-table, .pnf-table th, .pnf-table td {
     border: 1px solid;
     border-collapse: collapse;
 }
 
-.table th, .table td {
+.pnf-table th, .pnf-table td {
     padding: 2px 3px;
 }
 
-.check-label {
+.pnf-check-label {
     user-select: none;
     cursor: pointer;
 }

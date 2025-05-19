@@ -17,7 +17,7 @@ export const FlagList = ({ flaggedPoints }: FlagListProps) => {
 
   return (
     <div>
-      <table className='table'>
+      <table className='pnf-table'>
         <thead>
           <tr>
             <th>Channel</th>

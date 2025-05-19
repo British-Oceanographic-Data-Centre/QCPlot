@@ -18,7 +18,7 @@ const initHook = (u: uPlot, flagMode: boolean) => {
   u.over.tabIndex = -1 // required for key handlers
 
   if (flagMode) {
-    u.root.querySelector('.u-select')?.classList.add('flag-select')
+    u.root.querySelector('.u-select')?.classList.add('pnf-flag-select')
   }
 
   u.over.addEventListener(
@@ -64,7 +64,7 @@ export const ChartInner = ({ data, flaggedPoints = [], enableFlagging, xTimeAxis
   const clearSelection = () => {
     if (plotRef.current) {
       plotRef.current.setSelect({ left: 0, top: 0, width: 0, height: 0 })
-      plotRef.current.root.querySelector('.u-select')?.classList.remove('flag-select')
+      plotRef.current.root.querySelector('.u-select')?.classList.remove('pnf-flag-select')
     }
   }
 
@@ -94,7 +94,7 @@ export const ChartInner = ({ data, flaggedPoints = [], enableFlagging, xTimeAxis
             handler(e)
             if (e.button === 0) {
               if (flagMode) {
-                u.root.querySelector('.u-select')?.classList.add('flag-select')
+                u.root.querySelector('.u-select')?.classList.add('pnf-flag-select')
               }
             }
             return null
@@ -103,7 +103,7 @@ export const ChartInner = ({ data, flaggedPoints = [], enableFlagging, xTimeAxis
         dblclick: (u, _target, handler) => {
           return e => {
             handler(e)
-            u.root.querySelector('.u-select')?.classList.remove('flag-select')
+            u.root.querySelector('.u-select')?.classList.remove('pnf-flag-select')
             onUnZoom()
             return null
           }
@@ -137,11 +137,11 @@ export const ChartInner = ({ data, flaggedPoints = [], enableFlagging, xTimeAxis
   }
 
   return (
-    <div ref={containerRef} className='container'>
+    <div ref={containerRef} className='pnf-container'>
       <MenuBar data={data} flaggedPoints={flaggedPoints} />
 
       {/* Control bar */}
-      <div className='control-bar-outer'>
+      <div className='pnf-control-bar-outer'>
         <MainButtonBar
           flagMode={flagMode}
           setFlagMode={setFlagMode}
