@@ -71,7 +71,7 @@ export const ChartInner = ({ data, flaggedPoints = [], enableFlagging, xTimeAxis
   const onUnZoom = () => {
     const u = plotRef.current
     if (!u) return
-    const { min, max } = getArrayMinMax(xTimeAxis ? data.xValues.map(x => dayjs(x).unix()) : data.xValues)
+    const { min, max } = getArrayMinMax(xTimeAxis ? data.xValues.map(x => dayjs(x).unix()) : data.xValues as number[])
     u.setScale('x', { min, max })
   }
 
@@ -165,7 +165,7 @@ export const ChartInner = ({ data, flaggedPoints = [], enableFlagging, xTimeAxis
         : <UplotReact
             options={opts}
             data={[
-              xTimeAxis ? data.xValues.map(x => dayjs(x).unix()) : data.xValues,
+              xTimeAxis ? data.xValues.map(x => dayjs(x).unix()) : data.xValues as number[],
               ...data.series
                 .filter(s => activeIds.includes(s.id) && activeParams.includes(s.parameter))
                 .map(s => s.values)
