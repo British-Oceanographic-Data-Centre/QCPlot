@@ -92,9 +92,9 @@ export const getPointRanges = (points: number[]) => {
   }))
 }
 
-export const splitRanges = (flags: FlaggedPoint[]) => {
+export const splitRanges = (flaggedPoints: FlaggedPoint[]) => {
   const splitFlags: FlaggedPoint[] = []
-  flags.forEach(flagObj => {
+  flaggedPoints.forEach(flagObj => {
     if (isNil(flagObj.endIndex)) {
       splitFlags.push(flagObj)
     } else {
@@ -110,11 +110,11 @@ export const splitRanges = (flags: FlaggedPoint[]) => {
   return splitFlags
 }
 
-export const combineRanges = (flags: FlaggedPoint[]) => {
+export const combineRanges = (flaggedPoints: FlaggedPoint[]) => {
   const combined: FlaggedPoint[] = []
 
   const keyedBySeriesName: {[key: string]: FlaggedPoint[]} = {}
-  flags.forEach(flag => {
+  flaggedPoints.forEach(flag => {
     if (!keyedBySeriesName[flag.seriesName]) {
       keyedBySeriesName[flag.seriesName] = []
     }

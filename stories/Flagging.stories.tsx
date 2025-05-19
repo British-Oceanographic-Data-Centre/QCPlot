@@ -24,7 +24,7 @@ export const FlaggingDemo = (args, context) => {
   return (
     <Chart
       data={simpleData}
-      flags={flags}
+      flaggedPoints={flags}
       flagCallback={setFlags}
       enableFlagging
       defaultShowAll
@@ -38,7 +38,7 @@ export const FlaggingDemoBigData = (args, context) => {
   return (
     <Chart
       data={bigData}
-      flags={flags}
+      flaggedPoints={flags}
       flagCallback={setFlags}
       enableFlagging
       defaultShowAll

@@ -3,7 +3,7 @@ import uPlot, { Options } from 'uplot'
 import { FlaggedPoint, NamedSeries } from '../types'
 import { getFlagForPoint } from '../utils'
 
-export const renderFlagsPlugin = (flags: FlaggedPoint[] = []): uPlot.Plugin => {
+export const renderFlagsPlugin = (flaggedPoints: FlaggedPoint[] = []): uPlot.Plugin => {
   const drawFlagMarker = (ctx: CanvasRenderingContext2D, cx: number, cy: number) => {
     const shapeSize = 6
 
@@ -37,7 +37,7 @@ export const renderFlagsPlugin = (flags: FlaggedPoint[] = []): uPlot.Plugin => {
 
     let j = i0
 
-    const seriesFlags = flags.filter(x => x.seriesName === (thisSeries as NamedSeries).name)
+    const seriesFlags = flaggedPoints.filter(x => x.seriesName === (thisSeries as NamedSeries).name)
     while (j <= i1) {
       if (getFlagForPoint(seriesFlags, j)) {
         const val = u.data[i][j]!
