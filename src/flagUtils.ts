@@ -1,7 +1,7 @@
 import type uPlot from 'uplot'
 
 import { Data, FlaggedPoint, ISelectedPoints } from './types'
-import { getSeriesName, isNil } from './utils'
+import { getTraceName, isNil } from './utils'
 
 export const getPointsForSelection = (u: uPlot) => {
   const lft = u.select.left
@@ -45,9 +45,9 @@ export const updateFlags = ({ selectedPoints, flag, existingFlags, data, flagCal
   // Remove selected points from the current flag list
   Object.keys(selectedPoints).forEach(idx => {
     const seriesIndex = Number(idx)
-    const seriesName = getSeriesName(data.series[seriesIndex - 1])
+    const traceName = getTraceName(data.series[seriesIndex - 1])
     updatedFlags = updatedFlags.filter(x =>
-      !(x.seriesName === seriesName && selectedPoints[seriesIndex].includes(x.pointIndex))
+      !(x.traceName === traceName && selectedPoints[seriesIndex].includes(x.pointIndex))
     )
   })
 
@@ -55,10 +55,10 @@ export const updateFlags = ({ selectedPoints, flag, existingFlags, data, flagCal
   if (flag) {
     Object.keys(selectedPoints).forEach(idx => {
       const seriesIndex = Number(idx)
-      const seriesName = getSeriesName(data.series[seriesIndex - 1])
+      const traceName = getTraceName(data.series[seriesIndex - 1])
       selectedPoints[seriesIndex].forEach(pointIndex => {
         updatedFlags.push({
-          seriesName,
+          traceName,
           pointIndex,
           flag
         })
@@ -115,10 +115,10 @@ export const combineRanges = (flaggedPoints: FlaggedPoint[]) => {
 
   const keyedBySeriesName: {[key: string]: FlaggedPoint[]} = {}
   flaggedPoints.forEach(flag => {
-    if (!keyedBySeriesName[flag.seriesName]) {
-      keyedBySeriesName[flag.seriesName] = []
+    if (!keyedBySeriesName[flag.traceName]) {
+      keyedBySeriesName[flag.traceName] = []
     }
-    keyedBySeriesName[flag.seriesName].push(flag)
+    keyedBySeriesName[flag.traceName].push(flag)
   })
 
   Object.values(keyedBySeriesName).forEach(seriesFlags => {
@@ -135,7 +135,7 @@ export const combineRanges = (flaggedPoints: FlaggedPoint[]) => {
       const ranges = getPointRanges(indices)
       ranges.forEach(idxRange => {
         combined.push({
-          seriesName: flags[0].seriesName,
+          traceName: flags[0].traceName,
           pointIndex: idxRange.start,
           endIndex: idxRange.end,
           flag: flags[0].flag

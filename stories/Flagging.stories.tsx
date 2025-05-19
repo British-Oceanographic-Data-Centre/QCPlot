@@ -16,9 +16,9 @@ export default meta
 
 export const FlaggingDemo = (args, context) => {
   const [flags, setFlags] = useState<FlaggedPoint>([
-    { seriesName: '1-PARAM02', pointIndex: 3, flag: 'Z' },
-    { seriesName: '1-PARAM01', pointIndex: 2, endIndex: 3, flag: 'X' },
-    { seriesName: '1-PARAM02', pointIndex: 1, flag: 'Z' }
+    { traceName: '1-PARAM02', pointIndex: 3, flag: 'Z' },
+    { traceName: '1-PARAM01', pointIndex: 2, endIndex: 3, flag: 'X' },
+    { traceName: '1-PARAM02', pointIndex: 1, flag: 'Z' }
   ])
 
   return (

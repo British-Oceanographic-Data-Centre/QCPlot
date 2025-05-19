@@ -3,7 +3,7 @@ import type React from 'react'
 import type { Series } from 'uplot'
 
 export interface FlaggedPoint {
-  seriesName: string
+  traceName: string
   pointIndex: number
   endIndex?: number // endIndex is inclusive
   flag: string

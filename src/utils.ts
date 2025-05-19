@@ -10,7 +10,7 @@ export const invertHex = (hex: string) => {
   return '#' + (Number(`0x1${hex.replace('#', '')}`) ^ 0xFFFFFF).toString(16).substring(1).toUpperCase()
 }
 
-export const getSeriesName = (series: DataSeries) => {
+export const getTraceName = (series: DataSeries) => {
   return `${series.id}-${series.parameter}`
 }
 
@@ -41,8 +41,8 @@ export const seriesFromData = (
   const applyFlag = (u: uPlot, value: number | null, seriesIdx: number, pointIndex: number) => {
     if (value === null) return null
 
-    const seriesName = (u.series[seriesIdx] as NamedSeries).name
-    const seriesFlags = flaggedPoints.filter(x => x.seriesName === seriesName)
+    const traceName = (u.series[seriesIdx] as NamedSeries).name
+    const seriesFlags = flaggedPoints.filter(x => x.traceName === traceName)
     const flag = getFlagForPoint(seriesFlags, pointIndex)
     if (flag) {
       return `${value} (${flag})`

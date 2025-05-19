@@ -8,7 +8,7 @@ interface FlagListProps {
 export const FlagList = ({ flaggedPoints }: FlagListProps) => {
   const groupedFlaggedPoints: {[name: string]: FlaggedPoint[]} = {}
   flaggedPoints.forEach(fp => {
-    const key = `${fp.seriesName};${fp.flag}`
+    const key = `${fp.traceName};${fp.flag}`
     if (!(key in groupedFlaggedPoints)) {
       groupedFlaggedPoints[key] = []
     }
@@ -28,7 +28,7 @@ export const FlagList = ({ flaggedPoints }: FlagListProps) => {
         <tbody>
           {Object.keys(groupedFlaggedPoints).sort().map(key =>
             <tr key={key}>
-              <td>{groupedFlaggedPoints[key][0].seriesName}</td>
+              <td>{groupedFlaggedPoints[key][0].traceName}</td>
               <td>{groupedFlaggedPoints[key][0].flag}</td>
               <td>
                 {groupedFlaggedPoints[key].sort((a, b) => a.pointIndex - b.pointIndex).map(fp =>

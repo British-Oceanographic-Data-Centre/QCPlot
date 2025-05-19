@@ -37,7 +37,7 @@ export const renderFlagsPlugin = (flaggedPoints: FlaggedPoint[] = []): uPlot.Plu
 
     let j = i0
 
-    const seriesFlags = flaggedPoints.filter(x => x.seriesName === (thisSeries as NamedSeries).name)
+    const seriesFlags = flaggedPoints.filter(x => x.traceName === (thisSeries as NamedSeries).name)
     while (j <= i1) {
       if (getFlagForPoint(seriesFlags, j)) {
         const val = u.data[i][j]!
