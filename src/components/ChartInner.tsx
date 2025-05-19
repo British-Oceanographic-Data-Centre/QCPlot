@@ -28,7 +28,7 @@ const initHook = (u: uPlot, flagMode: boolean) => {
   )
 }
 
-export const ChartInner = ({ data, flags = [], enableFlagging, xTimeAxis = false }: ChartProps) => {
+export const ChartInner = ({ data, flaggedPoints = [], enableFlagging, xTimeAxis = false }: ChartProps) => {
   const [flagMode, setFlagMode] = useState(false)
 
   const { colours: plotColours, activeIds, activeParams } = useContext(ChartContext)
@@ -59,7 +59,7 @@ export const ChartInner = ({ data, flags = [], enableFlagging, xTimeAxis = false
     }
   }, [flagMode])
 
-  const series = seriesFromData(data, flags, plotColours, activeIds, activeParams)
+  const series = seriesFromData(data, flaggedPoints, plotColours, activeIds, activeParams)
 
   const clearSelection = () => {
     if (plotRef.current) {
@@ -114,7 +114,7 @@ export const ChartInner = ({ data, flags = [], enableFlagging, xTimeAxis = false
       init: [(u) => initHook(u, flagMode)]
     },
     plugins: [
-      renderFlagsPlugin(flags),
+      renderFlagsPlugin(flaggedPoints),
       scrollZoomPlugin()
     ],
     series,
@@ -138,7 +138,7 @@ export const ChartInner = ({ data, flags = [], enableFlagging, xTimeAxis = false
 
   return (
     <div ref={containerRef} className='container'>
-      <MenuBar data={data} flaggedPoints={flags} />
+      <MenuBar data={data} flaggedPoints={flaggedPoints} />
 
       {/* Control bar */}
       <div className='control-bar-outer'>
@@ -154,7 +154,7 @@ export const ChartInner = ({ data, flags = [], enableFlagging, xTimeAxis = false
             clearSelection={clearSelection}
             plotRef={plotRef}
             data={data}
-            flags={flags}
+            flaggedPoints={flaggedPoints}
           />
         }
       </div>

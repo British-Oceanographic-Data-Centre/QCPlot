@@ -18,9 +18,9 @@ export const getSeriesLabel = (series: DataSeries) => {
   return `${series.formattedId || series.id}-${series.parameter}`
 }
 
-export const getFlagForPoint = (flags: FlaggedPoint[], pointIndex: number) => {
-  for (let i = 0; i < flags.length; i++) {
-    const thisFlag = flags[i]
+export const getFlagForPoint = (flaggedPoints: FlaggedPoint[], pointIndex: number) => {
+  for (let i = 0; i < flaggedPoints.length; i++) {
+    const thisFlag = flaggedPoints[i]
     if (thisFlag.endIndex === undefined) {
       if (thisFlag.pointIndex === pointIndex) return thisFlag.flag
     } else if (pointIndex >= thisFlag.pointIndex && pointIndex <= thisFlag.endIndex) {
@@ -31,7 +31,7 @@ export const getFlagForPoint = (flags: FlaggedPoint[], pointIndex: number) => {
 
 export const seriesFromData = (
   data: Data,
-  flags: FlaggedPoint[],
+  flaggedPoints: FlaggedPoint[],
   colours: string[],
   activeIds: string[],
   activeParams: string[]
@@ -42,7 +42,7 @@ export const seriesFromData = (
     if (value === null) return null
 
     const seriesName = (u.series[seriesIdx] as NamedSeries).name
-    const seriesFlags = flags.filter(x => x.seriesName === seriesName)
+    const seriesFlags = flaggedPoints.filter(x => x.seriesName === seriesName)
     const flag = getFlagForPoint(seriesFlags, pointIndex)
     if (flag) {
       return `${value} (${flag})`

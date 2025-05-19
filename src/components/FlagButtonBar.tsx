@@ -12,10 +12,10 @@ interface FlagButtonBarProps {
   plotRef: RefObject<uPlot | null>
   clearSelection: () => void
   data: Data
-  flags: FlaggedPoint[]
+  flaggedPoints: FlaggedPoint[]
 }
 
-export const FlagButtonBar = ({ clearSelection, plotRef, flags, data }: FlagButtonBarProps) => {
+export const FlagButtonBar = ({ clearSelection, plotRef, flaggedPoints, data }: FlagButtonBarProps) => {
   const { flagCallback } = useContext(ChartContext)
 
   const flagSelect = useRef<HTMLSelectElement>(null)
@@ -24,13 +24,13 @@ export const FlagButtonBar = ({ clearSelection, plotRef, flags, data }: FlagButt
     if (!plotRef.current) return
     const selectedPoints = getPointsForSelection(plotRef.current)
     const flag = flagSelect.current?.value || null
-    updateFlags({ selectedPoints, flag, existingFlags: flags, data, flagCallback })
+    updateFlags({ selectedPoints, flag, existingFlags: flaggedPoints, data, flagCallback })
   }
 
   const removeFlags = () => {
     if (!plotRef.current) return
     const selectedPoints = getPointsForSelection(plotRef.current)
-    updateFlags({ selectedPoints, flag: null, existingFlags: flags, data, flagCallback })
+    updateFlags({ selectedPoints, flag: null, existingFlags: flaggedPoints, data, flagCallback })
   }
 
   return (

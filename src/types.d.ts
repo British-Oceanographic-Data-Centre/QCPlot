@@ -24,10 +24,10 @@ export interface Data {
 export interface ChartProps {
   data: Data
   enableFlagging: boolean
-  flags?: FlaggedPoint[]
+  flaggedPoints?: FlaggedPoint[]
   plotColours?: string[]
   buttonClassname?: string
-  flagCallback?: (flags: FlaggedPoint[]) => void
+  flagCallback?: (flaggedPoints: FlaggedPoint[]) => void
   xTimeAxis: boolean
   defaultShowAll?: boolean
 }
@@ -35,7 +35,7 @@ export interface ChartProps {
 export interface ChartContextValue {
   colours: string[]
   buttonClassname: string
-  flagCallback?: (flags: FlaggedPoint[]) => void
+  flagCallback?: (flaggedPoints: FlaggedPoint[]) => void
   activeIds: string[]
   setActiveIds: React.Dispatch<React.SetStateAction<string[]>>
   activeParams: string[]

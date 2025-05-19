@@ -35,7 +35,7 @@ interface updateFlagsProps {
   flag: string | null,
   existingFlags: FlaggedPoint[],
   data: Data,
-  flagCallback?: (flags: FlaggedPoint[]) => void
+  flagCallback?: (flaggedPoints: FlaggedPoint[]) => void
 }
 
 export const updateFlags = ({ selectedPoints, flag, existingFlags, data, flagCallback }: updateFlagsProps) => {

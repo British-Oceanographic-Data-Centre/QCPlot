@@ -8,7 +8,7 @@ import type { ChartProps } from './types'
 import './style.css'
 import 'uplot/dist/uPlot.min.css'
 
-export const Chart = ({ data, flags, defaultShowAll, ...props }: ChartProps) => {
+export const Chart = ({ data, flaggedPoints, defaultShowAll, ...props }: ChartProps) => {
   const allIds = new Set(data.series.map(x => x.id))
   const allParams = new Set(data.series.map(x => x.parameter))
 
@@ -27,7 +27,7 @@ export const Chart = ({ data, flags, defaultShowAll, ...props }: ChartProps) => 
         setActiveParams
       }}
     >
-      <ChartInner {...props} data={data} flags={flags} />
+      <ChartInner {...props} data={data} flaggedPoints={flaggedPoints} />
     </ChartContext.Provider>
   )
 }
