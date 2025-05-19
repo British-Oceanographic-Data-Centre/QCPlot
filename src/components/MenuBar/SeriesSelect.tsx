@@ -38,29 +38,44 @@ export const SeriesSelect = ({ dataSeries }: SeriesSelectProps) => {
   }
 
   return (
-    <div style={{ display: 'flex', gap: '2em' }}>
-      <div>
-        <CheckableLabel onChange={onSelectAllIds} checked={activeIds.length === uniqueIds.length}>
-          OID
-        </CheckableLabel>
-        <hr />
-        {uniqueIds.map(x =>
-          <CheckableLabel key={x} onChange={() => onToggleId(x)} checked={activeIds.includes(x)}>
-            {x}
-          </CheckableLabel>
+    <table className='table'>
+      <thead>
+        <tr>
+          <th>
+            <CheckableLabel onChange={onSelectAllIds} checked={activeIds.length === uniqueIds.length}>
+              OID
+            </CheckableLabel>
+          </th>
+          <th>
+            <CheckableLabel onChange={onSelectAllParams} checked={activeParams.length === uniqueParams.length}>
+              PARAMETER
+            </CheckableLabel>
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        {[...Array(Math.max(uniqueIds.length, uniqueParams.length))].map((_x, i) =>
+          <tr key={i}>
+            <td>
+              {uniqueIds[i] &&
+                <CheckableLabel onChange={() => onToggleId(uniqueIds[i])} checked={activeIds.includes(uniqueIds[i])}>
+                  {uniqueIds[i]}
+                </CheckableLabel>
+              }
+            </td>
+            <td>
+              {uniqueParams[i] &&
+                <CheckableLabel
+                  onChange={() => onToggleParam(uniqueParams[i])}
+                  checked={activeParams.includes(uniqueParams[i])}
+                >
+                  {uniqueParams[i]}
+                </CheckableLabel>
+              }
+            </td>
+          </tr>
         )}
-      </div>
-      <div>
-        <CheckableLabel onChange={onSelectAllParams} checked={activeParams.length === uniqueParams.length}>
-          PARAMETER
-        </CheckableLabel>
-        <hr />
-        {uniqueParams.map(x =>
-          <CheckableLabel key={x} onChange={() => onToggleParam(x)} checked={activeParams.includes(x)}>
-            {x}
-          </CheckableLabel>
-        )}
-      </div>
-    </div>
+      </tbody>
+    </table>
   )
 }

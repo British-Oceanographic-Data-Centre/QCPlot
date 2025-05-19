@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { ReactNode, useState } from 'react'
 
 import { FlagList } from './FlagList'
 import { SeriesSelect } from './SeriesSelect'
@@ -14,18 +14,27 @@ interface MenuBarProps {
   data: Data
 }
 
+const TabButton = ({ children, onClick, active }: {children: ReactNode, onClick: () => void, active: boolean}) => {
+  return (
+    <button onClick={onClick} className={active ? 'tab-button-active' : 'tab-button'}>
+      {children}
+    </button>
+  )
+}
+
 export const MenuBar = ({ flaggedPoints, data }: MenuBarProps) => {
   const [activeSection, setActiveSection] = useState<string | null>(Sections.SERIES)
 
   return (
     <div className={activeSection ? 'menu-bar menu-bar-open' : 'menu-bar'}>
       {Object.values(Sections).map(section =>
-        <button
+        <TabButton
           key={section}
+          active={section === activeSection}
           onClick={() => { section === activeSection ? setActiveSection(null) : setActiveSection(section) }}
         >
           {section}
-        </button>
+        </TabButton>
       )}
       {activeSection === Sections.FLAG_LIST && <FlagList flaggedPoints={flaggedPoints} />}
       {activeSection === Sections.SERIES && <SeriesSelect dataSeries={data.series} />}
