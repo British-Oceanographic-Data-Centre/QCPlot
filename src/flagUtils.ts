@@ -75,7 +75,7 @@ export const updateFlags = ({ selectedPoints, flag, existingFlags, data, flagCal
 export const getPointRanges = (points: number[]) => {
   const groups: number[][] = []
   let currentGroup: number[] = []
-  points.sort().forEach(point => {
+  points.sort((a, b) => a - b).forEach(point => {
     if (currentGroup.length === 0) {
       currentGroup.push(point)
     } else if (point === currentGroup[currentGroup.length - 1] + 1) {
@@ -131,7 +131,6 @@ export const combineRanges = (flaggedPoints: FlaggedPoint[]) => {
       }
       keyed[flag.flag].push(flag)
     })
-
     Object.values(keyed).forEach(flags => {
       const indices = flags.map(x => x.pointIndex)
       const ranges = getPointRanges(indices)
