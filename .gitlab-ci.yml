@@ -26,7 +26,7 @@ deploy-dry-run:
     - npm run rollup
     - npm config list
     - npm version "v0.0.0" --no-git-tag-version
-    - npm publish --dry-run
+    - npm publish --dry-run --tag dry-run
   rules:
     - if: $CI_MERGE_REQUEST_ID
 

@@ -43,7 +43,7 @@ export interface ChartContextValue {
 }
 
 export interface ISelectedPoints {
-  [seriesIndex: number]: number[] // array of point indices
+  [traceName: string]: number[] // array of point indices
 }
 
 export interface NamedSeries extends Series {
