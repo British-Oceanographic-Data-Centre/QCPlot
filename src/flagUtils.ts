@@ -1,7 +1,7 @@
 import type uPlot from 'uplot'
 
-import { Data, FlaggedPoint, ISelectedPoints } from './types'
-import { getTraceName, isNil } from './utils'
+import { Data, FlaggedPoint, ISelectedPoints, NamedSeries } from './types'
+import { isNil } from './utils'
 
 export const getPointsForSelection = (u: uPlot) => {
   const lft = u.select.left
@@ -16,14 +16,15 @@ export const getPointsForSelection = (u: uPlot) => {
 
   const selectedPoints: ISelectedPoints = {}
   u.data.slice(1).forEach((x, seriesIndex) => {
-    selectedPoints[seriesIndex + 1] = []
+    const seriesName = (u.series[seriesIndex + 1] as NamedSeries).name
+    selectedPoints[seriesName] = []
     for (let i = leftIdx; i <= rightIdx; i++) {
       const xPos = u.valToPos(u.data[0][i], 'x')
       if (xPos < lft || xPos > rgt) continue
       const val = x[i]
       if (isNil(val)) continue
       if (val >= bottomVal && val <= topVal) {
-        selectedPoints[seriesIndex + 1].push(i)
+        selectedPoints[seriesName].push(i)
       }
     }
   })
@@ -39,24 +40,25 @@ interface updateFlagsProps {
 }
 
 export const updateFlags = ({ selectedPoints, flag, existingFlags, data, flagCallback }: updateFlagsProps) => {
-  // TODO: Don't really want to split/combine on series that aren't being touched
-  let updatedFlags: FlaggedPoint[] = splitRanges(existingFlags)
+  const modifiedTraceNames = Object.entries(selectedPoints)
+    .filter(([_, v]) => v.length > 0) // Filter to keys with at least one point
+    .map(([k, _]) => k)
+
+  const untouchedFlags = existingFlags.filter(x => !modifiedTraceNames.includes(x.traceName))
+  const modifiedTraceFlags = existingFlags.filter(x => modifiedTraceNames.includes(x.traceName))
+  let updatedFlags: FlaggedPoint[] = splitRanges(modifiedTraceFlags)
 
   // Remove selected points from the current flag list
-  Object.keys(selectedPoints).forEach(idx => {
-    const seriesIndex = Number(idx)
-    const traceName = getTraceName(data.series[seriesIndex - 1])
+  Object.keys(selectedPoints).forEach(traceName => {
     updatedFlags = updatedFlags.filter(x =>
-      !(x.traceName === traceName && selectedPoints[seriesIndex].includes(x.pointIndex))
+      !(x.traceName === traceName && selectedPoints[traceName].includes(x.pointIndex))
     )
   })
 
   // Add newly flagged points to the list
   if (flag) {
-    Object.keys(selectedPoints).forEach(idx => {
-      const seriesIndex = Number(idx)
-      const traceName = getTraceName(data.series[seriesIndex - 1])
-      selectedPoints[seriesIndex].forEach(pointIndex => {
+    Object.keys(selectedPoints).forEach(traceName => {
+      selectedPoints[traceName].forEach(pointIndex => {
         updatedFlags.push({
           traceName,
           pointIndex,
@@ -66,7 +68,7 @@ export const updateFlags = ({ selectedPoints, flag, existingFlags, data, flagCal
     })
   }
   if (flagCallback) {
-    flagCallback(combineRanges(updatedFlags))
+    flagCallback(untouchedFlags.concat(combineRanges(updatedFlags)))
   }
 }
 
