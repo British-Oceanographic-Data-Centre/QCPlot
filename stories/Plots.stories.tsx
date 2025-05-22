@@ -56,8 +56,8 @@ export const DuplicateXValues: Story = {
     data: {
       xValues: [1, 2, 3, 3, 4],
       series: [
-        { name: 'PARAM01', values: [10, 20, 30, 40, 50] },
-        { name: 'PARAM02', values: [5, 4, 60, 20, 14] }
+        { id: '1', parameter: 'PARAM01', values: [10, 20, 30, 40, 50] },
+        { id: '1', parameter: 'PARAM02', values: [5, 4, 60, 20, 14] }
       ]
     }
   }
@@ -68,8 +68,20 @@ export const UnorderedData: Story = {
     data: {
       xValues: [1, 2, 3, 5, 4],
       series: [
-        { name: 'PARAM01', values: [10, 20, 30, 100, 50] },
-        { name: 'PARAM02', values: [5, 4, 60, 20, 14] }
+        { id: '1', parameter: 'PARAM01', values: [10, 20, 30, 100, 50] },
+        { id: '1', parameter: 'PARAM02', values: [5, 4, 60, 20, 14] }
+      ]
+    }
+  }
+}
+
+export const FormattedIds: Story = {
+  args: {
+    data: {
+      xValues: [1, 2, 3, 4, 5],
+      series: [
+        { id: '1', formattedId: '#1', parameter: 'PARAM01', values: [10, 20, 30, 100, 50] },
+        { id: '1', formattedId: '#1', parameter: 'PARAM02', values: [5, 4, 60, 20, 14] }
       ]
     }
   }

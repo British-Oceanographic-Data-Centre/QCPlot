@@ -8,6 +8,11 @@ interface SeriesSelectProps {
   dataSeries: DataSeries[]
 }
 
+interface IdPair {
+  id: string
+  formattedId?: string
+}
+
 export const SeriesSelect = ({ dataSeries }: SeriesSelectProps) => {
   const { activeIds, setActiveIds, activeParams, setActiveParams } = useContext(ChartContext)
 
@@ -20,15 +25,18 @@ export const SeriesSelect = ({ dataSeries }: SeriesSelectProps) => {
   }, [dataSeries])
 
   const uniqueIds = useMemo(() => {
-    const uniqIds: string[] = []
+    const uniqIds: IdPair[] = []
+    const addedIds: string[] = []
     dataSeries.forEach(x => {
-      const id = x.formattedId || x.id
-      if (!uniqIds.includes(id)) uniqIds.push(id)
+      if (!addedIds.includes(x.id)) {
+        addedIds.push(x.id)
+        uniqIds.push({ id: x.id, formattedId: x.formattedId })
+      }
     })
     return uniqIds
   }, [dataSeries])
 
-  const onSelectAllIds = (checked: boolean) => setActiveIds(checked ? uniqueIds : [])
+  const onSelectAllIds = (checked: boolean) => setActiveIds(checked ? uniqueIds.map(x => x.id) : [])
   const onSelectAllParams = (checked: boolean) => setActiveParams(checked ? uniqueParams : [])
   const onToggleId = (id: string) => {
     setActiveIds(prev => prev.includes(id) ? prev.filter(x => x !== id) : prev.concat(id))
@@ -58,8 +66,11 @@ export const SeriesSelect = ({ dataSeries }: SeriesSelectProps) => {
           <tr key={i}>
             <td>
               {uniqueIds[i] &&
-                <CheckableLabel onChange={() => onToggleId(uniqueIds[i])} checked={activeIds.includes(uniqueIds[i])}>
-                  {uniqueIds[i]}
+                <CheckableLabel
+                  onChange={() => onToggleId(uniqueIds[i].id)}
+                  checked={activeIds.includes(uniqueIds[i].id)}
+                >
+                  {uniqueIds[i].formattedId || uniqueIds[i].id}
                 </CheckableLabel>
               }
             </td>
