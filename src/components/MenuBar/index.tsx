@@ -36,7 +36,7 @@ export const MenuBar = ({ flaggedPoints, data }: MenuBarProps) => {
           {section}
         </TabButton>
       )}
-      {activeSection === Sections.FLAG_LIST && <FlagList flaggedPoints={flaggedPoints} />}
+      {activeSection === Sections.FLAG_LIST && <FlagList flaggedPoints={flaggedPoints} dataSeries={data.series} />}
       {activeSection === Sections.SERIES && <SeriesSelect dataSeries={data.series} />}
     </div>
   )

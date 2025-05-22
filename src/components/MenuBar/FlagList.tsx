@@ -1,11 +1,12 @@
-import { FlaggedPoint } from '@/types'
+import { DataSeries, FlaggedPoint } from '@/types'
 import { isNil } from '@/utils'
 
 interface FlagListProps {
   flaggedPoints: FlaggedPoint[]
+  dataSeries: DataSeries[]
 }
 
-export const FlagList = ({ flaggedPoints }: FlagListProps) => {
+export const FlagList = ({ flaggedPoints, dataSeries }: FlagListProps) => {
   const groupedFlaggedPoints: {[name: string]: FlaggedPoint[]} = {}
   flaggedPoints.forEach(fp => {
     const key = `${fp.traceName};${fp.flag}`
@@ -14,6 +15,18 @@ export const FlagList = ({ flaggedPoints }: FlagListProps) => {
     }
     groupedFlaggedPoints[key].push(fp)
   })
+
+  const traceNameToLabel = (traceName: string) => {
+    const lastSeperator = traceName.lastIndexOf('-')
+    const id = traceName.substring(0, lastSeperator)
+    const param = traceName.substring(lastSeperator + 1)
+
+    const series = dataSeries.filter(x => x.id === id)[0]
+    if (series) {
+      return `${series.formattedId}-${param}`
+    }
+    return traceName
+  }
 
   return (
     <div>
@@ -28,7 +41,9 @@ export const FlagList = ({ flaggedPoints }: FlagListProps) => {
         <tbody>
           {Object.keys(groupedFlaggedPoints).sort().map(key =>
             <tr key={key}>
-              <td>{groupedFlaggedPoints[key][0].traceName}</td>
+              <td>
+                {traceNameToLabel(groupedFlaggedPoints[key][0].traceName)}
+              </td>
               <td>{groupedFlaggedPoints[key][0].flag}</td>
               <td>
                 {groupedFlaggedPoints[key].sort((a, b) => a.pointIndex - b.pointIndex).map(fp =>
