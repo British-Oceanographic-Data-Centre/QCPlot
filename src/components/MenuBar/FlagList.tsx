@@ -17,9 +17,9 @@ export const FlagList = ({ flaggedPoints, dataSeries }: FlagListProps) => {
   })
 
   const traceNameToLabel = (traceName: string) => {
-    const lastSeperator = traceName.lastIndexOf('-')
-    const id = traceName.substring(0, lastSeperator)
-    const param = traceName.substring(lastSeperator + 1)
+    const lastSeparator = traceName.lastIndexOf('-')
+    const id = traceName.substring(0, lastSeparator)
+    const param = traceName.substring(lastSeparator + 1)
 
     const series = dataSeries.filter(x => x.id === id)[0]
     if (series) {
