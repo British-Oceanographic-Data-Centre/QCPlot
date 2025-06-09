@@ -30,6 +30,7 @@ export interface ChartProps {
   flagCallback?: (flaggedPoints: FlaggedPoint[]) => void
   xTimeAxis: boolean
   defaultShowAll?: boolean
+  height: number // in px
 }
 
 export interface ChartContextValue {

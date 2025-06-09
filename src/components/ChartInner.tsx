@@ -28,7 +28,13 @@ const initHook = (u: uPlot, flagMode: boolean) => {
   )
 }
 
-export const ChartInner = ({ data, flaggedPoints = [], enableFlagging, xTimeAxis = false }: ChartProps) => {
+export const ChartInner = ({
+  data,
+  flaggedPoints = [],
+  enableFlagging,
+  xTimeAxis = false,
+  height = 600
+}: ChartProps) => {
   const [flagMode, setFlagMode] = useState(false)
 
   const { colours: plotColours, activeIds, activeParams } = useContext(ChartContext)
@@ -77,7 +83,7 @@ export const ChartInner = ({ data, flaggedPoints = [], enableFlagging, xTimeAxis
 
   const opts: Options = {
     width: containerRef.current ? containerRef.current.clientWidth : 800,
-    height: 600,
+    height,
     cursor: {
       drag: {
         setScale: !flagMode,
