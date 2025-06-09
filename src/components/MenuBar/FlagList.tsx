@@ -23,7 +23,7 @@ export const FlagList = ({ flaggedPoints, dataSeries }: FlagListProps) => {
 
     const series = dataSeries.filter(x => x.id === id)[0]
     if (series) {
-      return `${series.formattedId}-${param}`
+      return `${series.formattedId || series.id}-${param}`
     }
     return traceName
   }
