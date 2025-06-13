@@ -3,7 +3,7 @@ import uPlot, { Options } from 'uplot'
 import { FlaggedPoint, NamedSeries } from '../types'
 import { getFlagForPoint } from '../utils'
 
-export const renderFlagsPlugin = (flaggedPoints: FlaggedPoint[] = []): uPlot.Plugin => {
+export const renderFlagsPlugin = (flaggedPoints: FlaggedPoint[] = [], showFlags: boolean): uPlot.Plugin => {
   const drawFlagMarker = (ctx: CanvasRenderingContext2D, cx: number, cy: number) => {
     const shapeSize = 6
 
@@ -25,32 +25,34 @@ export const renderFlagsPlugin = (flaggedPoints: FlaggedPoint[] = []): uPlot.Plu
     // Do this check at the top as rendering flagged points with too many on screen also caused problems
     if (visiblePoints >= 10_000) return false
 
-    const { ctx } = u
-    // const { _stroke, scale } = u.series[i];
-    const { scale } = u.series[i]
+    if (showFlags) {
+      const { ctx } = u
+      // const { _stroke, scale } = u.series[i];
+      const { scale } = u.series[i]
 
-    ctx.save()
+      ctx.save()
 
-    // ctx.fillStyle = _stroke;
-    ctx.lineWidth = 3
-    // ctx.strokeStyle = invertHex(_stroke)
+      // ctx.fillStyle = _stroke;
+      ctx.lineWidth = 3
+      // ctx.strokeStyle = invertHex(_stroke)
 
-    let j = i0
+      let j = i0
 
-    const seriesFlags = flaggedPoints.filter(x => x.traceName === (thisSeries as NamedSeries).name)
-    while (j <= i1) {
-      if (getFlagForPoint(seriesFlags, j)) {
-        const val = u.data[i][j]!
-        if (val >= u.scales.y.min! && val <= u.scales.y.max!) {
-          const cx = Math.round(u.valToPos(u.data[0][j], 'x', true))
-          const cy = Math.round(u.valToPos(val!, scale!, true))
-          drawFlagMarker(ctx, cx, cy)
+      const seriesFlags = flaggedPoints.filter(x => x.traceName === (thisSeries as NamedSeries).name)
+      while (j <= i1) {
+        if (getFlagForPoint(seriesFlags, j)) {
+          const val = u.data[i][j]!
+          if (val >= u.scales.y.min! && val <= u.scales.y.max!) {
+            const cx = Math.round(u.valToPos(u.data[0][j], 'x', true))
+            const cy = Math.round(u.valToPos(val!, scale!, true))
+            drawFlagMarker(ctx, cx, cy)
+          }
         }
+        j++
       }
-      j++
-    }
 
-    ctx.restore()
+      ctx.restore()
+    }
 
     return visiblePoints <= 10_000
   }

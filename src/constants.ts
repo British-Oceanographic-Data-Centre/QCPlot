@@ -15,3 +15,9 @@ export const DEFAULT_COLOURS = [
 ]
 
 export const FLAGS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ<>'.split('')
+
+export enum PointDisplay {
+  ALL,
+  FLAGS_ONLY,
+  HIDE_FLAGS
+}
