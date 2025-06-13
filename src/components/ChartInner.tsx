@@ -6,12 +6,13 @@ import type { Options } from 'uplot'
 import UplotReact from 'uplot-react'
 
 import { onKeyDown } from '../eventHandlers'
-import type { ChartProps } from '../types'
-import { getArrayMinMax, seriesFromData } from '../utils'
+import type { ChartProps, DataSeries } from '../types'
+import { getArrayMinMax, getFlagForPoint, getTraceName, seriesFromData } from '../utils'
 import { FlagButtonBar } from './FlagButtonBar'
 import { MainButtonBar } from './MainButtonBar'
 import { MenuBar } from './MenuBar'
 import { ChartContext } from '@/ChartContext'
+import { PointDisplay } from '@/constants'
 import { renderFlagsPlugin, scrollZoomPlugin } from '@/plugins'
 
 const initHook = (u: uPlot, flagMode: boolean) => {
@@ -36,6 +37,7 @@ export const ChartInner = ({
   height = 600
 }: ChartProps) => {
   const [flagMode, setFlagMode] = useState(false)
+  const [showPoints, setShowPoints] = useState<number>(PointDisplay.ALL)
 
   const { colours: plotColours, activeIds, activeParams } = useContext(ChartContext)
 
@@ -120,7 +122,7 @@ export const ChartInner = ({
       init: [(u) => initHook(u, flagMode)]
     },
     plugins: [
-      renderFlagsPlugin(flaggedPoints),
+      renderFlagsPlugin(flaggedPoints, showPoints !== PointDisplay.HIDE_FLAGS),
       scrollZoomPlugin()
     ],
     series,
@@ -142,11 +144,32 @@ export const ChartInner = ({
     ]
   }
 
+  const filterFlaggedValues = (series: DataSeries) => {
+    if (showPoints === PointDisplay.FLAGS_ONLY) {
+      const seriesFlags = flaggedPoints.filter(x => x.traceName === getTraceName(series))
+      return series.values.map((v, i) => getFlagForPoint(seriesFlags, i) ? v : null)
+    } else if (showPoints === PointDisplay.HIDE_FLAGS) {
+      const seriesFlags = flaggedPoints.filter(x => x.traceName === getTraceName(series))
+      return series.values.map((v, i) => getFlagForPoint(seriesFlags, i) ? null : v)
+    } else {
+      return series.values
+    }
+  }
+
   return (
     <div ref={containerRef} className='pnf-container'>
       <MenuBar data={data} flaggedPoints={flaggedPoints} />
 
       {/* Control bar */}
+      <div className='pnf-control-bar-outer'>
+        <label>Display Points
+          <select className='pnf-select' value={showPoints} onChange={e => setShowPoints(Number(e.target.value))}>
+            <option value={PointDisplay.ALL}>All</option>
+            <option value={PointDisplay.HIDE_FLAGS}>Hide Flags</option>
+            <option value={PointDisplay.FLAGS_ONLY}>Flags Only</option>
+          </select>
+        </label>
+      </div>
       <div className='pnf-control-bar-outer'>
         <MainButtonBar
           flagMode={flagMode}
@@ -174,7 +197,7 @@ export const ChartInner = ({
               xTimeAxis ? data.xValues.map(x => dayjs(x).unix()) : data.xValues as number[],
               ...data.series
                 .filter(s => activeIds.includes(s.id) && activeParams.includes(s.parameter))
-                .map(s => s.values)
+                .map(s => filterFlaggedValues(s))
             ]}
             onCreate={(chart) => {
               if (!plotRef.current) {
