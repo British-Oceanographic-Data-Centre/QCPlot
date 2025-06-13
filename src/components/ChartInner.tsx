@@ -99,7 +99,9 @@ export const ChartInner = ({
       bind: {
         mousedown: (u, _target, handler) => {
           return e => {
-            handler(e)
+            if (e.button !== 1) {
+              handler(e)
+            }
             if (e.button === 0) {
               if (flagMode) {
                 u.root.querySelector('.u-select')?.classList.add('pnf-flag-select')
