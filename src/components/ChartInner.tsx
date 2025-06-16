@@ -6,7 +6,7 @@ import type { Options } from 'uplot'
 import UplotReact from 'uplot-react'
 
 import { onKeyDown } from '../eventHandlers'
-import type { ChartProps, DataSeries } from '../types'
+import type { ChartProps, DataSeries, InitialRange } from '../types'
 import { getArrayMinMax, getFlagForPoint, getTraceName, seriesFromData } from '../utils'
 import { FlagButtonBar } from './FlagButtonBar'
 import { MainButtonBar } from './MainButtonBar'
@@ -43,6 +43,7 @@ export const ChartInner = ({
 
   const containerRef = useRef<HTMLDivElement>(null)
   const plotRef = useRef<uPlot>(null)
+  const initialScales = useRef<InitialRange>(null)
 
   useEffect(() => {
     const handleResize = () => {
@@ -99,10 +100,8 @@ export const ChartInner = ({
       bind: {
         mousedown: (u, _target, handler) => {
           return e => {
-            if (e.button !== 1) {
-              handler(e)
-            }
             if (e.button === 0) {
+              handler(e)
               if (flagMode) {
                 u.root.querySelector('.u-select')?.classList.add('pnf-flag-select')
               }
@@ -121,11 +120,21 @@ export const ChartInner = ({
       }
     },
     hooks: {
-      init: [(u) => initHook(u, flagMode)]
+      init: [(u) => initHook(u, flagMode)],
+      ready: [(u) => {
+        if (!initialScales.current) {
+          initialScales.current = {
+            xMin: u.scales.x.min!,
+            xMax: u.scales.x.max!,
+            yMin: u.scales.y.min!,
+            yMax: u.scales.y.max!
+          }
+        }
+      }]
     },
     plugins: [
       renderFlagsPlugin(flaggedPoints, showPoints !== PointDisplay.HIDE_FLAGS),
-      scrollZoomPlugin()
+      scrollZoomPlugin(initialScales.current)
     ],
     series,
     scales: {
