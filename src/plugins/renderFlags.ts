@@ -5,7 +5,8 @@ import { getFlagForPoint } from '../utils'
 
 export const renderFlagsPlugin = (flaggedPoints: FlaggedPoint[] = [], showFlags: boolean): uPlot.Plugin => {
   const drawFlagMarker = (ctx: CanvasRenderingContext2D, cx: number, cy: number) => {
-    const shapeSize = 6
+    let shapeSize = 6
+    shapeSize *= window.devicePixelRatio
 
     ctx.beginPath()
 

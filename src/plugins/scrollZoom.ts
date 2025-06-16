@@ -1,6 +1,8 @@
 import type uPlot from 'uplot'
 
-export const scrollZoomPlugin = () => {
+import type { InitialRange } from '@/types'
+
+export const scrollZoomPlugin = (initialScales: InitialRange | null) => {
   const factor = 0.75
 
   let xMin: number
@@ -28,10 +30,17 @@ export const scrollZoomPlugin = () => {
   return {
     hooks: {
       ready: (u: uPlot) => {
-        xMin = u.scales.x.min!
-        xMax = u.scales.x.max!
-        yMin = u.scales.y.min!
-        yMax = u.scales.y.max!
+        if (initialScales) {
+          xMin = initialScales.xMin
+          xMax = initialScales.xMax
+          yMin = initialScales.yMin
+          yMax = initialScales.yMax
+        } else {
+          xMin = u.scales.x.min!
+          xMax = u.scales.x.max!
+          yMin = u.scales.y.min!
+          yMax = u.scales.y.max!
+        }
 
         xRange = xMax - xMin
         yRange = yMax - yMin

@@ -50,3 +50,10 @@ export interface ISelectedPoints {
 export interface NamedSeries extends Series {
   name: string
 }
+
+export interface InitialRange {
+  xMin: number
+  xMax: number
+  yMin: number
+  yMax: number
+}
