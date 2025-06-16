@@ -1,0 +1,188 @@
+[
+    {
+      "traceName": "rteb1_06_2020_003.microcat-CNDCZZ01",
+      "pointIndex": 0,
+      "endIndex": 30748,
+      "flag": "N"
+    },
+    {
+      "traceName": "rteb1_06_2020_004.microcat-CNDCZZ01",
+      "pointIndex": 0,
+      "endIndex": 15374,
+      "flag": "N"
+    },
+    {
+      "traceName": "rteb1_06_2020_005.microcat-CNDCZZ01",
+      "pointIndex": 0,
+      "endIndex": 30748,
+      "flag": "N"
+    },
+    {
+      "traceName": "rteb1_06_2020_006.microcat-CNDCZZ01",
+      "pointIndex": 0,
+      "endIndex": 15374,
+      "flag": "N"
+    },
+    {
+      "traceName": "rteb1_06_2020_007.microcat-PREXPR01",
+      "pointIndex": 5581,
+      "endIndex": 5582,
+      "flag": "M"
+    },
+    {
+      "traceName": "rteb1_06_2020_007.microcat-PREXPR01",
+      "pointIndex": 5584,
+      "endIndex": 5586,
+      "flag": "M"
+    },
+    {
+      "traceName": "rteb1_06_2020_007.microcat-PREXPR01",
+      "pointIndex": 5590,
+      "endIndex": 5590,
+      "flag": "M"
+    },
+    {
+      "traceName": "rteb1_06_2020_007.microcat-PREXPR01",
+      "pointIndex": 5592,
+      "endIndex": 5595,
+      "flag": "M"
+    },
+    {
+      "traceName": "rteb1_06_2020_007.microcat-PREXPR01",
+      "pointIndex": 5597,
+      "endIndex": 5597,
+      "flag": "M"
+    },
+    {
+      "traceName": "rteb1_06_2020_007.microcat-PREXPR01",
+      "pointIndex": 5602,
+      "endIndex": 5606,
+      "flag": "M"
+    },
+    {
+      "traceName": "rteb1_06_2020_007.microcat-PREXPR01",
+      "pointIndex": 5612,
+      "endIndex": 5613,
+      "flag": "M"
+    },
+    {
+      "traceName": "rteb1_06_2020_007.microcat-PREXPR01",
+      "pointIndex": 5799,
+      "endIndex": 7718,
+      "flag": "M"
+    },
+    {
+      "traceName": "rteb1_06_2020_007.microcat-PREXPR01",
+      "pointIndex": 8007,
+      "endIndex": 9254,
+      "flag": "M"
+    },
+    {
+      "traceName": "rteb1_06_2020_007.microcat-TEMPPR01",
+      "pointIndex": 5581,
+      "endIndex": 5582,
+      "flag": "N"
+    },
+    {
+      "traceName": "rteb1_06_2020_007.microcat-TEMPPR01",
+      "pointIndex": 5584,
+      "endIndex": 5586,
+      "flag": "N"
+    },
+    {
+      "traceName": "rteb1_06_2020_007.microcat-TEMPPR01",
+      "pointIndex": 5590,
+      "endIndex": 5590,
+      "flag": "N"
+    },
+    {
+      "traceName": "rteb1_06_2020_007.microcat-TEMPPR01",
+      "pointIndex": 5592,
+      "endIndex": 5595,
+      "flag": "N"
+    },
+    {
+      "traceName": "rteb1_06_2020_007.microcat-TEMPPR01",
+      "pointIndex": 5597,
+      "endIndex": 5597,
+      "flag": "N"
+    },
+    {
+      "traceName": "rteb1_06_2020_007.microcat-TEMPPR01",
+      "pointIndex": 5602,
+      "endIndex": 5606,
+      "flag": "N"
+    },
+    {
+      "traceName": "rteb1_06_2020_007.microcat-TEMPPR01",
+      "pointIndex": 5612,
+      "endIndex": 5613,
+      "flag": "N"
+    },
+    {
+      "traceName": "rteb1_06_2020_007.microcat-TEMPPR01",
+      "pointIndex": 5799,
+      "endIndex": 7718,
+      "flag": "N"
+    },
+    {
+      "traceName": "rteb1_06_2020_007.microcat-TEMPPR01",
+      "pointIndex": 8007,
+      "endIndex": 9254,
+      "flag": "N"
+    },
+    {
+      "traceName": "rteb1_06_2020_007.microcat-CNDCZZ01",
+      "pointIndex": 0,
+      "endIndex": 12299,
+      "flag": "N"
+    },
+    {
+      "traceName": "rteb1_06_2020_008.microcat-CNDCZZ01",
+      "pointIndex": 0,
+      "endIndex": 30748,
+      "flag": "N"
+    },
+    {
+      "traceName": "rteb1_06_2020_009.microcat-CNDCZZ01",
+      "pointIndex": 0,
+      "endIndex": 30748,
+      "flag": "N"
+    },
+    {
+      "traceName": "rteb1_06_2020_010.microcat-CNDCZZ01",
+      "pointIndex": 0,
+      "endIndex": 30748,
+      "flag": "N"
+    },
+    {
+      "traceName": "rteb1_06_2020_011.microcat-CNDCZZ01",
+      "pointIndex": 0,
+      "endIndex": 30748,
+      "flag": "N"
+    },
+    {
+      "traceName": "rteb1_06_2020_012.microcat-CNDCZZ01",
+      "pointIndex": 0,
+      "endIndex": 30748,
+      "flag": "N"
+    },
+    {
+      "traceName": "rtwb1_06_2020_001.microcat-CNDCZZ01",
+      "pointIndex": 0,
+      "endIndex": 30770,
+      "flag": "N"
+    },
+    {
+      "traceName": "rteb1_06_2020_001.microcat-CNDCZZ01",
+      "pointIndex": 0,
+      "endIndex": 30748,
+      "flag": "N"
+    },
+    {
+      "traceName": "rteb1_06_2020_002.microcat-CNDCZZ01",
+      "pointIndex": 0,
+      "endIndex": 30748,
+      "flag": "N"
+    }
+]
