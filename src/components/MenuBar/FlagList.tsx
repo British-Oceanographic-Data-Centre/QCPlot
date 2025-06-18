@@ -41,10 +41,12 @@ export const FlagList = ({ flaggedPoints, dataSeries }: FlagListProps) => {
         <tbody>
           {Object.keys(groupedFlaggedPoints).sort().map(key =>
             <tr key={key}>
-              <td>
+              <td style={{ verticalAlign: 'top' }}>
                 {traceNameToLabel(groupedFlaggedPoints[key][0].traceName)}
               </td>
-              <td>{groupedFlaggedPoints[key][0].flag}</td>
+              <td style={{ verticalAlign: 'top' }}>
+                {groupedFlaggedPoints[key][0].flag}
+              </td>
               <td>
                 {groupedFlaggedPoints[key].sort((a, b) => a.pointIndex - b.pointIndex).map(fp =>
                   isNil(fp.endIndex) || fp.pointIndex === fp.endIndex

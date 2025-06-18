@@ -132,8 +132,9 @@ export const combineRanges = (flaggedPoints: FlaggedPoint[]) => {
       keyed[flag.flag].push(flag)
     })
     Object.values(keyed).forEach(flags => {
-      const indices = flags.map(x => x.pointIndex)
-      const ranges = getPointRanges(indices)
+      const indices = new Set<number>()
+      flags.forEach(x => indices.add(x.pointIndex))
+      const ranges = getPointRanges(Array.from(indices))
       ranges.forEach(idxRange => {
         combined.push({
           traceName: flags[0].traceName,
