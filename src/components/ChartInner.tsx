@@ -156,15 +156,25 @@ export const ChartInner = ({
   }
 
   const filterFlaggedValues = (series: DataSeries) => {
-    if (showPoints === PointDisplay.FLAGS_ONLY) {
+    if (showPoints === PointDisplay.HIDE_FLAGS || showPoints === PointDisplay.FLAGS_ONLY) {
+      const flaggedIndices = new Set<number>()
       const seriesFlags = flaggedPoints.filter(x => x.traceName === getTraceName(series))
-      return series.values.map((v, i) => getFlagForPoint(seriesFlags, i) ? v : null)
-    } else if (showPoints === PointDisplay.HIDE_FLAGS) {
-      const seriesFlags = flaggedPoints.filter(x => x.traceName === getTraceName(series))
-      return series.values.map((v, i) => getFlagForPoint(seriesFlags, i) ? null : v)
-    } else {
-      return series.values
+      seriesFlags.forEach(x => {
+        if (!x.endIndex) {
+          flaggedIndices.add(x.pointIndex)
+        } else {
+          for (let i = x.pointIndex; i <= x.endIndex; i++) {
+            flaggedIndices.add(i)
+          }
+        }
+      })
+      if (showPoints === PointDisplay.FLAGS_ONLY) {
+        return series.values.map((v, i) => flaggedIndices.has(i) ? v : null)
+      } else if (showPoints === PointDisplay.HIDE_FLAGS) {
+        return series.values.map((v, i) => flaggedIndices.has(i) ? null : v)
+      }
     }
+    return series.values
   }
 
   return (
