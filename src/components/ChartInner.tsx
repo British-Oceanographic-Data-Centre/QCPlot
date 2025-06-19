@@ -7,7 +7,7 @@ import UplotReact from 'uplot-react'
 
 import { onKeyDown } from '../eventHandlers'
 import type { ChartProps, DataSeries, InitialRange } from '../types'
-import { getArrayMinMax, getFlagForPoint, getTraceName, seriesFromData } from '../utils'
+import { getArrayMinMax, getTraceName, seriesFromData } from '../utils'
 import { FlagButtonBar } from './FlagButtonBar'
 import { MainButtonBar } from './MainButtonBar'
 import { MenuBar } from './MenuBar'
