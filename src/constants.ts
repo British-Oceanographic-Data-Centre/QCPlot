@@ -21,3 +21,11 @@ export enum PointDisplay {
   FLAGS_ONLY,
   HIDE_FLAGS
 }
+
+export const PLOT_HELP_TEXT = `
+  Plot controls
+  - While holding Ctrl use the mouse wheel to zoom
+  - Drawing a box with the left mouse button:
+    - If flag mode is off will zoom onto that region
+    - With flag mode on will select all points in that region to be flagged
+`
