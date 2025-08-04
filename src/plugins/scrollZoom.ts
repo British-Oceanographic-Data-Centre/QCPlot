@@ -88,6 +88,7 @@ export const scrollZoomPlugin = (initialScales: InitialRange | null) => {
 
         // wheel scroll zoom
         over.addEventListener('wheel', e => {
+          if (!e.ctrlKey) return // Only zoom if "ctrl" is held down
           e.preventDefault()
 
           const { left, top } = u.cursor

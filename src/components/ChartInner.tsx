@@ -12,7 +12,7 @@ import { FlagButtonBar } from './FlagButtonBar'
 import { MainButtonBar } from './MainButtonBar'
 import { MenuBar } from './MenuBar'
 import { ChartContext } from '@/ChartContext'
-import { PointDisplay } from '@/constants'
+import { PLOT_HELP_TEXT, PointDisplay } from '@/constants'
 import { renderFlagsPlugin, scrollZoomPlugin } from '@/plugins'
 
 const initHook = (u: uPlot, flagMode: boolean) => {
@@ -141,7 +141,11 @@ export const ChartInner = ({
       x: {
         time: xTimeAxis,
         min: plotRef.current ? plotRef.current.scales.x.min : undefined,
-        max: plotRef.current ? plotRef.current.scales.x.max : undefined
+        max: plotRef.current ? plotRef.current.scales.x.max : undefined,
+        range: (u, min, max) => {
+          const dataPadding = 0.05 * (max - min) // 5% of the total range
+          return [min - dataPadding, max + dataPadding]
+        }
       },
       y: {
         min: plotRef.current ? plotRef.current.scales.y.min : undefined,
@@ -190,6 +194,7 @@ export const ChartInner = ({
             <option value={PointDisplay.FLAGS_ONLY}>Flags Only</option>
           </select>
         </label>
+        <button className='pnf-button' onClick={() => alert(PLOT_HELP_TEXT)}>?</button>
       </div>
       <div className='pnf-control-bar-outer'>
         <MainButtonBar
