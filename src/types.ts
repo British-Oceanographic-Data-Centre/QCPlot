@@ -13,7 +13,8 @@ export interface DataSeries {
   id: string
   formattedId?: string
   parameter: string
-  values: number[]
+  values: (number | null)[]
+  spanGaps?: boolean
 }
 
 export interface Data {

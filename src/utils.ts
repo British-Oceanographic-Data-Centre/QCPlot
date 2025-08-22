@@ -57,7 +57,8 @@ export const seriesFromData = (
         label: `${series.formattedId || series.id}-${series.parameter}`,
         scale: 'y',
         value: (u: uPlot, v: number, seriesIdx: number, pointIndex: number) => applyFlag(u, v, seriesIdx, pointIndex),
-        stroke: colours[i % colours.length]
+        stroke: colours[i % colours.length],
+        spanGaps: series.spanGaps
       })
     }
   })
