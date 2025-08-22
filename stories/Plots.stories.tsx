@@ -38,6 +38,19 @@ export const TimeData: Story = {
   }
 }
 
+export const GappyData: Story = {
+  args: {
+    data: {
+      xValues: [1, 2, 3, 4, 5],
+      series: [
+        { id: '1', parameter: 'PARAM01', values: [10, null, 30, null, 15], spanGaps: true },
+        { id: '1', parameter: 'PARAM02', values: [10, 30, 15, 7, 21] },
+        { id: '1', parameter: 'PARAM03', values: [5, 6, null, 8, 9] }
+      ]
+    }
+  }
+}
+
 export const CustomColours: Story = {
   args: {
     data: simpleData,

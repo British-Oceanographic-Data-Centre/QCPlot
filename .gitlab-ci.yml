@@ -1,6 +1,6 @@
 default:
   tags:
-    - "jasmin"
+    - "selkie"
   image: node
 
 .set-npm-config: &set-npm-config

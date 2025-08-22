@@ -143,8 +143,12 @@ export const ChartInner = ({
         min: plotRef.current ? plotRef.current.scales.x.min : undefined,
         max: plotRef.current ? plotRef.current.scales.x.max : undefined,
         range: (u, min, max) => {
-          const dataPadding = 0.05 * (max - min) // 5% of the total range
-          return [min - dataPadding, max + dataPadding]
+          if (min >= u.data[0][0]) {
+            const dataPadding = 0.05 * (max - min) // 5% of the total range
+            return [min - dataPadding, max + dataPadding]
+          } else {
+            return [min, max]
+          }
         }
       },
       y: {

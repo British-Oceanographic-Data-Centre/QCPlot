@@ -1,7 +1,8 @@
-import { useContext, useMemo } from 'react'
+import { useContext, useEffect, useMemo, useState } from 'react'
 
 import { CheckableLabel } from './CheckableLabel'
 import { ChartContext } from '@/ChartContext'
+import { P01_BASE_URL } from '@/config'
 import { DataSeries } from '@/types'
 
 interface SeriesSelectProps {
@@ -14,6 +15,8 @@ interface IdPair {
 }
 
 export const SeriesSelect = ({ dataSeries }: SeriesSelectProps) => {
+  const [paramLabels, setParamLabels] = useState<{[key: string]: string}>({})
+
   const { activeIds, setActiveIds, activeParams, setActiveParams } = useContext(ChartContext)
 
   const uniqueParams = useMemo(() => {
@@ -44,6 +47,25 @@ export const SeriesSelect = ({ dataSeries }: SeriesSelectProps) => {
   const onToggleParam = (param: string) => {
     setActiveParams(prev => prev.includes(param) ? prev.filter(x => x !== param) : prev.concat(param))
   }
+
+  useEffect(() => {
+    const promises = []
+    for (let i = 0; i < uniqueParams.length; i++) {
+      const param = uniqueParams[i].toUpperCase()
+      promises.push(
+        fetch(`${P01_BASE_URL}/${param}/?_profile=nvs&_mediatype=application/ld+json`)
+          .then(resp =>
+            resp.json().then(data => ({ param, label: data['skos:prefLabel']['@value'] }))
+          )
+          .catch(() => { /* do nothing */ })
+      )
+    }
+    Promise.all(promises).then(resps => {
+      const paramLabels: {[key: string]: string} = {}
+      resps.forEach(x => { if (x) paramLabels[x.param] = x.label })
+      setParamLabels(paramLabels)
+    })
+  }, [uniqueParams])
 
   return (
     <table className='pnf-table'>
@@ -79,6 +101,7 @@ export const SeriesSelect = ({ dataSeries }: SeriesSelectProps) => {
                 <CheckableLabel
                   onChange={() => onToggleParam(uniqueParams[i])}
                   checked={activeParams.includes(uniqueParams[i])}
+                  tooltip={paramLabels[uniqueParams[i]]}
                 >
                   {uniqueParams[i]}
                 </CheckableLabel>
