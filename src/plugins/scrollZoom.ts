@@ -2,7 +2,11 @@ import type uPlot from 'uplot'
 
 import type { InitialRange } from '@/types'
 
-export const scrollZoomPlugin = (initialScales: InitialRange | null) => {
+/**
+ * uPlot plugin to enable zooming with the mouse wheel.
+ * @param initialScales Initial x/y ranges of the plot.
+ */
+export const scrollZoomPlugin = (initialScales: InitialRange | null): uPlot.Plugin => {
   const factor = 0.75
 
   let xMin: number

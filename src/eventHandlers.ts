@@ -1,5 +1,8 @@
 import uPlot from 'uplot'
 
+/**
+ * Define key down event handling for the plot.
+ */
 export const onKeyDown = (u: uPlot) => (e: KeyboardEvent) => {
   e.preventDefault()
   // const xStep = 0.5

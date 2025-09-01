@@ -10,6 +10,9 @@ interface MainButtonBarProps {
   enableFlagging: boolean
 }
 
+/**
+ * Container for various toggle buttons that are always present in the UI.
+ */
 export const MainButtonBar = ({
   flagMode, setFlagMode, onUnZoom, containerRef, enableFlagging
 }: MainButtonBarProps) => {

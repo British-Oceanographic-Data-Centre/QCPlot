@@ -7,6 +7,9 @@ interface ButtonProps {
   onClick: () => void
 }
 
+/**
+ * Styled HTML button.
+ */
 export const Button = ({ children, onClick }: ButtonProps) => {
   const { buttonClassname } = useContext(ChartContext)
 

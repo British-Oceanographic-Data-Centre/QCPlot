@@ -1,4 +1,6 @@
-import { ReactNode, useState } from 'react'
+import { ReactNode, RefObject, useState } from 'react'
+
+import type uPlot from 'uplot'
 
 import { FlagList } from './FlagList'
 import { SeriesSelect } from './SeriesSelect'
@@ -12,6 +14,8 @@ enum Sections {
 interface MenuBarProps {
   flaggedPoints: FlaggedPoint[]
   data: Data
+  zoomToRange: (traceName: string, start: number, end: number) => void
+  plotRef: RefObject<uPlot | null>
 }
 
 const TabButton = ({ children, onClick, active }: {children: ReactNode, onClick: () => void, active: boolean}) => {
@@ -22,7 +26,10 @@ const TabButton = ({ children, onClick, active }: {children: ReactNode, onClick:
   )
 }
 
-export const MenuBar = ({ flaggedPoints, data }: MenuBarProps) => {
+/**
+ * MenuBar component containing the series selection and flag list.
+ */
+export const MenuBar = ({ flaggedPoints, data, zoomToRange, plotRef }: MenuBarProps) => {
   const [activeSection, setActiveSection] = useState<string | null>(Sections.SERIES)
 
   return (
@@ -36,7 +43,9 @@ export const MenuBar = ({ flaggedPoints, data }: MenuBarProps) => {
           {section}
         </TabButton>
       )}
-      {activeSection === Sections.FLAG_LIST && <FlagList flaggedPoints={flaggedPoints} dataSeries={data.series} />}
+      {activeSection === Sections.FLAG_LIST &&
+        <FlagList flaggedPoints={flaggedPoints} dataSeries={data.series} zoomToRange={zoomToRange} plotRef={plotRef} />
+      }
       {activeSection === Sections.SERIES && <SeriesSelect dataSeries={data.series} />}
     </div>
   )

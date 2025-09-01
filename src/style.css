@@ -94,3 +94,17 @@
 .pnf-select {
     border: 1px solid #ccc;
 }
+
+.pnf-link-btn {
+	background: none;
+	color: inherit;
+	border: none;
+	padding: 0;
+	font: inherit;
+	cursor: pointer;
+	outline: inherit;
+}
+
+.pnf-faded {
+    opacity: 0.3;
+}

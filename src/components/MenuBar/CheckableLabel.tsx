@@ -7,6 +7,9 @@ interface CheckableLabelProps {
   tooltip?: string
 }
 
+/**
+ * Text label with accompanying checkbox.
+ */
 export const CheckableLabel = ({ checked, onChange, children, tooltip }: CheckableLabelProps) => (
   <div>
     <label className='pnf-check-label' title={tooltip}>

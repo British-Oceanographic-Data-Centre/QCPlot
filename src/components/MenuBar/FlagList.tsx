@@ -1,12 +1,21 @@
-import { DataSeries, FlaggedPoint } from '@/types'
+import { RefObject } from 'react'
+
+import uPlot from 'uplot'
+
+import { DataSeries, FlaggedPoint, NamedSeries } from '@/types'
 import { isNil } from '@/utils'
 
 interface FlagListProps {
   flaggedPoints: FlaggedPoint[]
   dataSeries: DataSeries[]
+  zoomToRange: (traceName: string, start: number, end: number) => void
+  plotRef: RefObject<uPlot | null>
 }
 
-export const FlagList = ({ flaggedPoints, dataSeries }: FlagListProps) => {
+/**
+ * Table showing a list of all flags currently applied to the data.
+ */
+export const FlagList = ({ flaggedPoints, dataSeries, zoomToRange, plotRef }: FlagListProps) => {
   const groupedFlaggedPoints: {[name: string]: FlaggedPoint[]} = {}
   flaggedPoints.forEach(fp => {
     const key = `${fp.traceName};${fp.flag}`
@@ -28,11 +37,32 @@ export const FlagList = ({ flaggedPoints, dataSeries }: FlagListProps) => {
     return traceName
   }
 
+  const getSeriesFromKey = (key: string) => {
+    const traceName = key.split(';')[0]
+    return plotRef.current?.series.find(x => (x as NamedSeries).name === traceName)
+  }
+
+  const getColourFromKey = (key: string) => {
+    if (!plotRef.current) return
+    const series = getSeriesFromKey(key)
+    let colour = '#ffffff'
+    if (series && typeof series.stroke === 'function') {
+      // The typing of uPlot's stroke is... odd.
+      // These checks might be excessive, but should ensure we don't pick up non-string colours
+      const stroke = series.stroke(plotRef.current, 0)
+      if (typeof stroke === 'string') {
+        colour = stroke
+      }
+    }
+    return colour
+  }
+
   return (
     <div>
       <table className='pnf-table'>
         <thead>
           <tr>
+            <th />
             <th>Channel</th>
             <th>Flag</th>
             <th>Point(s)</th>
@@ -40,7 +70,13 @@ export const FlagList = ({ flaggedPoints, dataSeries }: FlagListProps) => {
         </thead>
         <tbody>
           {Object.keys(groupedFlaggedPoints).sort().map(key =>
-            <tr key={key}>
+            <tr
+              key={key}
+              className={getSeriesFromKey(key)?.show ? '' : 'pnf-faded'}
+            >
+              <td>
+                <div style={{ width: '1em', height: '1em', border: `2px solid ${getColourFromKey(key)}` }} />
+              </td>
               <td style={{ verticalAlign: 'top' }}>
                 {traceNameToLabel(groupedFlaggedPoints[key][0].traceName)}
               </td>
@@ -49,10 +85,16 @@ export const FlagList = ({ flaggedPoints, dataSeries }: FlagListProps) => {
               </td>
               <td>
                 {groupedFlaggedPoints[key].sort((a, b) => a.pointIndex - b.pointIndex).map(fp =>
-                  isNil(fp.endIndex) || fp.pointIndex === fp.endIndex
-                    ? fp.pointIndex
-                    : `${fp.pointIndex}-${fp.endIndex}`
-                ).join(', ')}
+                  <button
+                    key={fp.pointIndex}
+                    className='pnf-link-btn'
+                    onClick={() => zoomToRange(fp.traceName, fp.pointIndex, fp.endIndex || fp.pointIndex)}
+                  >
+                    {isNil(fp.endIndex) || fp.pointIndex === fp.endIndex
+                      ? fp.pointIndex
+                      : `${fp.pointIndex}-${fp.endIndex}`}
+                  </button>
+                ).map((item, index) => [index > 0 && ', ', item])}
               </td>
             </tr>
           )}
