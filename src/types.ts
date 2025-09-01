@@ -32,6 +32,7 @@ export interface ChartProps {
   xTimeAxis: boolean
   defaultShowAll?: boolean
   height?: number // in px
+  showCycleNumber?: boolean
 }
 
 export interface ChartContextValue {

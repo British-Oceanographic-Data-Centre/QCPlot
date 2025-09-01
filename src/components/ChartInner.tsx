@@ -7,7 +7,7 @@ import UplotReact from 'uplot-react'
 
 import { onKeyDown } from '../eventHandlers'
 import type { ChartProps, DataSeries, InitialRange } from '../types'
-import { getArrayMinMax, getTraceName, seriesFromData } from '../utils'
+import { getArrayMinMax, getTraceName, isNil, seriesFromData } from '../utils'
 import { FlagButtonBar } from './FlagButtonBar'
 import { MainButtonBar } from './MainButtonBar'
 import { MenuBar } from './MenuBar'
@@ -29,12 +29,16 @@ const initHook = (u: uPlot, flagMode: boolean) => {
   )
 }
 
+/**
+ * The core component of the library, includes the plot as well as the various accompanying controls.
+ */
 export const ChartInner = ({
   data,
   flaggedPoints = [],
   enableFlagging,
   xTimeAxis = false,
-  height = 600
+  height = 600,
+  showCycleNumber = false
 }: ChartProps) => {
   const [flagMode, setFlagMode] = useState(false)
   const [showPoints, setShowPoints] = useState<number>(PointDisplay.ALL)
@@ -44,6 +48,7 @@ export const ChartInner = ({
   const containerRef = useRef<HTMLDivElement>(null)
   const plotRef = useRef<uPlot>(null)
   const initialScales = useRef<InitialRange>(null)
+  const yScrollPos = useRef<number>(0)
 
   useEffect(() => {
     const handleResize = () => {
@@ -68,7 +73,7 @@ export const ChartInner = ({
     }
   }, [flagMode])
 
-  const series = seriesFromData(data, flaggedPoints, plotColours, activeIds, activeParams)
+  const series = seriesFromData(data, flaggedPoints, plotColours, activeIds, activeParams, showCycleNumber)
 
   const clearSelection = () => {
     if (plotRef.current) {
@@ -143,7 +148,7 @@ export const ChartInner = ({
         min: plotRef.current ? plotRef.current.scales.x.min : undefined,
         max: plotRef.current ? plotRef.current.scales.x.max : undefined,
         range: (u, min, max) => {
-          if (min >= u.data[0][0]) {
+          if (min === u.data[0][0]) {
             const dataPadding = 0.05 * (max - min) // 5% of the total range
             return [min - dataPadding, max + dataPadding]
           } else {
@@ -185,9 +190,41 @@ export const ChartInner = ({
     return series.values
   }
 
+  const zoomToRange = (traceName: string, xStart: number, xEnd: number) => {
+    const u = plotRef.current
+    if (!u) return
+
+    // xStart and xEnd are indices for the non-null padded series
+    // Need to do some adjustment to get the actual indices to use
+    const seriesData = data.series.filter(x => getTraceName(x) === traceName)[0]
+    let adjustedXStart = xStart
+    let adjustedXEnd = xEnd
+    let j = 0
+    for (let i = 0; i < seriesData.values.length; i++) {
+      if (!isNil(seriesData.values[i])) {
+        if (j === xStart) adjustedXStart = i
+        if (j === xEnd) adjustedXEnd = i
+        j += 1
+      }
+    }
+
+    let xMin: number, xMax: number
+    if (adjustedXStart === adjustedXEnd) {
+      xMin = u.data[0][Math.max(adjustedXStart - 1, 0)]
+      xMax = u.data[0][Math.min(adjustedXEnd + 1, u.data[0].length - 1)]
+    } else {
+      xMin = u.data[0][Math.max(adjustedXStart, 0)]
+      xMax = u.data[0][Math.min(adjustedXEnd, u.data[0].length - 1)]
+      const diff = xMax - xMin
+      xMin = xMin - 0.05 * diff
+      xMax = xMax + 0.05 * diff
+    }
+    plotRef.current!.setScale('x', { min: xMin, max: xMax })
+  }
+
   return (
     <div ref={containerRef} className='pnf-container'>
-      <MenuBar data={data} flaggedPoints={flaggedPoints} />
+      <MenuBar data={data} flaggedPoints={flaggedPoints} zoomToRange={zoomToRange} plotRef={plotRef} />
 
       {/* Control bar */}
       <div className='pnf-control-bar-outer'>
@@ -212,7 +249,6 @@ export const ChartInner = ({
           <FlagButtonBar
             clearSelection={clearSelection}
             plotRef={plotRef}
-            data={data}
             flaggedPoints={flaggedPoints}
           />
         }
@@ -230,6 +266,8 @@ export const ChartInner = ({
                 .map(s => filterFlaggedValues(s))
             ]}
             onCreate={(chart) => {
+              // Reset the scroll pos to what it was pre-recreation
+              window.scroll(0, yScrollPos.current)
               if (!plotRef.current) {
                 plotRef.current = chart
                 // Only do the unzoom if this is the first time through
@@ -237,6 +275,10 @@ export const ChartInner = ({
               } else {
                 plotRef.current = chart
               }
+            }}
+            onDelete={() => {
+              // Remember where the user is scrolled to
+              yScrollPos.current = window.scrollY
             }}
           />
       }

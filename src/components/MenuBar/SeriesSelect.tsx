@@ -14,6 +14,9 @@ interface IdPair {
   formattedId?: string
 }
 
+/**
+ * Component to select which series are visible on the plot.
+ */
 export const SeriesSelect = ({ dataSeries }: SeriesSelectProps) => {
   const [paramLabels, setParamLabels] = useState<{[key: string]: string}>({})
 

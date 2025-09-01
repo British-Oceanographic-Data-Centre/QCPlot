@@ -2,22 +2,32 @@ import uPlot from 'uplot'
 
 import { Data, DataSeries, FlaggedPoint, NamedSeries } from './types'
 
+/**
+ * Checks if value is null or undefined.
+ * @param val a value of unknown type
+ * @returns true if val is null or undefined, else false
+ */
 export const isNil = (val: unknown) => {
   return val === undefined || val === null
 }
 
-export const invertHex = (hex: string) => {
-  return '#' + (Number(`0x1${hex.replace('#', '')}`) ^ 0xFFFFFF).toString(16).substring(1).toUpperCase()
-}
-
+/**
+ * Constructs the trace name for a given series.
+ */
 export const getTraceName = (series: DataSeries) => {
   return `${series.id}-${series.parameter}`
 }
 
+/**
+ * Constructs the displayed label for a given series.
+ */
 export const getSeriesLabel = (series: DataSeries) => {
   return `${series.formattedId || series.id}-${series.parameter}`
 }
 
+/**
+ * Gets the flag at a specific index from an array of FlaggedPoints
+ */
 export const getFlagForPoint = (flaggedPoints: FlaggedPoint[], pointIndex: number) => {
   for (let i = 0; i < flaggedPoints.length; i++) {
     const thisFlag = flaggedPoints[i]
@@ -29,25 +39,47 @@ export const getFlagForPoint = (flaggedPoints: FlaggedPoint[], pointIndex: numbe
   }
 }
 
+/**
+ * Constructs an array of series objects to be passed to uPlot from raw input data.
+ * @param data The original data passed to the Chart component.
+ * @param flaggedPoints Accompanying array of flags.
+ * @param colours Array of hex-string colours to be used.
+ * @param activeIds Array of the IDs in the data that are visible.
+ * @param activeParams Array of the parameters in the data that are visible.
+ * @param showCycleNumber Whether to show the cycle number in the legend.
+ */
 export const seriesFromData = (
   data: Data,
   flaggedPoints: FlaggedPoint[],
   colours: string[],
   activeIds: string[],
-  activeParams: string[]
+  activeParams: string[],
+  showCycleNumber = false
 ) => {
-  const seriesArray = [{}]
+  const seriesArray: (uPlot.Series | NamedSeries)[] = [{}]
 
-  const applyFlag = (u: uPlot, value: number | null, seriesIdx: number, pointIndex: number) => {
-    if (value === null) return null
+  const formatLabel = (u: uPlot, value: number | null, seriesIdx: number, pointIndex: number | null) => {
+    if (value === null || pointIndex === null) {
+      return showCycleNumber ? 'Val: -- Cyc: --' : 'Val: --'
+    }
+
+    // Count nulls in the series before this, to offset correctly
+    const precedingNulls = (u.data[seriesIdx] as (number | null)[]).filter((v, j) => v === null && j < pointIndex)
 
     const traceName = (u.series[seriesIdx] as NamedSeries).name
     const seriesFlags = flaggedPoints.filter(x => x.traceName === traceName)
-    const flag = getFlagForPoint(seriesFlags, pointIndex)
-    if (flag) {
-      return `${value} (${flag})`
+    const flag = getFlagForPoint(seriesFlags, pointIndex - precedingNulls.length)
+
+    let label: string
+    if (showCycleNumber) {
+      label = `Val: ${value} Cyc: ${pointIndex - precedingNulls.length}`
+    } else {
+      label = value.toString()
     }
-    return value
+    if (flag) {
+      label += ` (${flag})`
+    }
+    return label
   }
 
   data.series.forEach((series, i) => {
@@ -56,7 +88,7 @@ export const seriesFromData = (
         name: `${series.id}-${series.parameter}`,
         label: `${series.formattedId || series.id}-${series.parameter}`,
         scale: 'y',
-        value: (u: uPlot, v: number, seriesIdx: number, pointIndex: number) => applyFlag(u, v, seriesIdx, pointIndex),
+        value: formatLabel,
         stroke: colours[i % colours.length],
         spanGaps: series.spanGaps
       })
@@ -66,6 +98,10 @@ export const seriesFromData = (
   return seriesArray
 }
 
+/**
+ * Get the min and max values form an array of numbers.
+ * @param arr Input array
+ */
 export const getArrayMinMax = (arr: number[]) => {
   let min = Infinity
   let max = -Infinity

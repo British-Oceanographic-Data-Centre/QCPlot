@@ -16,9 +16,10 @@ export default meta
 
 export const FlaggingDemo = (args, context) => {
   const [flags, setFlags] = useState<FlaggedPoint>([
-    { traceName: 'INSTRUMENT_1-PARAM02', pointIndex: 3, flag: 'Z' },
-    { traceName: 'INSTRUMENT_1-PARAM01', pointIndex: 2, endIndex: 3, flag: 'X' },
-    { traceName: 'INSTRUMENT_1-PARAM02', pointIndex: 1, flag: 'Z' }
+    { traceName: 'INSTRUMENT_1-TEMPPR01', pointIndex: 3, flag: 'Z' },
+    { traceName: 'INSTRUMENT_1-PREXPR01', pointIndex: 1, flag: 'Y' },
+    { traceName: 'INSTRUMENT_1-PREXPR01', pointIndex: 2, endIndex: 3, flag: 'X' },
+    { traceName: 'INSTRUMENT_1-TEMPPR01', pointIndex: 1, flag: 'Z' }
   ])
 
   return (
@@ -26,16 +27,23 @@ export const FlaggingDemo = (args, context) => {
       data={{
         xValues: [11, 12, 13, 14, 15],
         series: [
-          { id: 'INSTRUMENT_1', formattedId: 'INST_1', parameter: 'PARAM01', values: [10, 20, 30, 40, 50] },
-          { id: 'INSTRUMENT_1', formattedId: 'INST_2', parameter: 'PARAM02', values: [5, 4, 60, 20, 14] },
-          { id: 'INSTRUMENT_1', formattedId: 'INST_3', parameter: 'PARAM03', values: [46, 15, 43, 5, 27] },
-          { id: 'INSTRUMENT_1', formattedId: 'INST_4', parameter: 'PARAM04', values: [1, 2, 3, 4, 5] }
+          {
+            id: 'INSTRUMENT_1',
+            formattedId: 'INST_1',
+            parameter: 'PREXPR01',
+            values: [10, null, 30, 40, 50],
+            spanGaps: true
+          },
+          { id: 'INSTRUMENT_1', formattedId: 'INST_2', parameter: 'TEMPPR01', values: [5, 4, 60, 20, 14] },
+          { id: 'INSTRUMENT_1', formattedId: 'INST_3', parameter: 'LCEWZZ01', values: [46, 15, 43, 5, 27] },
+          { id: 'INSTRUMENT_1', formattedId: 'INST_4', parameter: 'HEADCM01', values: [1, 2, 3, 4, 5] }
         ]
       }}
       flaggedPoints={flags}
       flagCallback={setFlags}
       enableFlagging
       defaultShowAll
+      showCycleNumber
     />
   )
 }

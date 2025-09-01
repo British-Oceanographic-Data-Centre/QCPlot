@@ -6,16 +6,18 @@ import { Button } from './Button'
 import { ChartContext } from '@/ChartContext'
 import { FLAGS } from '@/constants'
 import { getPointsForSelection, updateFlags } from '@/flagUtils'
-import { Data, FlaggedPoint } from '@/types'
+import { FlaggedPoint } from '@/types'
 
 interface FlagButtonBarProps {
   plotRef: RefObject<uPlot | null>
   clearSelection: () => void
-  data: Data
   flaggedPoints: FlaggedPoint[]
 }
 
-export const FlagButtonBar = ({ clearSelection, plotRef, flaggedPoints, data }: FlagButtonBarProps) => {
+/**
+ * Container for the flag controls, only visible when flagging mode is active.
+ */
+export const FlagButtonBar = ({ clearSelection, plotRef, flaggedPoints }: FlagButtonBarProps) => {
   const { flagCallback } = useContext(ChartContext)
 
   const flagSelect = useRef<HTMLSelectElement>(null)
@@ -24,13 +26,13 @@ export const FlagButtonBar = ({ clearSelection, plotRef, flaggedPoints, data }: 
     if (!plotRef.current) return
     const selectedPoints = getPointsForSelection(plotRef.current)
     const flag = flagSelect.current?.value || null
-    updateFlags({ selectedPoints, flag, existingFlags: flaggedPoints, data, flagCallback })
+    updateFlags({ selectedPoints, flag, existingFlags: flaggedPoints, flagCallback })
   }
 
   const removeFlags = () => {
     if (!plotRef.current) return
     const selectedPoints = getPointsForSelection(plotRef.current)
-    updateFlags({ selectedPoints, flag: null, existingFlags: flaggedPoints, data, flagCallback })
+    updateFlags({ selectedPoints, flag: null, existingFlags: flaggedPoints, flagCallback })
   }
 
   return (

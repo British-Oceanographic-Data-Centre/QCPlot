@@ -8,6 +8,9 @@ import type { ChartProps } from './types'
 import './style.css'
 import 'uplot/dist/uPlot.min.css'
 
+/**
+ * The main component exposed from this library. Wraps ChartInner in a context provider and passes props through.
+ */
 export const Chart = ({ data, flaggedPoints, defaultShowAll, ...props }: ChartProps) => {
   const allIds = new Set(data.series.map(x => x.id))
   const allParams = new Set(data.series.map(x => x.parameter))

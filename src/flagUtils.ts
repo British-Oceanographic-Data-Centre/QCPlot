@@ -1,9 +1,12 @@
 import type uPlot from 'uplot'
 
-import { Data, FlaggedPoint, ISelectedPoints, NamedSeries } from './types'
+import { FlaggedPoint, ISelectedPoints, NamedSeries } from './types'
 import { isNil } from './utils'
 
-export const getPointsForSelection = (u: uPlot) => {
+/**
+ * Get the points within the currently selected region.
+ */
+export const getPointsForSelection = (u: uPlot): ISelectedPoints => {
   const lft = u.select.left
   const rgt = u.select.width + lft
   const top = u.select.top
@@ -22,9 +25,11 @@ export const getPointsForSelection = (u: uPlot) => {
       const xPos = u.valToPos(u.data[0][i], 'x')
       if (xPos < lft || xPos > rgt) continue
       const val = x[i]
+      // Count nulls in the series before this, to offset correctly
+      const precedingNulls = (x as (number | null)[]).filter((v, j) => v === null && j < i)
       if (isNil(val)) continue
       if (val >= bottomVal && val <= topVal) {
-        selectedPoints[seriesName].push(i)
+        selectedPoints[seriesName].push(i - precedingNulls.length)
       }
     }
   })
@@ -35,11 +40,13 @@ interface updateFlagsProps {
   selectedPoints: ISelectedPoints,
   flag: string | null,
   existingFlags: FlaggedPoint[],
-  data: Data,
   flagCallback?: (flaggedPoints: FlaggedPoint[]) => void
 }
 
-export const updateFlags = ({ selectedPoints, flag, existingFlags, data, flagCallback }: updateFlagsProps) => {
+/**
+ * Applies changes to the flagged points, passing the updated array to a callback method if provided.
+ */
+export const updateFlags = ({ selectedPoints, flag, existingFlags, flagCallback }: updateFlagsProps) => {
   const modifiedTraceNames = Object.entries(selectedPoints)
     .filter(([_, v]) => v.length > 0) // Filter to keys with at least one point
     .map(([k, _]) => k)
@@ -72,6 +79,10 @@ export const updateFlags = ({ selectedPoints, flag, existingFlags, data, flagCal
   }
 }
 
+/**
+ * Takes an array of numbers and combine into grouped ranges.
+ * @example e.g. [1,2,4] would return [{start: 1, end: 2}, {start: 4, end: 4}]
+ */
 export const getPointRanges = (points: number[]) => {
   const groups: number[][] = []
   let currentGroup: number[] = []
@@ -94,6 +105,10 @@ export const getPointRanges = (points: number[]) => {
   }))
 }
 
+/**
+ * Takes an array of flagged data and split point ranges into individual points.
+ * Opposite of combineRanges.
+ */
 export const splitRanges = (flaggedPoints: FlaggedPoint[]) => {
   const splitFlags: FlaggedPoint[] = []
   flaggedPoints.forEach(flagObj => {
@@ -112,6 +127,10 @@ export const splitRanges = (flaggedPoints: FlaggedPoint[]) => {
   return splitFlags
 }
 
+/**
+ * Takes an array of flagged data and combine individual points into point ranges.
+ * Opposite of splitRanges.
+ */
 export const combineRanges = (flaggedPoints: FlaggedPoint[]) => {
   const combined: FlaggedPoint[] = []
 
