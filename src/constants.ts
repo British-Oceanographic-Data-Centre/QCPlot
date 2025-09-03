@@ -28,4 +28,8 @@ export const PLOT_HELP_TEXT = `
   - Drawing a box with the left mouse button:
     - If flag mode is off will zoom onto that region
     - With flag mode on will select all points in that region to be flagged
+  - Hot keys
+    - F: toggle flag mode
+    - R: reset zoom to default level
+    - Esc: Clear current flagging selection
 `

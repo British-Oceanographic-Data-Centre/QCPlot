@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useRef, useState } from 'react'
+import React, { useCallback, useContext, useEffect, useRef, useState } from 'react'
 
 import dayjs from 'dayjs'
 import type uPlot from 'uplot'
@@ -50,6 +50,13 @@ export const ChartInner = ({
   const initialScales = useRef<InitialRange>(null)
   const yScrollPos = useRef<number>(0)
 
+  const onUnZoom = useCallback(() => {
+    const u = plotRef.current
+    if (!u) return
+    const { min, max } = getArrayMinMax(xTimeAxis ? data.xValues.map(x => dayjs(x).unix()) : data.xValues as number[])
+    u.setScale('x', { min, max })
+  }, [data.xValues, xTimeAxis])
+
   useEffect(() => {
     const handleResize = () => {
       if (plotRef.current && containerRef.current) {
@@ -68,6 +75,28 @@ export const ChartInner = ({
   }, [])
 
   useEffect(() => {
+    const handleKeyPress = (event: KeyboardEvent) => {
+      if (event.target && (event.target as HTMLElement).tagName === 'INPUT') {
+        // Add the check so that it doesn't interfere with any inputs fields on the page
+        return
+      }
+      if (event.key.toUpperCase() === 'F') {
+        setFlagMode(prev => !prev)
+      }
+      if (event.key.toUpperCase() === 'R') {
+        onUnZoom()
+      }
+      if (event.key === 'Escape') {
+        clearSelection()
+      }
+    }
+    document.addEventListener('keydown', handleKeyPress)
+    return () => {
+      document.removeEventListener('keydown', handleKeyPress)
+    }
+  }, [onUnZoom])
+
+  useEffect(() => {
     if (!flagMode) {
       clearSelection()
     }
@@ -80,13 +109,6 @@ export const ChartInner = ({
       plotRef.current.setSelect({ left: 0, top: 0, width: 0, height: 0 })
       plotRef.current.root.querySelector('.u-select')?.classList.remove('pnf-flag-select')
     }
-  }
-
-  const onUnZoom = () => {
-    const u = plotRef.current
-    if (!u) return
-    const { min, max } = getArrayMinMax(xTimeAxis ? data.xValues.map(x => dayjs(x).unix()) : data.xValues as number[])
-    u.setScale('x', { min, max })
   }
 
   const opts: Options = {
