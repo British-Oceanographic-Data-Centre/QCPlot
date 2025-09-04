@@ -10,12 +10,13 @@ interface FlagListProps {
   dataSeries: DataSeries[]
   zoomToRange: (traceName: string, start: number, end: number) => void
   plotRef: RefObject<uPlot | null>
+  colours: string[]
 }
 
 /**
  * Table showing a list of all flags currently applied to the data.
  */
-export const FlagList = ({ flaggedPoints, dataSeries, zoomToRange, plotRef }: FlagListProps) => {
+export const FlagList = ({ flaggedPoints, dataSeries, zoomToRange, plotRef, colours }: FlagListProps) => {
   const groupedFlaggedPoints: {[name: string]: FlaggedPoint[]} = {}
   flaggedPoints.forEach(fp => {
     const key = `${fp.traceName};${fp.flag}`
@@ -44,17 +45,9 @@ export const FlagList = ({ flaggedPoints, dataSeries, zoomToRange, plotRef }: Fl
 
   const getColourFromKey = (key: string) => {
     if (!plotRef.current) return
-    const series = getSeriesFromKey(key)
-    let colour = '#ffffff'
-    if (series && typeof series.stroke === 'function') {
-      // The typing of uPlot's stroke is... odd.
-      // These checks might be excessive, but should ensure we don't pick up non-string colours
-      const stroke = series.stroke(plotRef.current, 0)
-      if (typeof stroke === 'string') {
-        colour = stroke
-      }
-    }
-    return colour
+    const traceName = key.split(';')[0]
+    const seriesIdx = plotRef.current?.series.findIndex(x => (x as NamedSeries).name === traceName)
+    return colours[seriesIdx - 1] || '#ffffff'
   }
 
   return (

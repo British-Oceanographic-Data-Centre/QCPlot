@@ -85,11 +85,11 @@ export const seriesFromData = (
   data.series.forEach((series, i) => {
     if (activeIds.includes(series.id) && activeParams.includes(series.parameter)) {
       seriesArray.push({
-        name: `${series.id}-${series.parameter}`,
-        label: `${series.formattedId || series.id}-${series.parameter}`,
+        name: getTraceName(series),
+        label: getSeriesLabel(series),
         scale: 'y',
         value: formatLabel,
-        stroke: colours[i % colours.length],
+        stroke: colours[i],
         spanGaps: series.spanGaps
       })
     }
@@ -110,4 +110,18 @@ export const getArrayMinMax = (arr: number[]) => {
     if (x > max) max = x
   })
   return { min, max }
+}
+
+/**
+ * Duplicates elements in an array to create a larger array of particular size.
+ * @param arr The original array being extended.
+ * @param desiredLength The required length of the returned array.
+ */
+export const extendArray = (arr: any[], desiredLength: number) => {
+  const output = []
+  for (let i = 0; i < desiredLength; i++) {
+    output.push(arr[i % arr.length])
+  }
+
+  return output
 }

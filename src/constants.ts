@@ -28,6 +28,7 @@ export const PLOT_HELP_TEXT = `
   - Drawing a box with the left mouse button:
     - If flag mode is off will zoom onto that region
     - With flag mode on will select all points in that region to be flagged
+  - Clicking the colour boxes in the legend will allow you to customise the colours
   - Hot keys
     - F: toggle flag mode
     - R: reset zoom to default level

@@ -108,3 +108,17 @@
 .pnf-faded {
     opacity: 0.3;
 }
+
+.u-marker {
+    position: relative;
+}
+
+.pnf-colour-input {
+    opacity: 0;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    cursor: pointer;
+}

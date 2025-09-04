@@ -7,13 +7,14 @@ import UplotReact from 'uplot-react'
 
 import { onKeyDown } from '../eventHandlers'
 import type { ChartProps, DataSeries, InitialRange } from '../types'
-import { getArrayMinMax, getTraceName, isNil, seriesFromData } from '../utils'
+import { extendArray, getArrayMinMax, getTraceName, isNil, seriesFromData } from '../utils'
 import { FlagButtonBar } from './FlagButtonBar'
 import { MainButtonBar } from './MainButtonBar'
 import { MenuBar } from './MenuBar'
 import { ChartContext } from '@/ChartContext'
-import { PLOT_HELP_TEXT, PointDisplay } from '@/constants'
+import { DEFAULT_COLOURS, PLOT_HELP_TEXT, PointDisplay } from '@/constants'
 import { renderFlagsPlugin, scrollZoomPlugin } from '@/plugins'
+import { legendPlugin } from '@/plugins/legend'
 
 const initHook = (u: uPlot, flagMode: boolean) => {
   u.over.tabIndex = -1 // required for key handlers
@@ -38,12 +39,14 @@ export const ChartInner = ({
   enableFlagging,
   xTimeAxis = false,
   height = 600,
-  showCycleNumber = false
+  showCycleNumber = false,
+  plotColours
 }: ChartProps) => {
+  const { activeIds, activeParams, totalSeriesCount } = useContext(ChartContext)
+
   const [flagMode, setFlagMode] = useState(false)
   const [showPoints, setShowPoints] = useState<number>(PointDisplay.ALL)
-
-  const { colours: plotColours, activeIds, activeParams } = useContext(ChartContext)
+  const [colours, setColours] = useState<string[]>(extendArray(plotColours || DEFAULT_COLOURS, totalSeriesCount))
 
   const containerRef = useRef<HTMLDivElement>(null)
   const plotRef = useRef<uPlot>(null)
@@ -102,7 +105,7 @@ export const ChartInner = ({
     }
   }, [flagMode])
 
-  const series = seriesFromData(data, flaggedPoints, plotColours, activeIds, activeParams, showCycleNumber)
+  const series = seriesFromData(data, flaggedPoints, colours, activeIds, activeParams, showCycleNumber)
 
   const clearSelection = () => {
     if (plotRef.current) {
@@ -161,7 +164,8 @@ export const ChartInner = ({
     },
     plugins: [
       renderFlagsPlugin(flaggedPoints, showPoints !== PointDisplay.HIDE_FLAGS),
-      scrollZoomPlugin(initialScales.current)
+      scrollZoomPlugin(initialScales.current),
+      legendPlugin(data.series, colours, setColours)
     ],
     series,
     scales: {
@@ -246,7 +250,13 @@ export const ChartInner = ({
 
   return (
     <div ref={containerRef} className='pnf-container'>
-      <MenuBar data={data} flaggedPoints={flaggedPoints} zoomToRange={zoomToRange} plotRef={plotRef} />
+      <MenuBar
+        data={data}
+        flaggedPoints={flaggedPoints}
+        zoomToRange={zoomToRange}
+        plotRef={plotRef}
+        colours={colours}
+      />
 
       {/* Control bar */}
       <div className='pnf-control-bar-outer'>
