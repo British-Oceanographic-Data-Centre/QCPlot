@@ -16,6 +16,7 @@ interface MenuBarProps {
   data: Data
   zoomToRange: (traceName: string, start: number, end: number) => void
   plotRef: RefObject<uPlot | null>
+  colours: string[]
 }
 
 const TabButton = ({ children, onClick, active }: {children: ReactNode, onClick: () => void, active: boolean}) => {
@@ -29,7 +30,7 @@ const TabButton = ({ children, onClick, active }: {children: ReactNode, onClick:
 /**
  * MenuBar component containing the series selection and flag list.
  */
-export const MenuBar = ({ flaggedPoints, data, zoomToRange, plotRef }: MenuBarProps) => {
+export const MenuBar = ({ flaggedPoints, data, zoomToRange, plotRef, colours }: MenuBarProps) => {
   const [activeSection, setActiveSection] = useState<string | null>(Sections.SERIES)
 
   return (
@@ -44,7 +45,13 @@ export const MenuBar = ({ flaggedPoints, data, zoomToRange, plotRef }: MenuBarPr
         </TabButton>
       )}
       {activeSection === Sections.FLAG_LIST &&
-        <FlagList flaggedPoints={flaggedPoints} dataSeries={data.series} zoomToRange={zoomToRange} plotRef={plotRef} />
+        <FlagList
+          flaggedPoints={flaggedPoints}
+          dataSeries={data.series}
+          zoomToRange={zoomToRange}
+          plotRef={plotRef}
+          colours={colours}
+        />
       }
       {activeSection === Sections.SERIES && <SeriesSelect dataSeries={data.series} />}
     </div>

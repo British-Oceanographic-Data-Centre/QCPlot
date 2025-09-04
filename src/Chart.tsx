@@ -2,7 +2,6 @@ import { useState } from 'react'
 
 import { ChartContext } from './ChartContext'
 import { ChartInner } from './components/ChartInner'
-import { DEFAULT_COLOURS } from './constants'
 import type { ChartProps } from './types'
 
 import './style.css'
@@ -21,13 +20,13 @@ export const Chart = ({ data, flaggedPoints, defaultShowAll, ...props }: ChartPr
   return (
     <ChartContext.Provider
       value={{
-        colours: props.plotColours || DEFAULT_COLOURS,
         buttonClassname: props.buttonClassname || '',
         flagCallback: props.flagCallback,
         activeIds,
         setActiveIds,
         activeParams,
-        setActiveParams
+        setActiveParams,
+        totalSeriesCount: allIds.size * allParams.size
       }}
     >
       <ChartInner {...props} data={data} flaggedPoints={flaggedPoints} />

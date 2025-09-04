@@ -36,13 +36,13 @@ export interface ChartProps {
 }
 
 export interface ChartContextValue {
-  colours: string[]
   buttonClassname: string
   flagCallback?: (flaggedPoints: FlaggedPoint[]) => void
   activeIds: string[]
   setActiveIds: React.Dispatch<React.SetStateAction<string[]>>
   activeParams: string[]
   setActiveParams: React.Dispatch<React.SetStateAction<string[]>>
+  totalSeriesCount: number
 }
 
 export interface ISelectedPoints {
