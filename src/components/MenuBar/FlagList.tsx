@@ -3,7 +3,7 @@ import { RefObject } from 'react'
 import uPlot from 'uplot'
 
 import { DataSeries, FlaggedPoint, NamedSeries } from '@/types'
-import { isNil } from '@/utils'
+import { getTraceName, isNil } from '@/utils'
 
 interface FlagListProps {
   flaggedPoints: FlaggedPoint[]
@@ -46,8 +46,8 @@ export const FlagList = ({ flaggedPoints, dataSeries, zoomToRange, plotRef, colo
   const getColourFromKey = (key: string) => {
     if (!plotRef.current) return
     const traceName = key.split(';')[0]
-    const seriesIdx = plotRef.current?.series.findIndex(x => (x as NamedSeries).name === traceName)
-    return colours[seriesIdx - 1] || '#ffffff'
+    const seriesIndex = dataSeries.findIndex(x => getTraceName(x) === traceName)
+    return colours[seriesIndex] || '#ffffff'
   }
 
   return (
