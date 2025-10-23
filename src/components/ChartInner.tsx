@@ -16,11 +16,15 @@ import { DEFAULT_COLOURS, PLOT_HELP_TEXT, PointDisplay } from '@/constants'
 import { renderFlagsPlugin, scrollZoomPlugin } from '@/plugins'
 import { legendPlugin } from '@/plugins/legend'
 
-const initHook = (u: uPlot, flagMode: boolean) => {
+const initHook = (u: uPlot, flagMode: boolean, rightLegend?: boolean) => {
   u.over.tabIndex = -1 // required for key handlers
 
   if (flagMode) {
     u.root.querySelector('.u-select')?.classList.add('pnf-flag-select')
+  }
+
+  if (rightLegend) {
+    u.root.classList.add('rgt-leg')
   }
 
   u.over.addEventListener(
@@ -40,7 +44,9 @@ export const ChartInner = ({
   xTimeAxis = false,
   height = 600,
   showCycleNumber = false,
-  plotColours
+  plotColours,
+  verticalMode,
+  scatterMode
 }: ChartProps) => {
   const { activeIds, activeParams, totalSeriesCount } = useContext(ChartContext)
 
@@ -53,6 +59,8 @@ export const ChartInner = ({
   const initialScales = useRef<InitialRange>(null)
   const yScrollPos = useRef<number>(0)
 
+  const clientWidthRatio = verticalMode ? 0.5 : 1
+
   const onUnZoom = useCallback(() => {
     const u = plotRef.current
     if (!u) return
@@ -64,7 +72,7 @@ export const ChartInner = ({
     const handleResize = () => {
       if (plotRef.current && containerRef.current) {
         plotRef.current.setSize({
-          width: containerRef.current?.clientWidth,
+          width: containerRef.current?.clientWidth * clientWidthRatio,
           height: plotRef.current.height
         })
       }
@@ -105,7 +113,7 @@ export const ChartInner = ({
     }
   }, [flagMode])
 
-  const series = seriesFromData(data, flaggedPoints, colours, activeIds, activeParams, showCycleNumber)
+  const series = seriesFromData(data, flaggedPoints, colours, activeIds, activeParams, showCycleNumber, scatterMode)
 
   const clearSelection = () => {
     if (plotRef.current) {
@@ -115,7 +123,7 @@ export const ChartInner = ({
   }
 
   const opts: Options = {
-    width: containerRef.current ? containerRef.current.clientWidth : 800,
+    width: containerRef.current ? containerRef.current.clientWidth * clientWidthRatio : 800,
     height,
     cursor: {
       drag: {
@@ -123,10 +131,12 @@ export const ChartInner = ({
         x: true,
         y: true
       },
-      hover: {
-        prox: 5,
-        bias: 0
-      },
+      hover: verticalMode
+        ? {}
+        : {
+            prox: 5,
+            bias: 0
+          },
       bind: {
         mousedown: (u, _target, handler) => {
           return e => {
@@ -150,7 +160,7 @@ export const ChartInner = ({
       }
     },
     hooks: {
-      init: [(u) => initHook(u, flagMode)],
+      init: [(u) => initHook(u, flagMode, verticalMode)],
       ready: [(u) => {
         if (!initialScales.current) {
           initialScales.current = {
@@ -171,6 +181,8 @@ export const ChartInner = ({
     scales: {
       x: {
         time: xTimeAxis,
+        dir: verticalMode ? -1 : 1,
+        ori: verticalMode ? 1 : 0,
         min: plotRef.current ? plotRef.current.scales.x.min : undefined,
         max: plotRef.current ? plotRef.current.scales.x.max : undefined,
         range: (u, min, max) => {
@@ -183,14 +195,19 @@ export const ChartInner = ({
         }
       },
       y: {
+        dir: verticalMode ? 1 : 1,
+        ori: verticalMode ? 0 : 1,
         min: plotRef.current ? plotRef.current.scales.y.min : undefined,
         max: plotRef.current ? plotRef.current.scales.y.max : undefined
       }
     },
     select: plotRef.current ? plotRef.current.select : undefined,
     axes: [
-      {},
-      { scale: 'y' }
+      { side: verticalMode ? 3 : 2 },
+      {
+        scale: 'y',
+        side: verticalMode ? 0 : 3
+      }
     ]
   }
 

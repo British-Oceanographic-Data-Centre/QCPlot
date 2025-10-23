@@ -7,28 +7,36 @@ import { isNil } from './utils'
  * Get the points within the currently selected region.
  */
 export const getPointsForSelection = (u: uPlot): ISelectedPoints => {
+  const isVertical = u.scales.x.ori === 1
+
   const lft = u.select.left
   const rgt = u.select.width + lft
   const top = u.select.top
   const bottom = u.select.height + top
 
-  const leftIdx = u.posToIdx(lft)
-  const rightIdx = u.posToIdx(rgt)
-  const topVal = u.posToVal(top, 'y')
-  const bottomVal = u.posToVal(bottom, 'y')
-
   const selectedPoints: ISelectedPoints = {}
+
+  const xStartIndex = u.posToIdx(isVertical ? top : lft)
+  const xEndIndex = u.posToIdx(isVertical ? bottom : rgt)
+  const upperYVal = u.posToVal(isVertical ? rgt : top, 'y')
+  const lowerYVal = u.posToVal(isVertical ? lft : bottom, 'y')
+
   u.data.slice(1).forEach((x, seriesIndex) => {
     const seriesName = (u.series[seriesIndex + 1] as NamedSeries).name
     selectedPoints[seriesName] = []
-    for (let i = leftIdx; i <= rightIdx; i++) {
+    for (let i = xStartIndex; i <= xEndIndex; i++) {
       const xPos = u.valToPos(u.data[0][i], 'x')
-      if (xPos < lft || xPos > rgt) continue
+      if (
+        (isVertical && (xPos < top || xPos > bottom)) ||
+        (!isVertical && (xPos < lft || xPos > rgt))
+      ) {
+        continue
+      }
       const val = x[i]
       // Count nulls in the series before this, to offset correctly
       const precedingNulls = (x as (number | null)[]).filter((v, j) => v === null && j < i)
       if (isNil(val)) continue
-      if (val >= bottomVal && val <= topVal) {
+      if (val >= lowerYVal && val <= upperYVal) {
         selectedPoints[seriesName].push(i - precedingNulls.length)
       }
     }

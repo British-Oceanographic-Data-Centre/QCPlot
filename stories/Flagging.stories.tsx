@@ -61,3 +61,29 @@ export const FlaggingDemoBigData = (args, context) => {
     />
   )
 }
+
+export const SamplesFlagging = (args, context) => {
+  const [flags, setFlags] = useState<FlaggedPoint>([])
+
+  const data = {
+    xValues: [11, 12, 13, 14, 15],
+    series: [
+      { id: 'INSTRUMENT_1', parameter: 'PREXPR01', values: [10, 20, 30, 40, 50] },
+      { id: 'INSTRUMENT_1', parameter: 'TEMPPR01', values: [5, 4, 60, 20, 14] },
+      { id: 'INSTRUMENT_1', parameter: 'LCEWZZ01', values: [46, 15, 43, 5, 27] },
+      { id: 'INSTRUMENT_1', parameter: 'HEADCM01', values: [1, 2, 3, 4, 5] }
+    ]
+  }
+
+  return (
+    <Chart
+      data={data}
+      flaggedPoints={flags}
+      flagCallback={setFlags}
+      enableFlagging
+      defaultShowAll
+      verticalMode
+      scatterMode
+    />
+  )
+}

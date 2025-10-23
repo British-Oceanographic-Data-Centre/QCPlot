@@ -54,7 +54,8 @@ export const seriesFromData = (
   colours: string[],
   activeIds: string[],
   activeParams: string[],
-  showCycleNumber = false
+  showCycleNumber = false,
+  scatterMode = false
 ) => {
   const seriesArray: (uPlot.Series | NamedSeries)[] = [{}]
 
@@ -90,6 +91,8 @@ export const seriesFromData = (
         scale: 'y',
         value: formatLabel,
         stroke: colours[i],
+        paths: scatterMode ? u => null : undefined,
+        points: scatterMode ? { size: 7, fill: colours[i] } : undefined,
         spanGaps: series.spanGaps
       })
     }

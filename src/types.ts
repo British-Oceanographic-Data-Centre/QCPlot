@@ -29,10 +29,12 @@ export interface ChartProps {
   plotColours?: string[]
   buttonClassname?: string
   flagCallback?: (flaggedPoints: FlaggedPoint[]) => void
-  xTimeAxis: boolean
+  xTimeAxis?: boolean
   defaultShowAll?: boolean
   height?: number // in px
   showCycleNumber?: boolean
+  verticalMode?: boolean
+  scatterMode?: boolean
 }
 
 export interface ChartContextValue {
