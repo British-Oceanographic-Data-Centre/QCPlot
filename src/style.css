@@ -122,3 +122,26 @@
     left: 0;
     cursor: pointer;
 }
+
+/* right/stacked legend */
+.uplot.rgt-leg {
+    display: flex;
+    width: auto;
+}
+
+.uplot.rgt-leg .u-wrap {
+    flex: none;
+}
+
+.uplot.rgt-leg .u-legend {
+    text-align: left;
+    margin-left: 0;
+    margin: 0;
+}
+
+.uplot.rgt-leg .u-legend,
+.uplot.rgt-leg .u-legend tr,
+.uplot.rgt-leg .u-legend th,
+.uplot.rgt-leg .u-legend td {
+    display: revert;
+}

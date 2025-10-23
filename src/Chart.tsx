@@ -9,6 +9,8 @@ import 'uplot/dist/uPlot.min.css'
 
 /**
  * The main component exposed from this library. Wraps ChartInner in a context provider and passes props through.
+ *
+ * Note that this component assumes the x values of the data to be sorted, behaviour may be incorrect otherwise.
  */
 export const Chart = ({ data, flaggedPoints, defaultShowAll, ...props }: ChartProps) => {
   const allIds = new Set(data.series.map(x => x.id))

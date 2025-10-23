@@ -25,6 +25,8 @@ export const renderFlagsPlugin = (flaggedPoints: FlaggedPoint[] = [], showFlags:
   }
 
   const drawFlaggedPoints = (u: uPlot, i: number, i0: number, i1: number) => {
+    const isVertical = u.scales.x.ori === 1
+
     const thisSeries = u.series[i]
     const visiblePoints = thisSeries.idxs![1] - thisSeries.idxs![0]
     // If return is true then all points are rendered - breaks if too many!
@@ -33,12 +35,10 @@ export const renderFlagsPlugin = (flaggedPoints: FlaggedPoint[] = [], showFlags:
 
     if (showFlags) {
       const { ctx } = u
-      // const { _stroke, scale } = u.series[i];
-      const { scale } = u.series[i]
 
       ctx.save()
 
-      // ctx.fillStyle = _stroke;
+      ctx.strokeStyle = (thisSeries as uPlot.Series & {_stroke: string})._stroke
       ctx.lineWidth = 3
 
       const data: number[] = []
@@ -62,9 +62,17 @@ export const renderFlagsPlugin = (flaggedPoints: FlaggedPoint[] = [], showFlags:
           const val = data[j]
 
           if (val >= u.scales.y.min! && val <= u.scales.y.max!) {
-            const cx = Math.round(u.valToPos(xVals[j], 'x', true))
-            const cy = Math.round(u.valToPos(val!, scale!, true))
-            drawFlagMarker(ctx, cx, cy)
+            let cx = Math.round(u.valToPos(xVals[j], 'x', true))
+            let cy = Math.round(u.valToPos(val!, 'y', true))
+            const pointSizeOffset = thisSeries.points?.size ? (thisSeries.points?.size / 5) - 1 : 0
+            cx += pointSizeOffset * devicePixelRatio
+            cy += pointSizeOffset * devicePixelRatio
+
+            if (isVertical) {
+              drawFlagMarker(ctx, cy, cx)
+            } else {
+              drawFlagMarker(ctx, cx, cy)
+            }
           }
         }
         j++
