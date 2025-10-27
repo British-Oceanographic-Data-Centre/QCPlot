@@ -1,6 +1,6 @@
 import { createContext, SetStateAction } from 'react'
 
-import type { ChartContextValue } from './types'
+import { FlagSets, type ChartContextValue } from './types'
 
 export const ChartContext = createContext<ChartContextValue>({
   buttonClassname: '',
@@ -12,5 +12,6 @@ export const ChartContext = createContext<ChartContextValue>({
   activeParams: [],
   setActiveParams: function (value: SetStateAction<string[]>): void {
     throw new Error('Function not implemented.')
-  }
+  },
+  flagset: FlagSets.ALPHABETICAL_FLAGS
 })

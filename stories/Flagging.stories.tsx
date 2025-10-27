@@ -2,9 +2,10 @@ import React, { useState } from 'react'
 
 import type { Meta } from '@storybook/react'
 
-import { bigData } from './data'
+import { bigData, simpleData } from './data'
 import { Chart } from '@/Chart'
 import type { FlaggedPoint } from '@/types'
+import { FlagSets } from '@/types'
 
 import './styles.css'
 
@@ -84,6 +85,21 @@ export const SamplesFlagging = (args, context) => {
       defaultShowAll
       verticalMode
       scatterMode
+    />
+  )
+}
+
+export const NumericFlagset = () => {
+  const [flags, setFlags] = useState<FlaggedPoint[]>([])
+
+  return (
+    <Chart
+      data={simpleData}
+      flaggedPoints={flags}
+      flagCallback={setFlags}
+      enableFlagging
+      defaultShowAll
+      flagset={FlagSets.NUMERIC_FLAGS}
     />
   )
 }

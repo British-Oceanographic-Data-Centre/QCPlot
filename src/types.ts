@@ -2,6 +2,8 @@ import type React from 'react'
 
 import type { Series } from 'uplot'
 
+import { FLAGS } from './constants'
+
 export interface FlaggedPoint {
   traceName: string
   pointIndex: number
@@ -35,6 +37,7 @@ export interface ChartProps {
   showCycleNumber?: boolean
   verticalMode?: boolean
   scatterMode?: boolean
+  flagset?: keyof typeof FLAGS
 }
 
 export interface ChartContextValue {
@@ -45,6 +48,7 @@ export interface ChartContextValue {
   activeParams: string[]
   setActiveParams: React.Dispatch<React.SetStateAction<string[]>>
   totalSeriesCount: number
+  flagset?: keyof typeof FLAGS
 }
 
 export interface ISelectedPoints {
@@ -60,4 +64,9 @@ export interface InitialRange {
   xMax: number
   yMin: number
   yMax: number
+}
+
+export enum FlagSets {
+  ALPHABETICAL_FLAGS = 'ALPHABETICAL_FLAGS',
+  NUMERIC_FLAGS = 'NUMERIC_FLAGS'
 }

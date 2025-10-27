@@ -2,7 +2,9 @@ import { useState } from 'react'
 
 import { ChartContext } from './ChartContext'
 import { ChartInner } from './components/ChartInner'
+import { FLAGS } from './constants'
 import type { ChartProps } from './types'
+import { FlagSets } from './types'
 
 import './style.css'
 import 'uplot/dist/uPlot.min.css'
@@ -18,6 +20,7 @@ export const Chart = ({ data, flaggedPoints, defaultShowAll, ...props }: ChartPr
 
   const [activeIds, setActiveIds] = useState<string[]>(defaultShowAll ? [...allIds] : [])
   const [activeParams, setActiveParams] = useState<string[]>(defaultShowAll ? [...allParams] : [])
+  const contextFlagset = props.flagset && props.flagset in FLAGS ? props.flagset : FlagSets.ALPHABETICAL_FLAGS
 
   return (
     <ChartContext.Provider
@@ -28,7 +31,8 @@ export const Chart = ({ data, flaggedPoints, defaultShowAll, ...props }: ChartPr
         setActiveIds,
         activeParams,
         setActiveParams,
-        totalSeriesCount: allIds.size * allParams.size
+        totalSeriesCount: allIds.size * allParams.size,
+        flagset: contextFlagset
       }}
     >
       <ChartInner {...props} data={data} flaggedPoints={flaggedPoints} />
