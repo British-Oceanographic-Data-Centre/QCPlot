@@ -18,9 +18,11 @@ interface FlagButtonBarProps {
  * Container for the flag controls, only visible when flagging mode is active.
  */
 export const FlagButtonBar = ({ clearSelection, plotRef, flaggedPoints }: FlagButtonBarProps) => {
-  const { flagCallback } = useContext(ChartContext)
+  const { flagCallback, flagset } = useContext(ChartContext)
 
   const flagSelect = useRef<HTMLSelectElement>(null)
+  const flagsetKey = flagset as keyof typeof FLAGS | undefined
+  const flagOptions = flagsetKey && FLAGS[flagsetKey] ? FLAGS[flagsetKey] : FLAGS.ALPHABETICAL_FLAGS
 
   const applyFlags = () => {
     if (!plotRef.current) return
@@ -39,7 +41,9 @@ export const FlagButtonBar = ({ clearSelection, plotRef, flaggedPoints }: FlagBu
     <div className='pnf-button-bar'>
       <select ref={flagSelect} className='pnf-select'>
         <option></option>
-        {FLAGS.map(x => <option key={x}>{x}</option>)}
+        {flagOptions.map(x => (
+          <option key={x}>{x}</option>
+        ))}
       </select>
       <Button onClick={applyFlags}>Apply flags</Button>
       <Button onClick={removeFlags}>Remove flags</Button>

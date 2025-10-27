@@ -14,7 +14,10 @@ export const DEFAULT_COLOURS = [
   '#858080'
 ]
 
-export const FLAGS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ<>'.split('')
+export const FLAGS = {
+  ALPHABETICAL_FLAGS: 'ABCDEFGHIJKLMNOPQRSTUVWXYZ<>'.split(''),
+  NUMERIC_FLAGS: '123456789'.split('')
+}
 
 export enum PointDisplay {
   ALL,
