@@ -128,3 +128,22 @@ export const extendArray = (arr: any[], desiredLength: number) => {
 
   return output
 }
+
+/**
+ * Maps the index from a null-less array to the actual index when null padding is included.
+ * @param arr The array to be checked.
+ */
+export const nullPaddedIndexMap = (arr: any[]) => {
+  const result: {[index: number]: number} = {}
+  let runningTotal = 0
+  let nonNullIndex = 0
+  arr.forEach((x, i) => {
+    if (isNil(x)) {
+      runningTotal += 1
+    } else {
+      result[nonNullIndex] = runningTotal
+      nonNullIndex += 1
+    }
+  })
+  return result
+}

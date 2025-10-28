@@ -16,6 +16,7 @@ lint:
     - npm run lint
   rules:
     - if: $CI_MERGE_REQUEST_ID
+    - if: $CI_PIPELINE_SOURCE == "schedule"
 
 deploy-dry-run:
   stage: test
@@ -29,6 +30,7 @@ deploy-dry-run:
     - npm publish --dry-run --tag dry-run
   rules:
     - if: $CI_MERGE_REQUEST_ID
+    - if: $CI_PIPELINE_SOURCE == "schedule"
 
 .deploy:
   stage: deploy
@@ -65,3 +67,12 @@ pages:
       - public
   rules:
     - if: $CI_COMMIT_BRANCH == "main"
+
+check-npm-dependencies:
+  stage: test
+  script:
+    - npm audit --registry=https://registry.npmjs.org --omit=dev --audit-level high
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "schedule"
+    - if: $CI_COMMIT_BRANCH == "main"
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"

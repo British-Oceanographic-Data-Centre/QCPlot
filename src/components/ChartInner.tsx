@@ -7,7 +7,7 @@ import UplotReact from 'uplot-react'
 
 import { onKeyDown } from '../eventHandlers'
 import type { ChartProps, DataSeries, InitialRange } from '../types'
-import { extendArray, getArrayMinMax, getTraceName, isNil, seriesFromData } from '../utils'
+import { extendArray, getArrayMinMax, getTraceName, isNil, nullPaddedIndexMap, seriesFromData } from '../utils'
 import { FlagButtonBar } from './FlagButtonBar'
 import { MainButtonBar } from './MainButtonBar'
 import { MenuBar } from './MenuBar'
@@ -173,7 +173,7 @@ export const ChartInner = ({
       }]
     },
     plugins: [
-      renderFlagsPlugin(flaggedPoints, showPoints !== PointDisplay.HIDE_FLAGS),
+      renderFlagsPlugin(flaggedPoints, showPoints),
       scrollZoomPlugin(initialScales.current),
       legendPlugin(data.series, colours, setColours)
     ],
@@ -215,12 +215,13 @@ export const ChartInner = ({
     if (showPoints === PointDisplay.HIDE_FLAGS || showPoints === PointDisplay.FLAGS_ONLY) {
       const flaggedIndices = new Set<number>()
       const seriesFlags = flaggedPoints.filter(x => x.traceName === getTraceName(series))
+      const offsetMap = nullPaddedIndexMap(series.values)
       seriesFlags.forEach(x => {
         if (!x.endIndex) {
-          flaggedIndices.add(x.pointIndex)
+          flaggedIndices.add(x.pointIndex + offsetMap[x.pointIndex])
         } else {
           for (let i = x.pointIndex; i <= x.endIndex; i++) {
-            flaggedIndices.add(i)
+            flaggedIndices.add(i + offsetMap[i])
           }
         }
       })
@@ -280,8 +281,8 @@ export const ChartInner = ({
         <label>Display Points
           <select className='pnf-select' value={showPoints} onChange={e => setShowPoints(Number(e.target.value))}>
             <option value={PointDisplay.ALL}>All</option>
-            <option value={PointDisplay.HIDE_FLAGS}>Hide Flags</option>
-            <option value={PointDisplay.FLAGS_ONLY}>Flags Only</option>
+            <option value={PointDisplay.HIDE_FLAGS}>Hide Flagged Data</option>
+            <option value={PointDisplay.FLAGS_ONLY}>Show Flagged Data Only</option>
           </select>
         </label>
         <button className='pnf-button' onClick={() => alert(PLOT_HELP_TEXT)}>?</button>
