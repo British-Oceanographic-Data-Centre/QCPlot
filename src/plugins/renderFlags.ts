@@ -2,13 +2,14 @@ import uPlot, { Options } from 'uplot'
 
 import { FlaggedPoint, NamedSeries } from '../types'
 import { getFlagForPoint, isNil } from '../utils'
+import { PointDisplay } from '@/constants'
 
 /**
  * uPlot plugin to render symbols for flagged data.
  * @param flaggedPoints Array of the flagged points.
- * @param showFlags Whether or not flags should be displayed.
+ * @param showPoints Current point display mode.
  */
-export const renderFlagsPlugin = (flaggedPoints: FlaggedPoint[] = [], showFlags: boolean): uPlot.Plugin => {
+export const renderFlagsPlugin = (flaggedPoints: FlaggedPoint[] = [], showPoints: number): uPlot.Plugin => {
   const drawFlagMarker = (ctx: CanvasRenderingContext2D, cx: number, cy: number) => {
     let shapeSize = 6
     shapeSize *= window.devicePixelRatio
@@ -33,7 +34,7 @@ export const renderFlagsPlugin = (flaggedPoints: FlaggedPoint[] = [], showFlags:
     // Do this check at the top as rendering flagged points with too many on screen also caused problems
     if (visiblePoints >= 10_000) return false
 
-    if (showFlags) {
+    if (showPoints !== PointDisplay.HIDE_FLAGS) {
       const { ctx } = u
 
       ctx.save()
@@ -58,7 +59,9 @@ export const renderFlagsPlugin = (flaggedPoints: FlaggedPoint[] = [], showFlags:
 
       const seriesFlags = flaggedPoints.filter(x => x.traceName === (thisSeries as NamedSeries).name)
       while (j <= i1) {
-        if (getFlagForPoint(seriesFlags, j)) {
+        // Render symbol if point is flagged OR if we're displaying flagged points only
+        // The FLAGS_ONLY check is a slight cheat to get round the flag indices being offset when data is filtered out
+        if (showPoints === PointDisplay.FLAGS_ONLY || getFlagForPoint(seriesFlags, j)) {
           const val = data[j]
 
           if (val >= u.scales.y.min! && val <= u.scales.y.max!) {

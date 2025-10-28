@@ -35,7 +35,7 @@ export const FlaggingDemo = (args, context) => {
             values: [10, null, 30, 40, 50],
             spanGaps: true
           },
-          { id: 'INSTRUMENT_1', formattedId: 'INST_2', parameter: 'TEMPPR01', values: [5, 4, 60, 20, 14] },
+          { id: 'INSTRUMENT_1', formattedId: 'INST_2', parameter: 'TEMPPR01', values: [5, 4, 60, 20, 14], spanGaps: true },
           { id: 'INSTRUMENT_1', formattedId: 'INST_3', parameter: 'LCEWZZ01', values: [46, 15, 43, 5, 27] },
           { id: 'INSTRUMENT_1', formattedId: 'INST_4', parameter: 'HEADCM01', values: [1, 2, 3, 4, 5] }
         ]

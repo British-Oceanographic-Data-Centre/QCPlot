@@ -1,0 +1,110 @@
+[
+    {
+        "traceName": "M108_30m_ODO_10315.csv-PPSBPR01",
+        "pointIndex": 12,
+        "endIndex": 12,
+        "flag": "M"
+    },
+    {
+        "traceName": "M108_30m_ODO_10315.csv-PPSBPR01",
+        "pointIndex": 16541,
+        "endIndex": 16577,
+        "flag": "M"
+    },
+    {
+        "traceName": "M108_30m_ODO_10315.csv-CNDCPR01",
+        "pointIndex": 8,
+        "endIndex": 10,
+        "flag": "N"
+    },
+    {
+        "traceName": "M108_30m_ODO_10315.csv-CNDCPR01",
+        "pointIndex": 12,
+        "endIndex": 12,
+        "flag": "N"
+    },
+    {
+        "traceName": "M108_30m_ODO_10315.csv-DOXYZZ01",
+        "pointIndex": 9550,
+        "endIndex": 16577,
+        "flag": "M"
+    },
+    {
+        "traceName": "M108_30m_ODO_10315.csv-DOXMZZXX",
+        "pointIndex": 9550,
+        "endIndex": 16577,
+        "flag": "M"
+    },
+    {
+        "traceName": "M108_30m_ODO_10315.csv-OXYSZZ01",
+        "pointIndex": 9550,
+        "endIndex": 16577,
+        "flag": "M"
+    },
+    {
+        "traceName": "M108_IDO_9030_buoy.csv-PREXPR01",
+        "pointIndex": 0,
+        "endIndex": 19,
+        "flag": "M"
+    },
+    {
+        "traceName": "M108_IDO_9030_buoy.csv-PREXPR01",
+        "pointIndex": 16533,
+        "endIndex": 16584,
+        "flag": "M"
+    },
+    {
+        "traceName": "M108_IDO_9030_buoy.csv-PPSBPR01",
+        "pointIndex": 0,
+        "endIndex": 19,
+        "flag": "M"
+    },
+    {
+        "traceName": "M108_IDO_9030_buoy.csv-PPSBPR01",
+        "pointIndex": 16533,
+        "endIndex": 16584,
+        "flag": "M"
+    },
+    {
+        "traceName": "M108_IDO_9030_buoy.csv-CNDCPR01",
+        "pointIndex": 0,
+        "endIndex": 19,
+        "flag": "M"
+    },
+    {
+        "traceName": "M108_microcat_6915.csv-PREXPR01",
+        "pointIndex": 0,
+        "endIndex": 38,
+        "flag": "M"
+    },
+    {
+        "traceName": "M108_microcat_6915.csv-PREXPR01",
+        "pointIndex": 33069,
+        "endIndex": 33100,
+        "flag": "M"
+    },
+    {
+        "traceName": "M108_microcat_6915.csv-PPSBPR01",
+        "pointIndex": 0,
+        "endIndex": 38,
+        "flag": "M"
+    },
+    {
+        "traceName": "M108_microcat_6915.csv-PPSBPR01",
+        "pointIndex": 33069,
+        "endIndex": 33100,
+        "flag": "M"
+    },
+    {
+        "traceName": "M108_30m_ODO_10315.csv-PREXPR01",
+        "pointIndex": 0,
+        "endIndex": 19,
+        "flag": "M"
+    },
+    {
+        "traceName": "M108_30m_ODO_10315.csv-PREXPR01",
+        "pointIndex": 16541,
+        "endIndex": 16577,
+        "flag": "M"
+    }
+]
