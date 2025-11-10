@@ -17,9 +17,19 @@ interface MenuBarProps {
   zoomToRange: (traceName: string, start: number, end: number) => void
   plotRef: RefObject<uPlot | null>
   colours: string[]
+  hideFlagTab?: boolean,
+  hideParameterSelect?: boolean
 }
 
-const TabButton = ({ children, onClick, active }: {children: ReactNode, onClick: () => void, active: boolean}) => {
+const TabButton = ({
+  children,
+  onClick,
+  active
+}: {
+  children: ReactNode
+  onClick: () => void
+  active: boolean
+}) => {
   return (
     <button onClick={onClick} className={active ? 'pnf-tab-button-active' : 'pnf-tab-button'}>
       {children}
@@ -30,21 +40,39 @@ const TabButton = ({ children, onClick, active }: {children: ReactNode, onClick:
 /**
  * MenuBar component containing the series selection and flag list.
  */
-export const MenuBar = ({ flaggedPoints, data, zoomToRange, plotRef, colours }: MenuBarProps) => {
+export const MenuBar = ({
+  flaggedPoints, data, zoomToRange, plotRef, colours, hideFlagTab, hideParameterSelect
+}: MenuBarProps) => {
   const [activeSection, setActiveSection] = useState<string | null>(Sections.SERIES)
 
   return (
     <div className={activeSection ? 'pnf-menu-bar pnf-menu-bar-open' : 'pnf-menu-bar'}>
-      {Object.values(Sections).map(section =>
+      <TabButton
+        active={activeSection === Sections.SERIES}
+        onClick={() =>
+          setActiveSection(activeSection === Sections.SERIES ? null : Sections.SERIES)
+        }
+      >
+        {Sections.SERIES}
+      </TabButton>
+      {!hideFlagTab &&
         <TabButton
-          key={section}
-          active={section === activeSection}
-          onClick={() => { section === activeSection ? setActiveSection(null) : setActiveSection(section) }}
+          active={activeSection === Sections.FLAG_LIST}
+          onClick={() =>
+            setActiveSection(activeSection === Sections.FLAG_LIST ? null : Sections.FLAG_LIST)
+          }
         >
-          {section}
+          {Sections.FLAG_LIST}
         </TabButton>
+      }
+      {activeSection === Sections.SERIES && (
+        <SeriesSelect
+          dataSeries={data.series}
+          hideParameterSelect={hideParameterSelect}
+        />
       )}
-      {activeSection === Sections.FLAG_LIST &&
+
+      {!hideFlagTab && activeSection === Sections.FLAG_LIST && (
         <FlagList
           flaggedPoints={flaggedPoints}
           dataSeries={data.series}
@@ -52,8 +80,7 @@ export const MenuBar = ({ flaggedPoints, data, zoomToRange, plotRef, colours }: 
           plotRef={plotRef}
           colours={colours}
         />
-      }
-      {activeSection === Sections.SERIES && <SeriesSelect dataSeries={data.series} />}
+      )}
     </div>
   )
 }

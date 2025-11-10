@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react'
 
-import { simpleData, bigData, timeData } from './data'
+import { simpleData, bigData, timeData, makeScatter, combined } from './data'
 import { Chart } from '@/Chart'
 
 import './styles.css'
@@ -98,5 +98,74 @@ export const FormattedIds: Story = {
         { id: '1', formattedId: '#1', parameter: 'PARAM02', values: [5, 4, 60, 20, 14] }
       ]
     }
+  }
+}
+
+export const BasicScatter: Story = {
+  args: {
+    data: makeScatter(2_000),
+    xTimeAxis: false,
+    scatterMode: true,
+    enableFlagging: false,
+    hideParameterSelect: true,
+    defaultShowAll: true,
+    height: 480
+  }
+}
+
+export const ScatterMode5k: Story = {
+  name: 'XY Scatter, 5k values (stays scatter)',
+  args: {
+    data: makeScatter(5_000),
+    xTimeAxis: false,
+    scatterMode: true,
+    enableFlagging: false,
+    hideParameterSelect: true,
+    defaultShowAll: true,
+    height: 500
+  },
+  parameters: { docs: { source: { state: 'closed' } } }
+}
+
+export const ScatterMode20k: Story = {
+  name: 'XY Scatter, 20k values (auto line fallback)',
+  args: {
+    data: makeScatter(10_001),
+    xTimeAxis: false,
+    scatterMode: true,
+    enableFlagging: false,
+    hideParameterSelect: true,
+    defaultShowAll: true,
+    height: 500
+  },
+  parameters: { docs: { source: { state: 'closed' } } }
+}
+
+export const ScatterMode200k: Story = {
+  name: 'XY Scatter, 200k values (stress test)',
+  args: {
+    data: makeScatter(200_000),
+    xTimeAxis: false,
+    scatterMode: true,
+    hideParameterSelect: true,
+    enableFlagging: false,
+    defaultShowAll: true,
+    height: 600
+  },
+  parameters: {
+    chromatic: { disable: true },
+    docs: { source: { state: 'closed' } }
+  }
+}
+
+export const MultiOidXYScatter: Story = {
+  args: {
+    data: combined,
+    xTimeAxis: false,
+    scatterMode: true,
+    enableFlagging: false,
+    hideParameterSelect: true,
+    defaultShowAll: false,
+    height: 520
   }
 }

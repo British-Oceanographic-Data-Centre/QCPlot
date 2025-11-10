@@ -10,7 +10,9 @@ import { getTraceName } from '@/utils'
  * - Changes the marker colour icons to be inputs to update the colour
  */
 export const legendPlugin = (
-  series: DataSeries[], colours: string[], setColours: React.Dispatch<React.SetStateAction<string[]>>
+  series: DataSeries[],
+  colours: string[],
+  setColours: React.Dispatch<React.SetStateAction<string[]>>
 ): uPlot.Plugin => {
   const addColourInputs = (u: uPlot) => {
     u.root.querySelectorAll('.u-marker').forEach((node, i) => {
@@ -38,7 +40,9 @@ export const legendPlugin = (
 
   return {
     hooks: {
-      ready: (u: uPlot) => addColourInputs(u)
+      ready: (u: uPlot) => {
+        addColourInputs(u)
+      }
     }
   }
 }
