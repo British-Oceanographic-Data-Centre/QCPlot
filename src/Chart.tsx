@@ -19,7 +19,8 @@ export const Chart = ({ data, flaggedPoints, defaultShowAll, ...props }: ChartPr
   const allParams = new Set(data.series.map(x => x.parameter))
 
   const [activeIds, setActiveIds] = useState<string[]>(defaultShowAll ? [...allIds] : [])
-  const [activeParams, setActiveParams] = useState<string[]>(defaultShowAll ? [...allParams] : [])
+  const initialActiveParams = (defaultShowAll || props.hideParameterSelect) ? [...allParams] : []
+  const [activeParams, setActiveParams] = useState<string[]>(initialActiveParams)
   const contextFlagset = props.flagset && props.flagset in FLAGS ? props.flagset : FlagSets.ALPHABETICAL_FLAGS
 
   return (

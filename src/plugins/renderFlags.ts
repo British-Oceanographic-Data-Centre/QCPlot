@@ -4,12 +4,19 @@ import { FlaggedPoint, NamedSeries } from '../types'
 import { getFlagForPoint, isNil } from '../utils'
 import { PointDisplay } from '@/constants'
 
+const POINT_THRESHOLD = 10_000
+const linear = uPlot.paths.linear!()
+
 /**
  * uPlot plugin to render symbols for flagged data.
  * @param flaggedPoints Array of the flagged points.
  * @param showPoints Current point display mode.
  */
-export const renderFlagsPlugin = (flaggedPoints: FlaggedPoint[] = [], showPoints: number): uPlot.Plugin => {
+export const renderFlagsPlugin = (
+  flaggedPoints: FlaggedPoint[] = [],
+  showPoints: number,
+  scatterMode = false
+): uPlot.Plugin => {
   const drawFlagMarker = (ctx: CanvasRenderingContext2D, cx: number, cy: number) => {
     let shapeSize = 6
     shapeSize *= window.devicePixelRatio
@@ -32,7 +39,7 @@ export const renderFlagsPlugin = (flaggedPoints: FlaggedPoint[] = [], showPoints
     const visiblePoints = thisSeries.idxs![1] - thisSeries.idxs![0]
     // If return is true then all points are rendered - breaks if too many!
     // Do this check at the top as rendering flagged points with too many on screen also caused problems
-    if (visiblePoints >= 10_000) return false
+    if (visiblePoints >= POINT_THRESHOLD) return false
 
     if (showPoints !== PointDisplay.HIDE_FLAGS) {
       const { ctx } = u
@@ -87,6 +94,17 @@ export const renderFlagsPlugin = (flaggedPoints: FlaggedPoint[] = [], showPoints
     return visiblePoints <= 10_000
   }
 
+  const showPaths = (u: uPlot, si: number, io: number, i1: number) => {
+    const series = u.series[si]
+    if (!series.idxs) return linear(u, si, io, i1)
+    const visiblePoints = series.idxs[1] - series.idxs[0]
+    if (visiblePoints >= POINT_THRESHOLD || !scatterMode) {
+      return linear(u, si, io, i1)
+    } else {
+      return null
+    }
+  }
+
   const plugin: uPlot.Plugin = {
     opts: (u: uPlot, opts: Options) => {
       opts.series.forEach((s, i) => {
@@ -94,7 +112,8 @@ export const renderFlagsPlugin = (flaggedPoints: FlaggedPoint[] = [], showPoints
           uPlot.assign(s, {
             points: {
               show: drawFlaggedPoints
-            }
+            },
+            paths: showPaths
           })
         }
       })

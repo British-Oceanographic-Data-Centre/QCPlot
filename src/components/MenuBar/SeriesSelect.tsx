@@ -7,6 +7,7 @@ import { DataSeries } from '@/types'
 
 interface SeriesSelectProps {
   dataSeries: DataSeries[]
+  hideParameterSelect?: boolean
 }
 
 interface IdPair {
@@ -17,7 +18,7 @@ interface IdPair {
 /**
  * Component to select which series are visible on the plot.
  */
-export const SeriesSelect = ({ dataSeries }: SeriesSelectProps) => {
+export const SeriesSelect = ({ dataSeries, hideParameterSelect }: SeriesSelectProps) => {
   const [paramLabels, setParamLabels] = useState<{[key: string]: string}>({})
 
   const { activeIds, setActiveIds, activeParams, setActiveParams } = useContext(ChartContext)
@@ -79,11 +80,13 @@ export const SeriesSelect = ({ dataSeries }: SeriesSelectProps) => {
               OID
             </CheckableLabel>
           </th>
-          <th>
+
+          {!hideParameterSelect && <th>
             <CheckableLabel onChange={onSelectAllParams} checked={activeParams.length === uniqueParams.length}>
               PARAMETER
             </CheckableLabel>
           </th>
+          }
         </tr>
       </thead>
       <tbody>
@@ -99,8 +102,9 @@ export const SeriesSelect = ({ dataSeries }: SeriesSelectProps) => {
                 </CheckableLabel>
               }
             </td>
-            <td>
-              {uniqueParams[i] &&
+            {!hideParameterSelect &&
+              <td>
+                {uniqueParams[i] &&
                 <CheckableLabel
                   onChange={() => onToggleParam(uniqueParams[i])}
                   checked={activeParams.includes(uniqueParams[i])}
@@ -108,8 +112,9 @@ export const SeriesSelect = ({ dataSeries }: SeriesSelectProps) => {
                 >
                   {uniqueParams[i]}
                 </CheckableLabel>
-              }
-            </td>
+                }
+              </td>
+            }
           </tr>
         )}
       </tbody>

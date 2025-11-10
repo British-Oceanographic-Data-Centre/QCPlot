@@ -46,7 +46,10 @@ export const ChartInner = ({
   showCycleNumber = false,
   plotColours,
   verticalMode,
-  scatterMode
+  scatterMode,
+  hideParameterSelect = false,
+  xAxisLabel,
+  yAxisLabel
 }: ChartProps) => {
   const { activeIds, activeParams, totalSeriesCount } = useContext(ChartContext)
 
@@ -58,7 +61,6 @@ export const ChartInner = ({
   const plotRef = useRef<uPlot>(null)
   const initialScales = useRef<InitialRange>(null)
   const yScrollPos = useRef<number>(0)
-
   const clientWidthRatio = verticalMode ? 0.5 : 1
 
   const onUnZoom = useCallback(() => {
@@ -173,7 +175,7 @@ export const ChartInner = ({
       }]
     },
     plugins: [
-      renderFlagsPlugin(flaggedPoints, showPoints),
+      renderFlagsPlugin(flaggedPoints, showPoints, scatterMode),
       scrollZoomPlugin(initialScales.current),
       legendPlugin(data.series, colours, setColours)
     ],
@@ -203,10 +205,14 @@ export const ChartInner = ({
     },
     select: plotRef.current ? plotRef.current.select : undefined,
     axes: [
-      { side: verticalMode ? 3 : 2 },
+      {
+        side: verticalMode ? 3 : 2,
+        label: xAxisLabel
+      },
       {
         scale: 'y',
-        side: verticalMode ? 0 : 3
+        side: verticalMode ? 0 : 3,
+        label: yAxisLabel
       }
     ]
   }
@@ -265,7 +271,6 @@ export const ChartInner = ({
     }
     plotRef.current!.setScale('x', { min: xMin, max: xMax })
   }
-
   return (
     <div ref={containerRef} className='pnf-container'>
       <MenuBar
@@ -274,17 +279,25 @@ export const ChartInner = ({
         zoomToRange={zoomToRange}
         plotRef={plotRef}
         colours={colours}
+        hideFlagTab={!enableFlagging}
+        hideParameterSelect={hideParameterSelect}
       />
 
       {/* Control bar */}
       <div className='pnf-control-bar-outer'>
-        <label>Display Points
-          <select className='pnf-select' value={showPoints} onChange={e => setShowPoints(Number(e.target.value))}>
-            <option value={PointDisplay.ALL}>All</option>
-            <option value={PointDisplay.HIDE_FLAGS}>Hide Flagged Data</option>
-            <option value={PointDisplay.FLAGS_ONLY}>Show Flagged Data Only</option>
-          </select>
-        </label>
+        {enableFlagging
+          ? (
+              <label>Display Points
+                <select className='pnf-select' value={showPoints} onChange={e => setShowPoints(Number(e.target.value))}>
+                  <option value={PointDisplay.ALL}>All</option>
+                  <option value={PointDisplay.HIDE_FLAGS}>Hide Flagged Data</option>
+                  <option value={PointDisplay.FLAGS_ONLY}>Show Flagged Data Only</option>
+                </select>
+              </label>
+            )
+          : (
+              <div />
+            )}
         <button className='pnf-button' onClick={() => alert(PLOT_HELP_TEXT)}>?</button>
       </div>
       <div className='pnf-control-bar-outer'>
@@ -295,13 +308,13 @@ export const ChartInner = ({
           containerRef={containerRef}
           enableFlagging={enableFlagging}
         />
-        {flagMode &&
+        {flagMode && (
           <FlagButtonBar
             clearSelection={clearSelection}
             plotRef={plotRef}
             flaggedPoints={flaggedPoints}
           />
-        }
+        )}
       </div>
       {/* End control bar  */}
 

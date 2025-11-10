@@ -37,7 +37,10 @@ export interface ChartProps {
   showCycleNumber?: boolean
   verticalMode?: boolean
   scatterMode?: boolean
+  hideParameterSelect?: boolean
   flagset?: keyof typeof FLAGS
+  xAxisLabel?: string
+  yAxisLabel?: string
 }
 
 export interface ChartContextValue {
