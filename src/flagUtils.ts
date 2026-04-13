@@ -175,3 +175,27 @@ export const combineRanges = (flaggedPoints: FlaggedPoint[]) => {
 
   return combined
 }
+
+/**
+ * Combines the flaggedPoints and originatorFlaggedPoints to a single effective array.
+ */
+export const combineFlaggedPoints = (
+  flaggedPoints: FlaggedPoint[], originatorFlaggedPoints: FlaggedPoint[]
+): FlaggedPoint[] => {
+  if (originatorFlaggedPoints.length === 0) {
+    return flaggedPoints
+  }
+  const splitFlaggedPoints = splitRanges(flaggedPoints)
+  const splitOriginatorFlaggedPoints = splitRanges(originatorFlaggedPoints)
+
+  const combinedFpKeyed: {[key: string]: FlaggedPoint} = {}
+  splitOriginatorFlaggedPoints.forEach(fp => {
+    combinedFpKeyed[`${fp.traceName}-${fp.pointIndex}`] = fp
+  })
+  // Overwrite originator flag if same index
+  splitFlaggedPoints.forEach(fp => {
+    combinedFpKeyed[`${fp.traceName}-${fp.pointIndex}`] = fp
+  })
+
+  return combineRanges(Object.values(combinedFpKeyed))
+}

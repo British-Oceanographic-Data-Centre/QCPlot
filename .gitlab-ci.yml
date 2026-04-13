@@ -4,7 +4,7 @@ default:
   image: node
 
 .set-npm-config: &set-npm-config
-  - npm set email bodcsoft@noc.ac.uk --location project
+  - npm set //registry.npmjs.org/:email bodcsoft@noc.ac.uk --location project
   - npm set //registry.npmjs.org/:_authToken=$PUBLIC_NPM_TOKEN
   - npm config set access public
 
@@ -14,6 +14,26 @@ lint:
     - npm ci
   script:
     - npm run lint
+  rules:
+    - if: $CI_MERGE_REQUEST_ID
+    - if: $CI_PIPELINE_SOURCE == "schedule"
+
+test:
+  stage: test
+  before_script:
+    - npm ci
+  script:
+    - npm run coverage
+  rules:
+    - if: $CI_MERGE_REQUEST_ID
+    - if: $CI_PIPELINE_SOURCE == "schedule"
+  coverage: '/All files(?:[^|]*\|){4}\s*(\S+)/'
+
+build-storybook:
+  stage: test
+  script:
+    - npm ci
+    - npm run build-storybook
   rules:
     - if: $CI_MERGE_REQUEST_ID
     - if: $CI_PIPELINE_SOURCE == "schedule"

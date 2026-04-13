@@ -8,11 +8,13 @@
     "dist"
   ],
   "scripts": {
-    "lint": "npx eslint src",
+    "lint": "npx eslint src stories",
     "type-check": "tsc --noEmit",
     "rollup": "rollup -c --bundleConfigAsCjs",
     "storybook": "storybook dev -p 6006",
-    "build-storybook": "storybook build"
+    "build-storybook": "storybook build",
+    "test": "vitest",
+    "coverage": "vitest run --coverage"
   },
   "dependencies": {
     "dayjs": "^1.11.13",
@@ -20,26 +22,24 @@
     "uplot-react": "^1.2.2"
   },
   "devDependencies": {
-    "@chromatic-com/storybook": "^3.2.6",
+    "@chromatic-com/storybook": "^5.0.2",
     "@rollup/plugin-commonjs": "^25.0.7",
     "@rollup/plugin-node-resolve": "^15.2.3",
-    "@rollup/plugin-terser": "^0.4.4",
+    "@rollup/plugin-terser": "^1.0.0",
     "@rollup/plugin-typescript": "^11.1.6",
-    "@storybook/addon-essentials": "^8.6.12",
-    "@storybook/blocks": "^8.6.12",
-    "@storybook/experimental-nextjs-vite": "^8.6.12",
-    "@storybook/react": "^8.6.12",
-    "@storybook/test": "^8.6.12",
+    "@storybook/addon-docs": "10.3.3",
+    "@storybook/nextjs-vite": "10.3.3",
     "@tailwindcss/postcss": "^4",
     "@types/lodash": "^4.17.16",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "@vitest/coverage-v8": "^4.1.2",
     "eslint-config-bodc": "^1.2.1",
     "eslint-plugin-jsdoc": "^54.1.1",
-    "eslint-plugin-storybook": "^0.12.0",
+    "eslint-plugin-storybook": "10.3.3",
     "lodash": "^4.17.21",
-    "next": "15.3.1",
+    "next": "^15.3.1",
     "playwright": "^1.52.0",
     "react": "^18.0.0",
     "react-dom": "^18.0.0",
@@ -49,9 +49,12 @@
     "rollup-plugin-peer-deps-external": "^2.2.4",
     "rollup-plugin-postcss": "^4.0.2",
     "rollup-plugin-preserve-directives": "^0.4.0",
-    "storybook": "^8.6.12",
+    "storybook": "10.3.3",
     "tailwindcss": "^4",
-    "typescript": "^5"
+    "typescript": "^5",
+    "vite": "^7.3.1",
+    "vite-tsconfig-paths": "^6.1.1",
+    "vitest": "^4.1.2"
   },
   "eslintConfig": {
     "plugins": [
@@ -86,6 +89,18 @@
           }
         }
       ]
-    }
+    },
+    "overrides": [
+      {
+        "files": [
+          "*.stories.tsx"
+        ],
+        "rules": {
+          "jsdoc/require-jsdoc": [
+            "off"
+          ]
+        }
+      }
+    ]
   }
 }

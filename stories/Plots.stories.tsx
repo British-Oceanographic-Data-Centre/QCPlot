@@ -1,9 +1,7 @@
-import type { Meta, StoryObj } from '@storybook/react'
+import type { Meta, StoryObj } from '@storybook/nextjs-vite'
 
 import { simpleData, bigData, timeData, makeScatter, combined } from './data'
 import { Chart } from '@/Chart'
-
-import './styles.css'
 
 const meta: Meta<typeof Chart> = {
   title: 'Plots Only',
@@ -48,20 +46,6 @@ export const GappyData: Story = {
         { id: '1', parameter: 'PARAM03', values: [5, 6, null, 8, 9] }
       ]
     }
-  }
-}
-
-export const CustomColours: Story = {
-  args: {
-    data: simpleData,
-    plotColours: ['magenta', 'orange']
-  }
-}
-
-export const CustomButtonStyle: Story = {
-  args: {
-    data: simpleData,
-    buttonClassname: 'styled-button'
   }
 }
 
