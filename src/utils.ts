@@ -102,15 +102,17 @@ export const seriesFromData = (
 }
 
 /**
- * Get the min and max values form an array of numbers.
+ * Get the min and max values from an array of numbers.
  * @param arr Input array
  */
 export const getArrayMinMax = (arr: number[]) => {
   let min = Infinity
   let max = -Infinity
   arr.forEach(x => {
-    if (x < min) min = x
-    if (x > max) max = x
+    if (!isNil(x)) {
+      if (x < min) min = x
+      if (x > max) max = x
+    }
   })
   return { min, max }
 }
@@ -120,7 +122,7 @@ export const getArrayMinMax = (arr: number[]) => {
  * @param arr The original array being extended.
  * @param desiredLength The required length of the returned array.
  */
-export const extendArray = (arr: any[], desiredLength: number) => {
+export const extendArray = (arr: string[], desiredLength: number) => {
   const output = []
   for (let i = 0; i < desiredLength; i++) {
     output.push(arr[i % arr.length])
@@ -130,10 +132,15 @@ export const extendArray = (arr: any[], desiredLength: number) => {
 }
 
 /**
- * Maps the index from a null-less array to the actual index when null padding is included.
+ * Takes an array A and creates a mapping {x: y}. Take B to be the array formed of removing all null values from A,
+ * then x is the index of B and y is the count of preceding null values removed from A.
+ *
+ * Since this library uses null-padding to align data to a consistent axis, this mapping is useful
+ * to keep consistency between the original data and its null-padded counterpart.
+ *
  * @param arr The array to be checked.
  */
-export const nullPaddedIndexMap = (arr: any[]) => {
+export const nullPaddedIndexMap = (arr: (number | null)[]) => {
   const result: {[index: number]: number} = {}
   let runningTotal = 0
   let nonNullIndex = 0

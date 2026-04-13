@@ -8,11 +8,13 @@ import UplotReact from 'uplot-react'
 import { onKeyDown } from '../eventHandlers'
 import type { ChartProps, DataSeries, InitialRange } from '../types'
 import { extendArray, getArrayMinMax, getTraceName, isNil, nullPaddedIndexMap, seriesFromData } from '../utils'
+import { Button } from './Button'
 import { FlagButtonBar } from './FlagButtonBar'
 import { MainButtonBar } from './MainButtonBar'
 import { MenuBar } from './MenuBar'
 import { ChartContext } from '@/ChartContext'
 import { DEFAULT_COLOURS, PLOT_HELP_TEXT, PointDisplay } from '@/constants'
+import { combineFlaggedPoints } from '@/flagUtils'
 import { renderFlagsPlugin, scrollZoomPlugin } from '@/plugins'
 import { legendPlugin } from '@/plugins/legend'
 
@@ -40,6 +42,7 @@ const initHook = (u: uPlot, flagMode: boolean, rightLegend?: boolean) => {
 export const ChartInner = ({
   data,
   flaggedPoints = [],
+  originatorFlaggedPoints = [],
   enableFlagging,
   xTimeAxis = false,
   height = 600,
@@ -62,6 +65,8 @@ export const ChartInner = ({
   const initialScales = useRef<InitialRange>(null)
   const yScrollPos = useRef<number>(0)
   const clientWidthRatio = verticalMode ? 0.5 : 1
+
+  const allFlaggedPoints = combineFlaggedPoints(flaggedPoints, originatorFlaggedPoints)
 
   const onUnZoom = useCallback(() => {
     const u = plotRef.current
@@ -115,7 +120,7 @@ export const ChartInner = ({
     }
   }, [flagMode])
 
-  const series = seriesFromData(data, flaggedPoints, colours, activeIds, activeParams, showCycleNumber, scatterMode)
+  const series = seriesFromData(data, allFlaggedPoints, colours, activeIds, activeParams, showCycleNumber, scatterMode)
 
   const clearSelection = () => {
     if (plotRef.current) {
@@ -175,7 +180,7 @@ export const ChartInner = ({
       }]
     },
     plugins: [
-      renderFlagsPlugin(flaggedPoints, showPoints, scatterMode),
+      renderFlagsPlugin(allFlaggedPoints, showPoints, scatterMode),
       scrollZoomPlugin(initialScales.current),
       legendPlugin(data.series, colours, setColours)
     ],
@@ -220,7 +225,7 @@ export const ChartInner = ({
   const filterFlaggedValues = (series: DataSeries) => {
     if (showPoints === PointDisplay.HIDE_FLAGS || showPoints === PointDisplay.FLAGS_ONLY) {
       const flaggedIndices = new Set<number>()
-      const seriesFlags = flaggedPoints.filter(x => x.traceName === getTraceName(series))
+      const seriesFlags = allFlaggedPoints.filter(x => x.traceName === getTraceName(series))
       const offsetMap = nullPaddedIndexMap(series.values)
       seriesFlags.forEach(x => {
         if (!x.endIndex) {
@@ -275,7 +280,7 @@ export const ChartInner = ({
     <div ref={containerRef} className='pnf-container'>
       <MenuBar
         data={data}
-        flaggedPoints={flaggedPoints}
+        flaggedPoints={allFlaggedPoints}
         zoomToRange={zoomToRange}
         plotRef={plotRef}
         colours={colours}
@@ -298,7 +303,7 @@ export const ChartInner = ({
           : (
               <div />
             )}
-        <button className='pnf-button' onClick={() => alert(PLOT_HELP_TEXT)}>?</button>
+        <Button onClick={() => alert(PLOT_HELP_TEXT)}>?</Button>
       </div>
       <div className='pnf-control-bar-outer'>
         <MainButtonBar
@@ -312,7 +317,7 @@ export const ChartInner = ({
           <FlagButtonBar
             clearSelection={clearSelection}
             plotRef={plotRef}
-            flaggedPoints={flaggedPoints}
+            flaggedPoints={allFlaggedPoints}
           />
         )}
       </div>

@@ -1,13 +1,11 @@
 import React, { useState } from 'react'
 
-import type { Meta } from '@storybook/react'
+import type { Meta } from '@storybook/nextjs-vite'
 
 import { bigData, simpleData } from './data'
 import { Chart } from '@/Chart'
 import type { FlaggedPoint } from '@/types'
 import { FlagSets } from '@/types'
-
-import './styles.css'
 
 const meta: Meta<typeof Chart> = {
   component: Chart
@@ -15,8 +13,8 @@ const meta: Meta<typeof Chart> = {
 
 export default meta
 
-export const FlaggingDemo = (args, context) => {
-  const [flags, setFlags] = useState<FlaggedPoint>([
+export const FlaggingDemo = () => {
+  const [flags, setFlags] = useState<FlaggedPoint[]>([
     { traceName: 'INSTRUMENT_1-TEMPPR01', pointIndex: 3, flag: 'Z' },
     { traceName: 'INSTRUMENT_1-PREXPR01', pointIndex: 1, flag: 'Y' },
     { traceName: 'INSTRUMENT_1-PREXPR01', pointIndex: 2, endIndex: 3, flag: 'X' },
@@ -35,7 +33,13 @@ export const FlaggingDemo = (args, context) => {
             values: [10, null, 30, 40, 50],
             spanGaps: true
           },
-          { id: 'INSTRUMENT_1', formattedId: 'INST_2', parameter: 'TEMPPR01', values: [5, 4, 60, 20, 14], spanGaps: true },
+          {
+            id: 'INSTRUMENT_1',
+            formattedId: 'INST_2',
+            parameter: 'TEMPPR01',
+            values: [5, 4, 60, 20, 14],
+            spanGaps: true
+          },
           { id: 'INSTRUMENT_1', formattedId: 'INST_3', parameter: 'LCEWZZ01', values: [46, 15, 43, 5, 27] },
           { id: 'INSTRUMENT_1', formattedId: 'INST_4', parameter: 'HEADCM01', values: [1, 2, 3, 4, 5] }
         ]
@@ -49,8 +53,8 @@ export const FlaggingDemo = (args, context) => {
   )
 }
 
-export const FlaggingDemoBigData = (args, context) => {
-  const [flags, setFlags] = useState<FlaggedPoint>([])
+export const FlaggingDemoBigData = () => {
+  const [flags, setFlags] = useState<FlaggedPoint[]>([])
 
   return (
     <Chart
@@ -63,8 +67,8 @@ export const FlaggingDemoBigData = (args, context) => {
   )
 }
 
-export const SamplesFlagging = (args, context) => {
-  const [flags, setFlags] = useState<FlaggedPoint>([])
+export const SamplesFlagging = () => {
+  const [flags, setFlags] = useState<FlaggedPoint[]>([])
 
   const data = {
     xValues: [11, 12, 13, 14, 15],
@@ -100,6 +104,26 @@ export const NumericFlagset = () => {
       enableFlagging
       defaultShowAll
       flagset={FlagSets.NUMERIC_FLAGS}
+    />
+  )
+}
+
+export const OriginatorFlags = () => {
+  const [flags, setFlags] = useState<FlaggedPoint[]>([])
+
+  return (
+    <Chart
+      data={simpleData}
+      flaggedPoints={flags}
+      flagCallback={setFlags}
+      enableFlagging
+      defaultShowAll
+      originatorFlaggedPoints={[
+        { traceName: 'INSTRUMENT_1-TEMPPR01', pointIndex: 3, flag: 'Z' },
+        { traceName: 'INSTRUMENT_1-PREXPR01', pointIndex: 1, flag: 'Y' },
+        { traceName: 'INSTRUMENT_1-PREXPR01', pointIndex: 2, endIndex: 3, flag: 'X' },
+        { traceName: 'INSTRUMENT_1-TEMPPR01', pointIndex: 1, flag: 'Z' }
+      ]}
     />
   )
 }

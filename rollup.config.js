@@ -28,7 +28,15 @@ const config = [
       peerDepsExternal(),
       resolve(),
       commonjs(),
-      typescript({ tsconfig: './tsconfig.json' }),
+      typescript({
+        tsconfig: './tsconfig.json',
+        exclude: [
+          'node_modules',
+          'stories/**/*',
+          '**/*.stories.tsx'
+        ],
+        outputToFilesystem: false
+      }),
       terser(),
       postcss({
         extensions: ['.css']

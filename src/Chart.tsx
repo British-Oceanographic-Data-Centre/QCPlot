@@ -26,7 +26,6 @@ export const Chart = ({ data, flaggedPoints, defaultShowAll, ...props }: ChartPr
   return (
     <ChartContext.Provider
       value={{
-        buttonClassname: props.buttonClassname || '',
         flagCallback: props.flagCallback,
         activeIds,
         setActiveIds,

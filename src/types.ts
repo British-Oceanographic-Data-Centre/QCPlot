@@ -28,8 +28,10 @@ export interface ChartProps {
   data: Data
   enableFlagging: boolean
   flaggedPoints?: FlaggedPoint[]
+  // Originator flags have slightly different properties:
+  // They can be overwritten by manually flagging the point but they can't be removed
+  originatorFlaggedPoints?: FlaggedPoint[]
   plotColours?: string[]
-  buttonClassname?: string
   flagCallback?: (flaggedPoints: FlaggedPoint[]) => void
   xTimeAxis?: boolean
   defaultShowAll?: boolean
@@ -44,7 +46,6 @@ export interface ChartProps {
 }
 
 export interface ChartContextValue {
-  buttonClassname: string
   flagCallback?: (flaggedPoints: FlaggedPoint[]) => void
   activeIds: string[]
   setActiveIds: React.Dispatch<React.SetStateAction<string[]>>

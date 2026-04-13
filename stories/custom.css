@@ -1,0 +1,11 @@
+.pnf-tab-button-active, .pnf-button {
+  background-color: orange;
+}
+
+.pnf-tab-button {
+  border-color: orange;
+}
+
+.pnf-flag-select {
+  background: rgba(255, 255, 0, 0.2)!important;
+}

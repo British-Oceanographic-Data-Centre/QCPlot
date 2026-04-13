@@ -1,6 +1,4 @@
-import { ReactNode, useContext } from 'react'
-
-import { ChartContext } from '@/ChartContext'
+import { ReactNode } from 'react'
 
 interface ButtonProps {
   children: ReactNode
@@ -11,11 +9,9 @@ interface ButtonProps {
  * Styled HTML button.
  */
 export const Button = ({ children, onClick }: ButtonProps) => {
-  const { buttonClassname } = useContext(ChartContext)
-
   return (
     <button
-      className={buttonClassname || 'pnf-button'}
+      className='pnf-button'
       onClick={onClick}
     >
       {children}
