@@ -42,7 +42,7 @@ const config = [
         extensions: ['.css']
       })
     ],
-    external: ['react', 'react-dom']
+    external: ['react', 'react-dom', 'react/jsx-runtime']
   },
   {
     input: 'src/index.ts',
