@@ -43,6 +43,8 @@ export const FlagList = ({ flaggedPoints, dataSeries, zoomToRange, plotRef, colo
     return plotRef.current?.series.find(x => (x as NamedSeries).name === traceName)
   }
 
+  const displayIndex = (i: number) => i + 1 // Display indices starting from 1 for user-friendliness
+
   const getColourFromKey = (key: string) => {
     if (!plotRef.current) return
     const traceName = key.split(';')[0]
@@ -84,8 +86,8 @@ export const FlagList = ({ flaggedPoints, dataSeries, zoomToRange, plotRef, colo
                     onClick={() => zoomToRange(fp.traceName, fp.pointIndex, fp.endIndex || fp.pointIndex)}
                   >
                     {isNil(fp.endIndex) || fp.pointIndex === fp.endIndex
-                      ? fp.pointIndex
-                      : `${fp.pointIndex}-${fp.endIndex}`}
+                      ? displayIndex(fp.pointIndex)
+                      : `${displayIndex(fp.pointIndex)}-${displayIndex(fp.endIndex)}`}
                   </button>
                 ).map((item, index) => [index > 0 && ', ', item])}
               </td>

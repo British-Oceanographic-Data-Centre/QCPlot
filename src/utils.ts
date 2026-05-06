@@ -73,7 +73,7 @@ export const seriesFromData = (
 
     let label: string
     if (showCycleNumber) {
-      label = `Val: ${value} Cyc: ${pointIndex - precedingNulls.length}`
+      label = `Val: ${value} Cyc: ${pointIndex - precedingNulls.length + 1}`
     } else {
       label = value.toString()
     }
