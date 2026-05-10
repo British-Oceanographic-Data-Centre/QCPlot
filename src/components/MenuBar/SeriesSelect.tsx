@@ -2,7 +2,7 @@ import { useContext, useEffect, useMemo, useState } from 'react'
 
 import { CheckableLabel } from './CheckableLabel'
 import { ChartContext } from '@/ChartContext'
-import { P01_BASE_URL } from '@/config'
+import { P01_BASE_URL } from '@/constants'
 import { DataSeries } from '@/types'
 
 interface SeriesSelectProps {

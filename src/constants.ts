@@ -14,9 +14,14 @@ export const DEFAULT_COLOURS = [
   '#858080'
 ]
 
-export const FLAGS = {
+export const FLAGS: {[key: string]: string[]} = {
   ALPHABETICAL_FLAGS: 'ABCDEFGHIJKLMNOPQRSTUVWXYZ<>'.split(''),
   NUMERIC_FLAGS: '123456789'.split('')
+}
+
+export enum FlagSets {
+  ALPHABETICAL_FLAGS = 'ALPHABETICAL_FLAGS',
+  NUMERIC_FLAGS = 'NUMERIC_FLAGS'
 }
 
 export enum PointDisplay {
@@ -37,3 +42,6 @@ export const PLOT_HELP_TEXT = `
     - R: reset zoom to default level
     - Esc: Clear current flagging selection
 `
+
+export const VOCAB_HOST = 'https://vocab.nerc.ac.uk'
+export const P01_BASE_URL = `${VOCAB_HOST}/collection/P01/current`

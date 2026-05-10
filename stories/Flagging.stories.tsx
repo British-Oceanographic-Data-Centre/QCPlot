@@ -4,8 +4,8 @@ import type { Meta } from '@storybook/nextjs-vite'
 
 import { bigData, simpleData } from './data'
 import { Chart } from '@/Chart'
+import { FlagSets } from '@/constants'
 import type { FlaggedPoint } from '@/types'
-import { FlagSets } from '@/types'
 
 const meta: Meta<typeof Chart> = {
   component: Chart

@@ -2,9 +2,8 @@ import { useState } from 'react'
 
 import { ChartContext } from './ChartContext'
 import { ChartInner } from './components/ChartInner'
-import { FLAGS } from './constants'
+import { FLAGS, FlagSets } from './constants'
 import type { ChartProps } from './types'
-import { FlagSets } from './types'
 
 import './style.css'
 import 'uplot/dist/uPlot.min.css'

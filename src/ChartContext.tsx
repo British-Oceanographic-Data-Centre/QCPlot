@@ -1,6 +1,7 @@
 import { createContext, SetStateAction } from 'react'
 
-import { FlagSets, type ChartContextValue } from './types'
+import { FlagSets } from './constants'
+import type { ChartContextValue } from './types'
 
 export const ChartContext = createContext<ChartContextValue>({
   totalSeriesCount: 0,
