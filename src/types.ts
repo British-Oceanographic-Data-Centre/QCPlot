@@ -69,8 +69,3 @@ export interface InitialRange {
   yMin: number
   yMax: number
 }
-
-export enum FlagSets {
-  ALPHABETICAL_FLAGS = 'ALPHABETICAL_FLAGS',
-  NUMERIC_FLAGS = 'NUMERIC_FLAGS'
-}
