@@ -14,26 +14,17 @@ import { MainButtonBar } from './MainButtonBar'
 import { MenuBar } from './MenuBar'
 import { ChartContext } from '@/ChartContext'
 import { DEFAULT_COLOURS, PLOT_HELP_TEXT, PointDisplay } from '@/constants'
-import { combineFlaggedPoints } from '@/flagUtils'
+import { toggleDark, updateFlagModeState } from '@/domUtils'
+import { clearSelection, combineFlaggedPoints } from '@/flagUtils'
 import { renderFlagsPlugin, scrollZoomPlugin } from '@/plugins'
 import { legendPlugin } from '@/plugins/legend'
 
-const initHook = (u: uPlot, flagMode: boolean, rightLegend?: boolean) => {
-  u.over.tabIndex = -1 // required for key handlers
-
-  if (flagMode) {
-    u.root.querySelector('.u-select')?.classList.add('pnf-flag-select')
-  }
-
+const initHook = (u: uPlot, rightLegend?: boolean) => {
   if (rightLegend) {
     u.root.classList.add('rgt-leg')
   }
 
-  u.over.addEventListener(
-    'keydown',
-    onKeyDown(u),
-    true
-  )
+  document.addEventListener('keydown', onKeyDown(u), true)
 }
 
 /**
@@ -56,10 +47,10 @@ export const ChartInner = ({
 }: ChartProps) => {
   const { activeIds, activeParams, totalSeriesCount } = useContext(ChartContext)
 
-  const [flagMode, setFlagMode] = useState(false)
   const [showPoints, setShowPoints] = useState<number>(PointDisplay.ALL)
   const [colours, setColours] = useState<string[]>(extendArray(plotColours || DEFAULT_COLOURS, totalSeriesCount))
 
+  const flagModeRef = useRef<boolean>(false)
   const containerRef = useRef<HTMLDivElement>(null)
   const plotRef = useRef<uPlot>(null)
   const initialScales = useRef<InitialRange>(null)
@@ -67,6 +58,13 @@ export const ChartInner = ({
   const clientWidthRatio = verticalMode ? 0.5 : 1
 
   const allFlaggedPoints = combineFlaggedPoints(flaggedPoints, originatorFlaggedPoints)
+
+  const toggleFlagMode = () => {
+    if (!plotRef.current) return
+    flagModeRef.current = !flagModeRef.current // Update stored ref value
+
+    updateFlagModeState(plotRef.current, flagModeRef.current)
+  }
 
   const onUnZoom = useCallback(() => {
     const u = plotRef.current
@@ -99,13 +97,16 @@ export const ChartInner = ({
         return
       }
       if (event.key.toUpperCase() === 'F') {
-        setFlagMode(prev => !prev)
+        toggleFlagMode()
       }
       if (event.key.toUpperCase() === 'R') {
         onUnZoom()
       }
+      if (event.key.toUpperCase() === 'D') {
+        toggleDark()
+      }
       if (event.key === 'Escape') {
-        clearSelection()
+        clearSelection(plotRef.current)
       }
     }
     document.addEventListener('keydown', handleKeyPress)
@@ -114,27 +115,14 @@ export const ChartInner = ({
     }
   }, [onUnZoom])
 
-  useEffect(() => {
-    if (!flagMode) {
-      clearSelection()
-    }
-  }, [flagMode])
-
   const series = seriesFromData(data, allFlaggedPoints, colours, activeIds, activeParams, showCycleNumber, scatterMode)
-
-  const clearSelection = () => {
-    if (plotRef.current) {
-      plotRef.current.setSelect({ left: 0, top: 0, width: 0, height: 0 })
-      plotRef.current.root.querySelector('.u-select')?.classList.remove('pnf-flag-select')
-    }
-  }
 
   const opts: Options = {
     width: containerRef.current ? containerRef.current.clientWidth * clientWidthRatio : 800,
     height,
     cursor: {
       drag: {
-        setScale: !flagMode,
+        setScale: !flagModeRef.current,
         x: true,
         y: true
       },
@@ -149,7 +137,7 @@ export const ChartInner = ({
           return e => {
             if (e.button === 0) {
               handler(e)
-              if (flagMode) {
+              if (flagModeRef.current) {
                 u.root.querySelector('.u-select')?.classList.add('pnf-flag-select')
               }
             }
@@ -167,7 +155,7 @@ export const ChartInner = ({
       }
     },
     hooks: {
-      init: [(u) => initHook(u, flagMode, verticalMode)],
+      init: [(u) => initHook(u, verticalMode)],
       ready: [(u) => {
         if (!initialScales.current) {
           initialScales.current = {
@@ -307,19 +295,16 @@ export const ChartInner = ({
       </div>
       <div className='pnf-control-bar-outer'>
         <MainButtonBar
-          flagMode={flagMode}
-          setFlagMode={setFlagMode}
+          flagMode={flagModeRef.current}
+          toggleFlagMode={toggleFlagMode}
           onUnZoom={onUnZoom}
-          containerRef={containerRef}
           enableFlagging={enableFlagging}
         />
-        {flagMode && (
-          <FlagButtonBar
-            clearSelection={clearSelection}
-            plotRef={plotRef}
-            flaggedPoints={allFlaggedPoints}
-          />
-        )}
+        <FlagButtonBar
+          clearSelection={clearSelection}
+          plotRef={plotRef}
+          flaggedPoints={allFlaggedPoints}
+        />
       </div>
       {/* End control bar  */}
 

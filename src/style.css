@@ -73,6 +73,10 @@
     margin-top: 5px;
 }
 
+.pnf-hidden {
+    display: none!important;
+}
+
 .pnf-table, .pnf-table th, .pnf-table td {
     border: 1px solid #ccc;
     border-collapse: collapse;

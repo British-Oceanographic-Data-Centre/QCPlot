@@ -55,7 +55,7 @@ export interface ChartContextValue {
   flagset?: keyof typeof FLAGS
 }
 
-export interface ISelectedPoints {
+export interface SelectedPoints {
   [traceName: string]: number[] // array of point indices
 }
 
