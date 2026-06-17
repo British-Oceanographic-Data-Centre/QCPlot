@@ -10,7 +10,7 @@ import { FlaggedPoint } from '@/types'
 
 interface FlagButtonBarProps {
   plotRef: RefObject<uPlot | null>
-  clearSelection: () => void
+  clearSelection: (u: uPlot | null) => void
   flaggedPoints: FlaggedPoint[]
 }
 
@@ -38,7 +38,7 @@ export const FlagButtonBar = ({ clearSelection, plotRef, flaggedPoints }: FlagBu
   }
 
   return (
-    <div className='pnf-button-bar'>
+    <div className='pnf-button-bar pnf-flag-controls pnf-hidden'>
       <select ref={flagSelect} className='pnf-select'>
         <option></option>
         {flagOptions.map(x => (
@@ -47,7 +47,7 @@ export const FlagButtonBar = ({ clearSelection, plotRef, flaggedPoints }: FlagBu
       </select>
       <Button onClick={applyFlags}>Apply flags</Button>
       <Button onClick={removeFlags}>Remove flags</Button>
-      <Button onClick={clearSelection}>Clear selection</Button>
+      <Button onClick={() => clearSelection(plotRef.current)}>Clear selection</Button>
     </div>
   )
 }

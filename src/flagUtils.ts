@@ -1,12 +1,22 @@
 import type uPlot from 'uplot'
 
-import { FlaggedPoint, ISelectedPoints, NamedSeries } from './types'
+import { FlaggedPoint, SelectedPoints, NamedSeries } from './types'
 import { isNil } from './utils'
+
+/**
+ * Clear current selected region on the plot.
+ */
+export const clearSelection = (u: uPlot | null) => {
+  if (u) {
+    u.setSelect({ left: 0, top: 0, width: 0, height: 0 })
+    u.root.querySelector('.u-select')?.classList.remove('pnf-flag-select')
+  }
+}
 
 /**
  * Get the points within the currently selected region.
  */
-export const getPointsForSelection = (u: uPlot): ISelectedPoints => {
+export const getPointsForSelection = (u: uPlot): SelectedPoints => {
   const isVertical = u.scales.x.ori === 1
 
   const lft = u.select.left
@@ -14,7 +24,7 @@ export const getPointsForSelection = (u: uPlot): ISelectedPoints => {
   const top = u.select.top
   const bottom = u.select.height + top
 
-  const selectedPoints: ISelectedPoints = {}
+  const selectedPoints: SelectedPoints = {}
 
   const xStartIndex = u.posToIdx(isVertical ? top : lft)
   const xEndIndex = u.posToIdx(isVertical ? bottom : rgt)
@@ -45,7 +55,7 @@ export const getPointsForSelection = (u: uPlot): ISelectedPoints => {
 }
 
 interface updateFlagsProps {
-  selectedPoints: ISelectedPoints,
+  selectedPoints: SelectedPoints,
   flag: string | null,
   existingFlags: FlaggedPoint[],
   flagCallback?: (flaggedPoints: FlaggedPoint[]) => void
