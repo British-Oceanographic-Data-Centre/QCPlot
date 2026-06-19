@@ -8,9 +8,12 @@ import data2 from './realData2/data.json'
 import flags2 from './realData2/flags.json'
 import data3 from './realData3/data.json'
 import flags3 from './realData3/flags.json'
+import data4 from './realData4/data.json'
+import flags4 from './realData4/flags.json'
 import { Chart } from '@/Chart'
 import { combineRanges } from '@/flagUtils'
 import type { Data, FlaggedPoint } from '@/types'
+import { combinePlotData } from '@/utils'
 
 const meta: Meta<typeof Chart> = {
   component: Chart
@@ -59,6 +62,23 @@ export const RealDataDemo3 = () => {
       enableFlagging
       xTimeAxis
       showCycleNumber
+    />
+  )
+}
+
+export const RealDataDemo4 = () => {
+  const [flags, setFlags] = useState<FlaggedPoint[]>(flags4 as FlaggedPoint[])
+
+  return (
+    <Chart
+      data={combinePlotData(data4 as Data[], true, false)}
+      flaggedPoints={flags}
+      flagCallback={setFlags}
+      enableFlagging
+      showCycleNumber
+      scatterMode
+      verticalMode
+      xTimeAxis={false}
     />
   )
 }

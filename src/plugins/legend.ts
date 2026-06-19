@@ -12,7 +12,8 @@ import { getTraceName } from '@/utils'
 export const legendPlugin = (
   series: DataSeries[],
   colours: string[],
-  setColours: React.Dispatch<React.SetStateAction<string[]>>
+  setColours: React.Dispatch<React.SetStateAction<string[]>>,
+  scatterMode = false
 ): uPlot.Plugin => {
   const addColourInputs = (u: uPlot) => {
     u.root.querySelectorAll('.u-marker').forEach((node, i) => {
@@ -41,6 +42,9 @@ export const legendPlugin = (
   return {
     hooks: {
       ready: (u: uPlot) => {
+        if (scatterMode) {
+          u.root.querySelector('.u-series')?.remove()
+        }
         addColourInputs(u)
       }
     }

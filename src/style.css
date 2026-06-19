@@ -83,6 +83,12 @@
     text-align: left;
 }
 
+.pnf-table th {
+    background-color: white;
+    position: sticky;
+    top: 1px;
+}
+
 .pnf-table th, .pnf-table td {
     padding: 2px 3px;
 }

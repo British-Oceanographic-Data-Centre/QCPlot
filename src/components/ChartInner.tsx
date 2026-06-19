@@ -16,6 +16,7 @@ import { ChartContext } from '@/ChartContext'
 import { DEFAULT_COLOURS, PLOT_HELP_TEXT, PointDisplay } from '@/constants'
 import { toggleDark, updateFlagModeState } from '@/domUtils'
 import { clearSelection, combineFlaggedPoints } from '@/flagUtils'
+import { getScatterHoverIndex } from '@/plotUtils'
 import { renderFlagsPlugin, scrollZoomPlugin } from '@/plugins'
 import { legendPlugin } from '@/plugins/legend'
 
@@ -69,7 +70,11 @@ export const ChartInner = ({
   const onUnZoom = useCallback(() => {
     const u = plotRef.current
     if (!u) return
-    const { min, max } = getArrayMinMax(xTimeAxis ? data.xValues.map(x => dayjs(x).unix()) : data.xValues as number[])
+    let { min, max } = getArrayMinMax(xTimeAxis ? data.xValues.map(x => dayjs(x).unix()) : data.xValues as number[])
+    if (min === max) {
+      min -= 1
+      max += 1
+    }
     u.setScale('x', { min, max })
   }, [data.xValues, xTimeAxis])
 
@@ -121,17 +126,12 @@ export const ChartInner = ({
     width: containerRef.current ? containerRef.current.clientWidth * clientWidthRatio : 800,
     height,
     cursor: {
+      dataIdx: scatterMode ? getScatterHoverIndex : undefined,
       drag: {
         setScale: !flagModeRef.current,
         x: true,
         y: true
       },
-      hover: verticalMode
-        ? {}
-        : {
-            prox: 5,
-            bias: 0
-          },
       bind: {
         mousedown: (u, _target, handler) => {
           return e => {
@@ -170,7 +170,7 @@ export const ChartInner = ({
     plugins: [
       renderFlagsPlugin(allFlaggedPoints, showPoints, scatterMode),
       scrollZoomPlugin(initialScales.current),
-      legendPlugin(data.series, colours, setColours)
+      legendPlugin(data.series, colours, setColours, scatterMode)
     ],
     series,
     scales: {

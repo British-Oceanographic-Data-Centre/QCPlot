@@ -34,16 +34,20 @@ export const scrollZoomPlugin = (initialScales: InitialRange | null): uPlot.Plug
   return {
     hooks: {
       ready: (u: uPlot) => {
+        const isVertical = u.scales.x.ori === 1
+        const horizontalScale = isVertical ? 'y' : 'x'
+        const verticalScale = isVertical ? 'x' : 'y'
+
         if (initialScales) {
-          xMin = initialScales.xMin
-          xMax = initialScales.xMax
-          yMin = initialScales.yMin
-          yMax = initialScales.yMax
+          xMin = isVertical ? initialScales.yMin : initialScales.xMin
+          xMax = isVertical ? initialScales.yMax : initialScales.xMax
+          yMin = isVertical ? initialScales.xMin : initialScales.yMin
+          yMax = isVertical ? initialScales.xMax : initialScales.yMax
         } else {
-          xMin = u.scales.x.min!
-          xMax = u.scales.x.max!
-          yMin = u.scales.y.min!
-          yMax = u.scales.y.max!
+          xMin = u.scales[horizontalScale].min!
+          xMax = u.scales[horizontalScale].max!
+          yMin = u.scales[verticalScale].min!
+          yMax = u.scales[verticalScale].max!
         }
 
         xRange = xMax - xMin
@@ -61,10 +65,10 @@ export const scrollZoomPlugin = (initialScales: InitialRange | null): uPlot.Plug
             const left0 = e.clientX
             // let top0 = e.clientY;
 
-            const scXMin0 = u.scales.x.min!
-            const scXMax0 = u.scales.x.max!
+            const scXMin0 = u.scales[horizontalScale].min!
+            const scXMax0 = u.scales[horizontalScale].max!
 
-            const xUnitsPerPx = u.posToVal(1, 'x') - u.posToVal(0, 'x')
+            const xUnitsPerPx = u.posToVal(1, horizontalScale) - u.posToVal(0, horizontalScale)
 
             const onmove = (e: MouseEvent) => {
               e.preventDefault()
@@ -74,7 +78,7 @@ export const scrollZoomPlugin = (initialScales: InitialRange | null): uPlot.Plug
 
               const dx = xUnitsPerPx * (left1 - left0)
 
-              u.setScale('x', {
+              u.setScale(horizontalScale, {
                 min: scXMin0 - dx,
                 max: scXMax0 - dx
               })
@@ -98,11 +102,12 @@ export const scrollZoomPlugin = (initialScales: InitialRange | null): uPlot.Plug
           const { left, top } = u.cursor
 
           const leftPct = left! / rect.width
-          const btmPct = 1 - top! / rect.height
-          const xVal = u.posToVal(left!, 'x')
-          const yVal = u.posToVal(top!, 'y')
-          const oxRange = u.scales.x.max! - u.scales.x.min!
-          const oyRange = u.scales.y.max! - u.scales.y.min!
+          const btmPct = isVertical ? top! / rect.height : 1 - top! / rect.height
+
+          const xVal = u.posToVal(left!, horizontalScale)
+          const yVal = u.posToVal(top!, verticalScale)
+          const oxRange = u.scales[horizontalScale].max! - u.scales[horizontalScale].min!
+          const oyRange = u.scales[verticalScale].max! - u.scales[verticalScale].min!
 
           const nxRange = e.deltaY < 0 ? oxRange * factor : oxRange / factor
           let nxMin = xVal - leftPct * nxRange
@@ -115,12 +120,12 @@ export const scrollZoomPlugin = (initialScales: InitialRange | null): uPlot.Plug
           [nyMin, nyMax] = clamp(nyRange, nyMin, nyMax, yRange, yMin, yMax)
 
           u.batch(() => {
-            u.setScale('x', {
+            u.setScale(horizontalScale, {
               min: nxMin,
               max: nxMax
             })
 
-            u.setScale('y', {
+            u.setScale(verticalScale, {
               min: nyMin,
               max: nyMax
             })
