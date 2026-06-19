@@ -1,0 +1,27 @@
+[
+    {
+        "traceName": "7-ALKYPOTK",
+        "pointIndex": 19,
+        "flag": "L"
+    },
+    {
+        "traceName": "11-ALKYPOTK",
+        "pointIndex": 6,
+        "flag": "L"
+    },
+    {
+        "traceName": "15-ALKYPOTK",
+        "pointIndex": 13,
+        "flag": "L"
+    },
+    {
+        "traceName": "17-TCO2KG01",
+        "pointIndex": 0,
+        "flag": "L"
+    },
+    {
+        "traceName": "17-ALKYPOTK",
+        "pointIndex": 0,
+        "flag": "L"
+    }
+]

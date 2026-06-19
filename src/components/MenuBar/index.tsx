@@ -46,7 +46,7 @@ export const MenuBar = ({
   const [activeSection, setActiveSection] = useState<string | null>(Sections.SERIES)
 
   return (
-    <div className={activeSection ? 'pnf-menu-bar pnf-menu-bar-open' : 'pnf-menu-bar'}>
+    <div className='pnf-menu-bar'>
       <TabButton
         active={activeSection === Sections.SERIES}
         onClick={() =>
@@ -65,22 +65,24 @@ export const MenuBar = ({
           {Sections.FLAG_LIST}
         </TabButton>
       }
-      {activeSection === Sections.SERIES && (
-        <SeriesSelect
-          dataSeries={data.series}
-          hideParameterSelect={hideParameterSelect}
-        />
-      )}
+      <div className={activeSection ? 'pnf-menu-bar-open' : ''}>
+        {activeSection === Sections.SERIES && (
+          <SeriesSelect
+            dataSeries={data.series}
+            hideParameterSelect={hideParameterSelect}
+          />
+        )}
 
-      {!hideFlagTab && activeSection === Sections.FLAG_LIST && (
-        <FlagList
-          flaggedPoints={flaggedPoints}
-          dataSeries={data.series}
-          zoomToRange={zoomToRange}
-          plotRef={plotRef}
-          colours={colours}
-        />
-      )}
+        {!hideFlagTab && activeSection === Sections.FLAG_LIST && (
+          <FlagList
+            flaggedPoints={flaggedPoints}
+            dataSeries={data.series}
+            zoomToRange={zoomToRange}
+            plotRef={plotRef}
+            colours={colours}
+          />
+        )}
+      </div>
     </div>
   )
 }

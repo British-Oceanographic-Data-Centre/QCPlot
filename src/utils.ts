@@ -60,8 +60,9 @@ export const seriesFromData = (
   const seriesArray: (uPlot.Series | NamedSeries)[] = [{}]
 
   const formatLabel = (u: uPlot, value: number | null, seriesIdx: number, pointIndex: number | null) => {
+    const baseLabel = scatterMode ? 'x: -- y: --' : '--'
     if (value === null || pointIndex === null) {
-      return showCycleNumber ? 'Val: -- Cyc: --' : 'Val: --'
+      return showCycleNumber ? `${baseLabel} Cyc: --` : baseLabel
     }
 
     // Count nulls in the series before this, to offset correctly
@@ -72,10 +73,16 @@ export const seriesFromData = (
     const flag = getFlagForPoint(seriesFlags, pointIndex - precedingNulls.length)
 
     let label: string
-    if (showCycleNumber) {
-      label = `Val: ${value} Cyc: ${pointIndex - precedingNulls.length + 1}`
+    if (scatterMode) {
+      const x = u.data[0][pointIndex]
+      const y = value
+      const isVertical = u.scales.x.ori === 1
+      label = isVertical ? `x: ${y} y: ${x}` : `x: ${x} y: ${y}`
     } else {
-      label = value.toString()
+      label = `${value}`
+    }
+    if (showCycleNumber) {
+      label += ` Cyc: ${pointIndex - precedingNulls.length + 1}`
     }
     if (flag) {
       label += ` (${flag})`
@@ -153,4 +160,70 @@ export const nullPaddedIndexMap = (arr: (number | null)[]) => {
     }
   })
   return result
+}
+
+/**
+ * Combines multiple plot data objects aligning the x values across them using null padding.
+ *
+ * @param allPlotData Array of Data objects to be combined
+ * @param sortNumeric Boolean - whether to case X values to numbers before applying sort
+ * @param uniqueXs Boolean - whether to allow duplicate X values in the combined data
+ */
+export const combinePlotData = (allPlotData: Data[], sortNumeric = false, uniqueXs = true) => {
+  let allXValues: (string|number)[] = []
+  if (uniqueXs) {
+    const allXsSet = new Set<string|number>()
+    allPlotData.forEach(d => {
+      d.xValues.forEach(x => allXsSet.add(x))
+    })
+    allXValues = Array.from(allXsSet)
+  } else {
+    allPlotData.forEach(d => {
+      d.xValues.forEach(x => allXValues.push(x))
+    })
+  }
+  const allXs = sortNumeric ? allXValues.sort((a, b) => Number(a) - Number(b)) : allXValues.sort()
+
+  const adjustedSeries: DataSeries[] = []
+  allPlotData.forEach(d => {
+    // Create a dictionary of x-values to index for quick lookup
+    const indexedDatasetXs: {[key: string]: number[]} = {}
+    d.xValues.forEach((x, i) => {
+      if (!uniqueXs && indexedDatasetXs[x] !== undefined) {
+        indexedDatasetXs[x].push(i)
+      } else {
+        indexedDatasetXs[x] = [i]
+      }
+    })
+    d.series.forEach(s => {
+      const adjusted: DataSeries = {
+        ...s,
+        spanGaps: true,
+        values: []
+      }
+      let currentXCount = 0 // Used to track duplicate x values
+      allXs.forEach((x, j) => {
+        if (j > 0 && x === allXs[j - 1]) {
+          currentXCount += 1
+        } else {
+          currentXCount = 0
+        }
+        const i = indexedDatasetXs[x] !== undefined ? indexedDatasetXs[x][currentXCount] : undefined
+        if (i !== undefined) {
+          // if this x value exists for this particular series
+          adjusted.values.push(s.values[i])
+        } else {
+          // else null-pad it
+          adjusted.values.push(null)
+        }
+      })
+      adjustedSeries.push(adjusted)
+    })
+  })
+
+  const data: Data = {
+    xValues: allXs,
+    series: adjustedSeries
+  }
+  return data
 }

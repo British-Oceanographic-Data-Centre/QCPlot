@@ -40,6 +40,7 @@ export const PLOT_HELP_TEXT = `
   - Hot keys
     - F: toggle flag mode
     - R: reset zoom to default level
+    - D: toggle dark mode
     - Esc: Clear current flagging selection
 `
 
