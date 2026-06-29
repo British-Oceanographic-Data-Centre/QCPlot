@@ -43,6 +43,7 @@ export interface ChartProps {
   flagset?: keyof typeof FLAGS
   xAxisLabel?: string
   yAxisLabel?: string
+  goodFlags? : string[] // List of flags that should shouldn't display as different symbols on the plots
 }
 
 export interface ChartContextValue {

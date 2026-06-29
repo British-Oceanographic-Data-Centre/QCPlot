@@ -44,7 +44,8 @@ export const ChartInner = ({
   scatterMode,
   hideParameterSelect = false,
   xAxisLabel,
-  yAxisLabel
+  yAxisLabel,
+  goodFlags = []
 }: ChartProps) => {
   const { activeIds, activeParams, totalSeriesCount } = useContext(ChartContext)
 
@@ -168,7 +169,7 @@ export const ChartInner = ({
       }]
     },
     plugins: [
-      renderFlagsPlugin(allFlaggedPoints, showPoints, scatterMode),
+      renderFlagsPlugin(allFlaggedPoints, showPoints, scatterMode, goodFlags),
       scrollZoomPlugin(initialScales.current),
       legendPlugin(data.series, colours, setColours, scatterMode)
     ],
