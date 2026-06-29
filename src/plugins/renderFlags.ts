@@ -15,7 +15,8 @@ const linear = uPlot.paths.linear!()
 export const renderFlagsPlugin = (
   flaggedPoints: FlaggedPoint[] = [],
   showPoints: number,
-  scatterMode = false
+  scatterMode = false,
+  goodFlags: string[] = []
 ): uPlot.Plugin => {
   const drawFlagMarker = (ctx: CanvasRenderingContext2D, cx: number, cy: number) => {
     let shapeSize = 6
@@ -68,7 +69,8 @@ export const renderFlagsPlugin = (
       while (j <= i1) {
         // Render symbol if point is flagged OR if we're displaying flagged points only
         // The FLAGS_ONLY check is a slight cheat to get round the flag indices being offset when data is filtered out
-        if (showPoints === PointDisplay.FLAGS_ONLY || getFlagForPoint(seriesFlags, j)) {
+        const flag = getFlagForPoint(seriesFlags, j)
+        if (showPoints === PointDisplay.FLAGS_ONLY || (flag && !goodFlags.includes(flag))) {
           const val = data[j]
 
           if (val >= u.scales.y.min! && val <= u.scales.y.max!) {
