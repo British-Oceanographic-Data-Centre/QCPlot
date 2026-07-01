@@ -54,7 +54,7 @@ export const FlagList = ({ flaggedPoints, dataSeries, zoomToRange, plotRef, colo
 
   return (
     <div>
-      <table className='pnf-table'>
+      <table className='qcp-table'>
         <thead>
           <tr>
             <th />
@@ -67,7 +67,7 @@ export const FlagList = ({ flaggedPoints, dataSeries, zoomToRange, plotRef, colo
           {Object.keys(groupedFlaggedPoints).sort().map(key =>
             <tr
               key={key}
-              className={getSeriesFromKey(key)?.show ? '' : 'pnf-faded'}
+              className={getSeriesFromKey(key)?.show ? '' : 'qcp-faded'}
             >
               <td>
                 <div style={{ width: '1em', height: '1em', border: `2px solid ${getColourFromKey(key)}` }} />
@@ -82,7 +82,7 @@ export const FlagList = ({ flaggedPoints, dataSeries, zoomToRange, plotRef, colo
                 {groupedFlaggedPoints[key].sort((a, b) => a.pointIndex - b.pointIndex).map(fp =>
                   <button
                     key={fp.pointIndex}
-                    className='pnf-link-btn'
+                    className='qcp-link-btn'
                     onClick={() => zoomToRange(fp.traceName, fp.pointIndex, fp.endIndex || fp.pointIndex)}
                   >
                     {isNil(fp.endIndex) || fp.pointIndex === fp.endIndex

@@ -13,9 +13,9 @@ interface MainButtonBarProps {
  */
 export const MainButtonBar = ({ flagMode, toggleFlagMode, onUnZoom, enableFlagging }: MainButtonBarProps) => {
   return (
-    <div className='pnf-button-bar'>
+    <div className='qcp-button-bar'>
       {enableFlagging &&
-        <Button className='pnf-toggle-flag-mode-btn' onClick={toggleFlagMode}>
+        <Button className='qcp-toggle-flag-mode-btn' onClick={toggleFlagMode}>
           Toggle Flag Mode - {flagMode ? 'on' : 'off'}
         </Button>
       }

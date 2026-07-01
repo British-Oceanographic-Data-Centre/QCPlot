@@ -31,7 +31,7 @@ const TabButton = ({
   active: boolean
 }) => {
   return (
-    <button onClick={onClick} className={active ? 'pnf-tab-button-active' : 'pnf-tab-button'}>
+    <button onClick={onClick} className={active ? 'qcp-tab-button-active' : 'qcp-tab-button'}>
       {children}
     </button>
   )
@@ -46,7 +46,7 @@ export const MenuBar = ({
   const [activeSection, setActiveSection] = useState<string | null>(Sections.SERIES)
 
   return (
-    <div className='pnf-menu-bar'>
+    <div className='qcp-menu-bar'>
       <TabButton
         active={activeSection === Sections.SERIES}
         onClick={() =>
@@ -65,7 +65,7 @@ export const MenuBar = ({
           {Sections.FLAG_LIST}
         </TabButton>
       }
-      <div className={activeSection ? 'pnf-menu-bar-open' : ''}>
+      <div className={activeSection ? 'qcp-menu-bar-open' : ''}>
         {activeSection === Sections.SERIES && (
           <SeriesSelect
             dataSeries={data.series}

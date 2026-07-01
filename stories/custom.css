@@ -1,11 +1,11 @@
-.pnf-tab-button-active, .pnf-button {
+.qcp-tab-button-active, .qcp-button {
   background-color: orange;
 }
 
-.pnf-tab-button {
+.qcp-tab-button {
   border-color: orange;
 }
 
-.pnf-flag-select {
+.qcp-flag-select {
   background: rgba(255, 255, 0, 0.2)!important;
 }

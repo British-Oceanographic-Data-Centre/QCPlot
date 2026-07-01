@@ -72,7 +72,7 @@ export const SeriesSelect = ({ dataSeries, hideParameterSelect }: SeriesSelectPr
   }, [uniqueParams])
 
   return (
-    <table className='pnf-table'>
+    <table className='qcp-table'>
       <thead>
         <tr>
           <th>

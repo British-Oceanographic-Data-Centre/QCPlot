@@ -1,4 +1,4 @@
-# BODC Plot n' Flag
+# QCPlot
 
 A react component, built on µPlot, to display data and apply QC flagging.
 

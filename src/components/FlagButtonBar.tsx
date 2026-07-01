@@ -38,8 +38,8 @@ export const FlagButtonBar = ({ clearSelection, plotRef, flaggedPoints }: FlagBu
   }
 
   return (
-    <div className='pnf-button-bar pnf-flag-controls pnf-hidden'>
-      <select ref={flagSelect} className='pnf-select'>
+    <div className='qcp-button-bar qcp-flag-controls qcp-hidden'>
+      <select ref={flagSelect} className='qcp-select'>
         <option></option>
         {flagOptions.map(x => (
           <option key={x}>{x}</option>

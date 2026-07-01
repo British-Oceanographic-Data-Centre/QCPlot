@@ -139,7 +139,7 @@ export const ChartInner = ({
             if (e.button === 0) {
               handler(e)
               if (flagModeRef.current) {
-                u.root.querySelector('.u-select')?.classList.add('pnf-flag-select')
+                u.root.querySelector('.u-select')?.classList.add('qcp-flag-select')
               }
             }
             return null
@@ -148,7 +148,7 @@ export const ChartInner = ({
         dblclick: (u, _target, handler) => {
           return e => {
             handler(e)
-            u.root.querySelector('.u-select')?.classList.remove('pnf-flag-select')
+            u.root.querySelector('.u-select')?.classList.remove('qcp-flag-select')
             onUnZoom()
             return null
           }
@@ -266,7 +266,7 @@ export const ChartInner = ({
     plotRef.current!.setScale('x', { min: xMin, max: xMax })
   }
   return (
-    <div ref={containerRef} className='pnf-container'>
+    <div ref={containerRef} className='qcp-container'>
       <MenuBar
         data={data}
         flaggedPoints={allFlaggedPoints}
@@ -278,11 +278,11 @@ export const ChartInner = ({
       />
 
       {/* Control bar */}
-      <div className='pnf-control-bar-outer'>
+      <div className='qcp-control-bar-outer'>
         {enableFlagging
           ? (
               <label>Display Points
-                <select className='pnf-select' value={showPoints} onChange={e => setShowPoints(Number(e.target.value))}>
+                <select className='qcp-select' value={showPoints} onChange={e => setShowPoints(Number(e.target.value))}>
                   <option value={PointDisplay.ALL}>All</option>
                   <option value={PointDisplay.HIDE_FLAGS}>Hide Flagged Data</option>
                   <option value={PointDisplay.FLAGS_ONLY}>Show Flagged Data Only</option>
@@ -294,7 +294,7 @@ export const ChartInner = ({
             )}
         <Button onClick={() => alert(PLOT_HELP_TEXT)}>?</Button>
       </div>
-      <div className='pnf-control-bar-outer'>
+      <div className='qcp-control-bar-outer'>
         <MainButtonBar
           flagMode={flagModeRef.current}
           toggleFlagMode={toggleFlagMode}

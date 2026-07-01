@@ -9,7 +9,7 @@ import { isNil } from './utils'
 export const clearSelection = (u: uPlot | null) => {
   if (u) {
     u.setSelect({ left: 0, top: 0, width: 0, height: 0 })
-    u.root.querySelector('.u-select')?.classList.remove('pnf-flag-select')
+    u.root.querySelector('.u-select')?.classList.remove('qcp-flag-select')
   }
 }
 

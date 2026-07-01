@@ -6,12 +6,12 @@ import { clearSelection } from './flagUtils'
  * Toggle dark mode.
  */
 export const toggleDark = () => {
-  const container = document.querySelector('.pnf-container')
+  const container = document.querySelector('.qcp-container')
   if (!container) return
-  if (container.className.includes('pnf-dark-mode')) {
-    container.classList.remove('pnf-dark-mode')
+  if (container.className.includes('qcp-dark-mode')) {
+    container.classList.remove('qcp-dark-mode')
   } else {
-    container.classList.add('pnf-dark-mode')
+    container.classList.add('qcp-dark-mode')
   }
 }
 
@@ -20,15 +20,15 @@ export const toggleDark = () => {
  */
 export const updateFlagModeState = (u: uPlot, isActive: boolean) => {
   if (isActive) {
-    u.root.querySelector('.u-select')?.classList.add('pnf-flag-select')
-    document.querySelector('.pnf-flag-controls')?.classList.remove('pnf-hidden')
+    u.root.querySelector('.u-select')?.classList.add('qcp-flag-select')
+    document.querySelector('.qcp-flag-controls')?.classList.remove('qcp-hidden')
   } else {
-    u.root.querySelector('.u-select')?.classList.remove('pnf-flag-select')
-    document.querySelector('.pnf-flag-controls')?.classList.add('pnf-hidden')
+    u.root.querySelector('.u-select')?.classList.remove('qcp-flag-select')
+    document.querySelector('.qcp-flag-controls')?.classList.add('qcp-hidden')
     clearSelection(u)
   }
 
-  document.querySelector('.pnf-toggle-flag-mode-btn')!.textContent = `Toggle Flag Mode - ${isActive ? 'on' : 'off'}`
+  document.querySelector('.qcp-toggle-flag-mode-btn')!.textContent = `Toggle Flag Mode - ${isActive ? 'on' : 'off'}`
 
   u.cursor.drag!.setScale = !isActive
 }

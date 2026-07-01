@@ -21,7 +21,7 @@ export const legendPlugin = (
         const seriesIndex = series.findIndex(x => getTraceName(x) === (u.series[i] as NamedSeries).name)
         const colourInput = document.createElement('input')
         colourInput.type = 'color'
-        colourInput.className = 'pnf-colour-input'
+        colourInput.className = 'qcp-colour-input'
         colourInput.value = colours[seriesIndex]
         colourInput.onchange = (e) => setColours(prev => {
           const updated = [...prev]
