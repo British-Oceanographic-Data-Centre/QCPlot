@@ -16,6 +16,11 @@
     "test": "vitest",
     "coverage": "vitest run --coverage"
   },
+  "devEngines": {
+    "packageManager": {
+      "name": "npm"
+    }
+  },
   "dependencies": {
     "dayjs": "^1.11.13",
     "uplot": "^1.6.32",
