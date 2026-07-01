@@ -20,6 +20,6 @@ jobs:
       - run: npm run rollup
       - run: echo "${{ github.ref }}"
       - run: npm version "${{ github.ref_name }}" --no-git-tag-version
-      - run: npm publish --tag alpha
+      - run: npm publish --tag ${{ github.event.release.prerelease  && 'alpha' || 'latest' }}
         env:
           NODE_AUTH_TOKEN: ${{secrets.npm_token}}
