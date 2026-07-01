@@ -10,19 +10,44 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: ./.github/actions/node-setup
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - run: npm ci
       - run: npm run lint
 
   test:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: ./.github/actions/node-setup
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - run: npm ci
       - run: npm run coverage
 
   build-storybook:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: ./.github/actions/node-setup
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - run: npm ci
       - run: npm run build-storybook
+
+  deploy-dry-run:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - run: npm ci
+      - run: npm set //registry.npmjs.org/:email bodcsoft@noc.ac.uk --location project
+      - run: npm set //registry.npmjs.org/:_authToken=$PUBLIC_NPM_TOKEN
+      - run: npm config set access public
+      - run: npm run rollup
+      - run: npm config list
+      - run: npm version "v0.0.0" --no-git-tag-version
+      - run: npm publish --dry-run --tag dry-run
