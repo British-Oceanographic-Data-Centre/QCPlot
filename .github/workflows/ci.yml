@@ -51,3 +51,13 @@ jobs:
       - run: npm config list
       - run: npm version "v0.0.0" --no-git-tag-version
       - run: npm publish --dry-run --tag dry-run
+
+  npm-audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 24
+      - run: npm ci
+      - run: npm audit --omit=dev --audit-level high
