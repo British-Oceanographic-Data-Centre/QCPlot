@@ -1,11 +1,18 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite'
+import { range } from 'lodash'
 
 import { simpleData, bigData, timeData, makeScatter, combined } from './data'
+import Template from './Template.mdx'
 import { Chart } from '@/Chart'
+import { DataSeries } from '@/types'
 
 const meta: Meta<typeof Chart> = {
-  title: 'Plots Only',
   component: Chart,
+  parameters: {
+    docs: {
+      page: Template
+    }
+  },
   args: {
     flagCallback: console.log,
     defaultShowAll: true
@@ -16,6 +23,13 @@ export default meta
 type Story = StoryObj<typeof Chart>;
 
 export const SmallDataset: Story = {
+  parameters: {
+    docs: {
+      description: {
+        story: 'Another description on the story, overriding the comments'
+      }
+    }
+  },
   args: {
     data: simpleData,
     flaggedPoints: [{ traceName: 'INSTRUMENT_1-PARAM01', pointIndex: 1, endIndex: 4, flag: 'X' }],
@@ -151,5 +165,31 @@ export const MultiOidXYScatter: Story = {
     hideParameterSelect: true,
     defaultShowAll: false,
     height: 520
+  }
+}
+
+export const VeryManySeries: Story = {
+  args: {
+    data: {
+      xValues: range(1000).map(_ => 3),
+      series: (() => {
+        const series: DataSeries[] = []
+        range(10).forEach(j => {
+          range(1000).forEach(i => {
+            series.push({
+              id: `ID_${i}`,
+              parameter: `PARAM_${j}`,
+              values: ((i, j) => { const arr = []; arr[i] = j; return arr })(i, j)
+            })
+          })
+        })
+        return series
+      })()
+    },
+    xTimeAxis: false,
+    defaultShowAll: false,
+    height: 520,
+    scatterMode: true,
+    verticalMode: true
   }
 }
