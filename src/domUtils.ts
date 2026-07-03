@@ -16,6 +16,17 @@ export const toggleDark = () => {
 }
 
 /**
+ * Toggle fullscreen mode.
+ */
+export const toggleFullscreen = () => {
+  if (document.fullscreenElement) {
+    document.exitFullscreen()
+  } else {
+    document.querySelector('.qcp-container')?.requestFullscreen()
+  }
+}
+
+/**
  * Updates various UI components and uPlot properties when toggling flag mode on/off.
  */
 export const updateFlagModeState = (u: uPlot, isActive: boolean) => {

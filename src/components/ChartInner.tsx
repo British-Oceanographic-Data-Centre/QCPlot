@@ -14,7 +14,7 @@ import { MainButtonBar } from './MainButtonBar'
 import { MenuBar } from './MenuBar'
 import { ChartContext } from '@/ChartContext'
 import { DEFAULT_COLOURS, PLOT_HELP_TEXT, PointDisplay } from '@/constants'
-import { toggleDark, updateFlagModeState } from '@/domUtils'
+import { toggleDark, toggleFullscreen, updateFlagModeState } from '@/domUtils'
 import { clearSelection, combineFlaggedPoints } from '@/flagUtils'
 import { getScatterHoverIndex } from '@/plotUtils'
 import { renderFlagsPlugin, scrollZoomPlugin } from '@/plugins'
@@ -102,17 +102,17 @@ export const ChartInner = ({
         // Add the check so that it doesn't interfere with any inputs fields on the page
         return
       }
-      if (event.key.toUpperCase() === 'F') {
-        toggleFlagMode()
-      }
-      if (event.key.toUpperCase() === 'R') {
-        onUnZoom()
-      }
-      if (event.key.toUpperCase() === 'D') {
-        toggleDark()
-      }
-      if (event.key === 'Escape') {
-        clearSelection(plotRef.current)
+      switch (event.key.toUpperCase()) {
+        case 'F':
+          toggleFlagMode(); break
+        case 'R':
+          onUnZoom(); break
+        case 'D':
+          toggleDark(); break
+        case 'B':
+          toggleFullscreen(); break
+        case 'ESCAPE':
+          clearSelection(plotRef.current); break
       }
     }
     document.addEventListener('keydown', handleKeyPress)

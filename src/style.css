@@ -3,11 +3,8 @@
     height: 100%;
 }
 
-.qcp-inner-container {
-    height: 100%;
-    position: relative;
-    display: flex;
-    max-width: 100%;
+.qcp-container:fullscreen {
+    background-color: white;
 }
 
 .qcp-menu-bar {
