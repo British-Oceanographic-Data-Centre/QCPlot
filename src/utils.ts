@@ -19,6 +19,17 @@ export const getTraceName = (series: DataSeries) => {
 }
 
 /**
+ * Splits a trace name into ID and param. Opposite of getTraceName.
+ */
+export const splitTraceName = (name: string): string[] => {
+  // Assume the parameter doesn't contain a hyphen, but the ID could
+  const parts = name.split('-')
+  const param = parts.pop() as string
+  const id = parts.join('/')
+  return [id, param]
+}
+
+/**
  * Constructs the displayed label for a given series.
  */
 export const getSeriesLabel = (series: DataSeries) => {
@@ -91,18 +102,17 @@ export const seriesFromData = (
   }
 
   data.series.forEach((series, i) => {
-    if (activeIds.includes(series.id) && activeParams.includes(series.parameter)) {
-      seriesArray.push({
-        name: getTraceName(series),
-        label: getSeriesLabel(series),
-        scale: 'y',
-        value: formatLabel,
-        stroke: colours[i],
-        paths: scatterMode ? u => null : undefined,
-        points: scatterMode ? { size: 7, fill: colours[i] } : undefined,
-        spanGaps: series.spanGaps
-      })
-    }
+    seriesArray.push({
+      name: getTraceName(series),
+      label: getSeriesLabel(series),
+      scale: 'y',
+      value: formatLabel,
+      stroke: colours[i],
+      paths: scatterMode ? u => null : undefined,
+      points: scatterMode ? { size: 7, fill: colours[i] } : undefined,
+      spanGaps: series.spanGaps,
+      show: activeIds.includes(series.id) && activeParams.includes(series.parameter)
+    })
   })
 
   return seriesArray

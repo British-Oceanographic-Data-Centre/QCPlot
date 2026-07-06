@@ -1,19 +1,25 @@
 import { ReactNode } from 'react'
 
 interface CheckableLabelProps {
-  checked?: boolean
+  defaultChecked?: boolean
   onChange: (val: boolean) => void
   children: ReactNode
   tooltip?: string
+  inputClass?: string
 }
 
 /**
  * Text label with accompanying checkbox.
  */
-export const CheckableLabel = ({ checked, onChange, children, tooltip }: CheckableLabelProps) => (
+export const CheckableLabel = ({ defaultChecked, onChange, children, tooltip, inputClass }: CheckableLabelProps) => (
   <div>
     <label className='qcp-check-label' title={tooltip}>
-      <input type='checkbox' onChange={e => onChange(e.target.checked)} checked={checked} />
+      <input
+        type='checkbox'
+        className={inputClass}
+        onChange={e => onChange(e.target.checked)}
+        defaultChecked={defaultChecked}
+      />
       {children}
     </label>
   </div>

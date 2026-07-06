@@ -48,10 +48,8 @@ export interface ChartProps {
 
 export interface ChartContextValue {
   flagCallback?: (flaggedPoints: FlaggedPoint[]) => void
-  activeIds: string[]
-  setActiveIds: React.Dispatch<React.SetStateAction<string[]>>
-  activeParams: string[]
-  setActiveParams: React.Dispatch<React.SetStateAction<string[]>>
+  activeIds: React.RefObject<string[]>
+  activeParams: React.RefObject<string[]>
   totalSeriesCount: number
   flagset?: keyof typeof FLAGS
 }

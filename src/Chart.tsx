@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useRef } from 'react'
 
 import { ChartContext } from './ChartContext'
 import { ChartInner } from './components/ChartInner'
@@ -17,19 +17,19 @@ export const Chart = ({ data, flaggedPoints, defaultShowAll, ...props }: ChartPr
   const allIds = new Set(data.series.map(x => x.id))
   const allParams = new Set(data.series.map(x => x.parameter))
 
-  const [activeIds, setActiveIds] = useState<string[]>(defaultShowAll ? [...allIds] : [])
+  const initialActiveIds = defaultShowAll ? [...allIds] : []
   const initialActiveParams = (defaultShowAll || props.hideParameterSelect) ? [...allParams] : []
-  const [activeParams, setActiveParams] = useState<string[]>(initialActiveParams)
   const contextFlagset = props.flagset && props.flagset in FLAGS ? props.flagset : FlagSets.ALPHABETICAL_FLAGS
+
+  const activeIds = useRef<string[]>(initialActiveIds)
+  const activeParams = useRef<string[]>(initialActiveParams)
 
   return (
     <ChartContext.Provider
       value={{
         flagCallback: props.flagCallback,
         activeIds,
-        setActiveIds,
         activeParams,
-        setActiveParams,
         totalSeriesCount: allIds.size * allParams.size,
         flagset: contextFlagset
       }}
