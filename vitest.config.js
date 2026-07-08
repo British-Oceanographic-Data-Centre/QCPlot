@@ -4,7 +4,8 @@ import { defineConfig } from 'vitest/config'
 export default defineConfig({
   test: {
     coverage: {
-      include: ['src/**/*.{ts,tsx}']
+      include: ['src/**/*.{ts,tsx}'],
+      reporter: ['text', 'html', 'cobertura']
     }
   },
   plugins: [tsconfigPaths()]
