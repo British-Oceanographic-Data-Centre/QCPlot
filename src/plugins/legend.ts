@@ -43,7 +43,7 @@ export const legendPlugin = (
     hooks: {
       ready: (u: uPlot) => {
         if (scatterMode) {
-          u.root.querySelector('.u-series')?.remove()
+          u.root.querySelector('.u-series')?.classList.add('qcp-hidden')
         }
         addColourInputs(u)
       }

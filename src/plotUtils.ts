@@ -1,6 +1,7 @@
 import type uPlot from 'uplot'
 
-import { isNil } from './utils'
+import { NamedSeries } from './types'
+import { isNil, splitTraceName } from './utils'
 
 /**
  * Improved hover logic for scatter plots
@@ -30,4 +31,26 @@ export const getScatterHoverIndex = (u: uPlot, seriesIdx: number) => {
     }
   }
   return hoveredPoint
+}
+
+/**
+ * Updates the displayed series within the plot.
+ */
+export const updateDisplayed = (u: uPlot | null, activeIds: string[], activeParams: string[]) => {
+  if (!u) return
+  u.series.slice(1).forEach((s, i) => {
+    const x = s as NamedSeries
+    const [id, param] = splitTraceName(x.name)
+    x.show = activeIds.includes(id) && activeParams.includes(param)
+
+    const legendIndex = i + 1
+    const legendItem = u.root.querySelectorAll('.u-series')[legendIndex]
+    if (x.show) {
+      legendItem.classList.remove('qcp-hidden')
+    } else {
+      legendItem.classList.add('qcp-hidden')
+      legendItem.classList.remove('u-off')
+    }
+  })
+  u.redraw()
 }
