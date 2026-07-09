@@ -1,13 +1,17 @@
-import { useContext, useEffect, useMemo, useState } from 'react'
+import { RefObject, useContext, useEffect, useMemo, useState } from 'react'
+
+import type uPlot from 'uplot'
 
 import { CheckableLabel } from './CheckableLabel'
 import { ChartContext } from '@/ChartContext'
 import { P01_BASE_URL } from '@/constants'
+import { updateDisplayed } from '@/plotUtils'
 import { DataSeries } from '@/types'
 
 interface SeriesSelectProps {
   dataSeries: DataSeries[]
   hideParameterSelect?: boolean
+  plotRef: RefObject<uPlot | null>
 }
 
 interface IdPair {
@@ -18,10 +22,10 @@ interface IdPair {
 /**
  * Component to select which series are visible on the plot.
  */
-export const SeriesSelect = ({ dataSeries, hideParameterSelect }: SeriesSelectProps) => {
+export const SeriesSelect = ({ dataSeries, hideParameterSelect, plotRef }: SeriesSelectProps) => {
   const [paramLabels, setParamLabels] = useState<{[key: string]: string}>({})
 
-  const { activeIds, setActiveIds, activeParams, setActiveParams } = useContext(ChartContext)
+  const { activeIds, activeParams } = useContext(ChartContext)
 
   const uniqueParams = useMemo(() => {
     const uniqParams: string[] = []
@@ -43,13 +47,31 @@ export const SeriesSelect = ({ dataSeries, hideParameterSelect }: SeriesSelectPr
     return uniqIds
   }, [dataSeries])
 
-  const onSelectAllIds = (checked: boolean) => setActiveIds(checked ? uniqueIds.map(x => x.id) : [])
-  const onSelectAllParams = (checked: boolean) => setActiveParams(checked ? uniqueParams : [])
+  const onSelectAllIds = (checked: boolean) => {
+    activeIds.current = checked ? uniqueIds.map(x => x.id) : []
+    document.querySelectorAll('.qcp-id-check').forEach(x => {
+      const el = x as HTMLInputElement
+      el.checked = checked
+    })
+    updateDisplayed(plotRef.current, activeIds.current, activeParams.current)
+  }
+  const onSelectAllParams = (checked: boolean) => {
+    activeParams.current = checked ? uniqueParams : []
+    document.querySelectorAll('.qcp-param-check').forEach(x => {
+      const el = x as HTMLInputElement
+      el.checked = checked
+    })
+    updateDisplayed(plotRef.current, activeIds.current, activeParams.current)
+  }
   const onToggleId = (id: string) => {
-    setActiveIds(prev => prev.includes(id) ? prev.filter(x => x !== id) : prev.concat(id))
+    const prev = activeIds.current
+    activeIds.current = prev.includes(id) ? prev.filter(x => x !== id) : prev.concat(id)
+    updateDisplayed(plotRef.current, activeIds.current, activeParams.current)
   }
   const onToggleParam = (param: string) => {
-    setActiveParams(prev => prev.includes(param) ? prev.filter(x => x !== param) : prev.concat(param))
+    const prev = activeParams.current
+    activeParams.current = prev.includes(param) ? prev.filter(x => x !== param) : prev.concat(param)
+    updateDisplayed(plotRef.current, activeIds.current, activeParams.current)
   }
 
   useEffect(() => {
@@ -76,13 +98,19 @@ export const SeriesSelect = ({ dataSeries, hideParameterSelect }: SeriesSelectPr
       <thead>
         <tr>
           <th>
-            <CheckableLabel onChange={onSelectAllIds} checked={activeIds.length === uniqueIds.length}>
+            <CheckableLabel
+              onChange={onSelectAllIds}
+              defaultChecked={activeIds.current.length === uniqueIds.length}
+            >
               OID
             </CheckableLabel>
           </th>
 
           {!hideParameterSelect && <th>
-            <CheckableLabel onChange={onSelectAllParams} checked={activeParams.length === uniqueParams.length}>
+            <CheckableLabel
+              onChange={onSelectAllParams}
+              defaultChecked={activeParams?.current.length === uniqueParams.length}
+            >
               PARAMETER
             </CheckableLabel>
           </th>
@@ -96,7 +124,8 @@ export const SeriesSelect = ({ dataSeries, hideParameterSelect }: SeriesSelectPr
               {uniqueIds[i] &&
                 <CheckableLabel
                   onChange={() => onToggleId(uniqueIds[i].id)}
-                  checked={activeIds.includes(uniqueIds[i].id)}
+                  defaultChecked={activeIds.current.includes(uniqueIds[i].id)}
+                  inputClass='qcp-id-check'
                 >
                   {uniqueIds[i].formattedId || uniqueIds[i].id}
                 </CheckableLabel>
@@ -107,8 +136,9 @@ export const SeriesSelect = ({ dataSeries, hideParameterSelect }: SeriesSelectPr
                 {uniqueParams[i] &&
                 <CheckableLabel
                   onChange={() => onToggleParam(uniqueParams[i])}
-                  checked={activeParams.includes(uniqueParams[i])}
+                  defaultChecked={activeParams?.current.includes(uniqueParams[i])}
                   tooltip={paramLabels[uniqueParams[i]]}
+                  inputClass='qcp-param-check'
                 >
                   {uniqueParams[i]}
                 </CheckableLabel>

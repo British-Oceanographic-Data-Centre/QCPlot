@@ -70,6 +70,7 @@ export const MenuBar = ({
           <SeriesSelect
             dataSeries={data.series}
             hideParameterSelect={hideParameterSelect}
+            plotRef={plotRef}
           />
         )}
 

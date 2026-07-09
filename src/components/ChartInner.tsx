@@ -16,7 +16,7 @@ import { ChartContext } from '@/ChartContext'
 import { DEFAULT_COLOURS, PLOT_HELP_TEXT, PointDisplay } from '@/constants'
 import { toggleDark, updateFlagModeState } from '@/domUtils'
 import { clearSelection, combineFlaggedPoints } from '@/flagUtils'
-import { getScatterHoverIndex } from '@/plotUtils'
+import { getScatterHoverIndex, updateDisplayed } from '@/plotUtils'
 import { renderFlagsPlugin, scrollZoomPlugin } from '@/plugins'
 import { legendPlugin } from '@/plugins/legend'
 
@@ -56,7 +56,6 @@ export const ChartInner = ({
   const containerRef = useRef<HTMLDivElement>(null)
   const plotRef = useRef<uPlot>(null)
   const initialScales = useRef<InitialRange>(null)
-  const yScrollPos = useRef<number>(0)
   const clientWidthRatio = verticalMode ? 0.5 : 1
 
   const allFlaggedPoints = combineFlaggedPoints(flaggedPoints, originatorFlaggedPoints)
@@ -94,7 +93,7 @@ export const ChartInner = ({
     return () => {
       window.removeEventListener('resize', handleResize)
     }
-  }, [])
+  }, [clientWidthRatio])
 
   useEffect(() => {
     const handleKeyPress = (event: KeyboardEvent) => {
@@ -121,7 +120,9 @@ export const ChartInner = ({
     }
   }, [onUnZoom])
 
-  const series = seriesFromData(data, allFlaggedPoints, colours, activeIds, activeParams, showCycleNumber, scatterMode)
+  const series = seriesFromData(
+    data, allFlaggedPoints, colours, activeIds.current, activeParams.current, showCycleNumber, scatterMode
+  )
 
   const opts: Options = {
     width: containerRef.current ? containerRef.current.clientWidth * clientWidthRatio : 800,
@@ -309,33 +310,24 @@ export const ChartInner = ({
       </div>
       {/* End control bar  */}
 
-      {(activeIds.length === 0 && activeParams.length === 0)
-        ? <div>Nothing selected to plot</div>
-        : <UplotReact
-            options={opts}
-            data={[
-              xTimeAxis ? data.xValues.map(x => dayjs(x).unix()) : data.xValues as number[],
-              ...data.series
-                .filter(s => activeIds.includes(s.id) && activeParams.includes(s.parameter))
-                .map(s => filterFlaggedValues(s))
-            ]}
-            onCreate={(chart) => {
-              // Reset the scroll pos to what it was pre-recreation
-              window.scroll(0, yScrollPos.current)
-              if (!plotRef.current) {
-                plotRef.current = chart
-                // Only do the unzoom if this is the first time through
-                onUnZoom()
-              } else {
-                plotRef.current = chart
-              }
-            }}
-            onDelete={() => {
-              // Remember where the user is scrolled to
-              yScrollPos.current = window.scrollY
-            }}
-          />
-      }
+      <UplotReact
+        options={opts}
+        data={[
+          xTimeAxis ? data.xValues.map(x => dayjs(x).unix()) : data.xValues as number[],
+          ...data.series
+            .map(s => filterFlaggedValues(s))
+        ]}
+        onCreate={(chart) => {
+          if (!plotRef.current) {
+            plotRef.current = chart
+            updateDisplayed(chart, activeIds.current, activeParams.current)
+            // Only do the unzoom if this is the first time through
+            onUnZoom()
+          } else {
+            plotRef.current = chart
+          }
+        }}
+      />
     </div>
   )
 }
