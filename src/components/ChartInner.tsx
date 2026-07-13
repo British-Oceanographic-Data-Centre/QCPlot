@@ -16,7 +16,7 @@ import { ChartContext } from '@/ChartContext'
 import { DEFAULT_COLOURS, PLOT_HELP_TEXT, PointDisplay } from '@/constants'
 import { toggleDark, toggleFullscreen, updateFlagModeState } from '@/domUtils'
 import { clearSelection, combineFlaggedPoints } from '@/flagUtils'
-import { getScatterHoverIndex, updateDisplayed } from '@/plotUtils'
+import { getScatterHoverIndex, nextId, nextParam, updateDisplayed } from '@/plotUtils'
 import { renderFlagsPlugin, scrollZoomPlugin } from '@/plugins'
 import { legendPlugin } from '@/plugins/legend'
 
@@ -47,7 +47,7 @@ export const ChartInner = ({
   yAxisLabel,
   goodFlags = []
 }: ChartProps) => {
-  const { activeIds, activeParams, totalSeriesCount } = useContext(ChartContext)
+  const { activeIds, activeParams, totalSeriesCount, allIds, allParams } = useContext(ChartContext)
 
   const [showPoints, setShowPoints] = useState<number>(PointDisplay.ALL)
   const [colours, setColours] = useState<string[]>(extendArray(plotColours || DEFAULT_COLOURS, totalSeriesCount))
@@ -110,6 +110,10 @@ export const ChartInner = ({
           toggleDark(); break
         case 'B':
           toggleFullscreen(); break
+        case 'O':
+          nextId(plotRef.current, allIds, activeIds, activeParams); break
+        case 'P':
+          nextParam(plotRef.current, allParams, activeIds, activeParams); break
         case 'ESCAPE':
           clearSelection(plotRef.current); break
       }

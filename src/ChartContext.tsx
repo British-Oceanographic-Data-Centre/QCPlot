@@ -5,6 +5,8 @@ import type { ChartContextValue } from './types'
 
 export const ChartContext = createContext<ChartContextValue>({
   totalSeriesCount: 0,
+  allIds: [],
+  allParams: [],
   activeIds: { current: [] },
   activeParams: { current: [] },
   flagset: FlagSets.ALPHABETICAL_FLAGS

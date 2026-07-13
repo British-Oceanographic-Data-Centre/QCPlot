@@ -28,6 +28,8 @@ export const Chart = ({ data, flaggedPoints, defaultShowAll, ...props }: ChartPr
     <ChartContext.Provider
       value={{
         flagCallback: props.flagCallback,
+        allIds: Array.from(allIds),
+        allParams: Array.from(allParams),
         activeIds,
         activeParams,
         totalSeriesCount: allIds.size * allParams.size,

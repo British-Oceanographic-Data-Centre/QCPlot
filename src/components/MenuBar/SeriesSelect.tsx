@@ -25,15 +25,7 @@ interface IdPair {
 export const SeriesSelect = ({ dataSeries, hideParameterSelect, plotRef }: SeriesSelectProps) => {
   const [paramLabels, setParamLabels] = useState<{[key: string]: string}>({})
 
-  const { activeIds, activeParams } = useContext(ChartContext)
-
-  const uniqueParams = useMemo(() => {
-    const uniqParams: string[] = []
-    dataSeries.forEach(x => {
-      if (!uniqParams.includes(x.parameter)) uniqParams.push(x.parameter)
-    })
-    return uniqParams
-  }, [dataSeries])
+  const { activeIds, activeParams, allParams } = useContext(ChartContext)
 
   const uniqueIds = useMemo(() => {
     const uniqIds: IdPair[] = []
@@ -56,7 +48,7 @@ export const SeriesSelect = ({ dataSeries, hideParameterSelect, plotRef }: Serie
     updateDisplayed(plotRef.current, activeIds.current, activeParams.current)
   }
   const onSelectAllParams = (checked: boolean) => {
-    activeParams.current = checked ? uniqueParams : []
+    activeParams.current = checked ? allParams : []
     document.querySelectorAll('.qcp-param-check').forEach(x => {
       const el = x as HTMLInputElement
       el.checked = checked
@@ -76,8 +68,8 @@ export const SeriesSelect = ({ dataSeries, hideParameterSelect, plotRef }: Serie
 
   useEffect(() => {
     const promises = []
-    for (let i = 0; i < uniqueParams.length; i++) {
-      const param = uniqueParams[i].toUpperCase()
+    for (let i = 0; i < allParams.length; i++) {
+      const param = allParams[i].toUpperCase()
       promises.push(
         fetch(`${P01_BASE_URL}/${param}/?_profile=nvs&_mediatype=application/ld+json`)
           .then(resp =>
@@ -91,7 +83,7 @@ export const SeriesSelect = ({ dataSeries, hideParameterSelect, plotRef }: Serie
       resps.forEach(x => { if (x) paramLabels[x.param] = x.label })
       setParamLabels(paramLabels)
     })
-  }, [uniqueParams])
+  }, [allParams])
 
   return (
     <table className='qcp-table'>
@@ -109,7 +101,7 @@ export const SeriesSelect = ({ dataSeries, hideParameterSelect, plotRef }: Serie
           {!hideParameterSelect && <th>
             <CheckableLabel
               onChange={onSelectAllParams}
-              defaultChecked={activeParams?.current.length === uniqueParams.length}
+              defaultChecked={activeParams?.current.length === allParams.length}
             >
               PARAMETER
             </CheckableLabel>
@@ -118,7 +110,7 @@ export const SeriesSelect = ({ dataSeries, hideParameterSelect, plotRef }: Serie
         </tr>
       </thead>
       <tbody>
-        {[...Array(Math.max(uniqueIds.length, uniqueParams.length))].map((_x, i) =>
+        {[...Array(Math.max(uniqueIds.length, allParams.length))].map((_x, i) =>
           <tr key={i}>
             <td>
               {uniqueIds[i] &&
@@ -133,14 +125,14 @@ export const SeriesSelect = ({ dataSeries, hideParameterSelect, plotRef }: Serie
             </td>
             {!hideParameterSelect &&
               <td>
-                {uniqueParams[i] &&
+                {allParams[i] &&
                 <CheckableLabel
-                  onChange={() => onToggleParam(uniqueParams[i])}
-                  defaultChecked={activeParams?.current.includes(uniqueParams[i])}
-                  tooltip={paramLabels[uniqueParams[i]]}
+                  onChange={() => onToggleParam(allParams[i])}
+                  defaultChecked={activeParams?.current.includes(allParams[i])}
+                  tooltip={paramLabels[allParams[i]]}
                   inputClass='qcp-param-check'
                 >
-                  {uniqueParams[i]}
+                  {allParams[i]}
                 </CheckableLabel>
                 }
               </td>
