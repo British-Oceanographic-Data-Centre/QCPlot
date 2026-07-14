@@ -3,7 +3,7 @@ import { RefObject } from 'react'
 import type uPlot from 'uplot'
 
 import { NamedSeries } from './types'
-import { isNil, splitTraceName } from './utils'
+import { isNil, splitTraceName, wrapIndex } from './utils'
 
 /**
  * Improved hover logic for scatter plots
@@ -64,11 +64,12 @@ export const nextId = (
   plot: uPlot | null,
   allIds: string[],
   activeIds: RefObject<string[]>,
-  activeParams: RefObject<string[]>
+  activeParams: RefObject<string[]>,
+  direction = 1
 ) => {
   if (activeIds.current.length === 1) {
     const currentIndex = allIds.indexOf(activeIds.current[0])
-    const newIndex = currentIndex + 1 < allIds.length ? currentIndex + 1 : 0
+    const newIndex = wrapIndex(currentIndex + direction, allIds.length)
     activeIds.current = [allIds[newIndex]]
     document.querySelectorAll('.qcp-id-check').forEach((x, i) => {
       const el = x as HTMLInputElement
@@ -85,11 +86,12 @@ export const nextParam = (
   plot: uPlot | null,
   allParams: string[],
   activeIds: RefObject<string[]>,
-  activeParams: RefObject<string[]>
+  activeParams: RefObject<string[]>,
+  direction = 1
 ) => {
   if (activeParams.current.length === 1) {
     const currentIndex = allParams.indexOf(activeParams.current[0])
-    const newIndex = currentIndex + 1 < allParams.length ? currentIndex + 1 : 0
+    const newIndex = wrapIndex(currentIndex + direction, allParams.length)
     activeParams.current = [allParams[newIndex]]
     document.querySelectorAll('.qcp-param-check').forEach((x, i) => {
       const el = x as HTMLInputElement

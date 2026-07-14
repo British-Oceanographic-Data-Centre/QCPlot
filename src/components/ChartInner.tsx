@@ -110,10 +110,18 @@ export const ChartInner = ({
           toggleDark(); break
         case 'B':
           toggleFullscreen(); break
-        case 'O':
-          nextId(plotRef.current, allIds, activeIds, activeParams); break
-        case 'P':
+        case 'Q':
+          // Prev param
+          nextParam(plotRef.current, allParams, activeIds, activeParams, -1); break
+        case 'W':
+          // next param
           nextParam(plotRef.current, allParams, activeIds, activeParams); break
+        case 'A':
+          // prev ID
+          nextId(plotRef.current, allIds, activeIds, activeParams, -1); break
+        case 'S':
+          // next ID
+          nextId(plotRef.current, allIds, activeIds, activeParams); break
         case 'ESCAPE':
           clearSelection(plotRef.current); break
       }
