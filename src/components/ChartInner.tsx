@@ -85,6 +85,10 @@ export const ChartInner = ({
           width: containerRef.current?.clientWidth * clientWidthRatio,
           height: plotRef.current.height
         })
+        if (verticalMode) {
+          const legendBody = document.querySelector('.uplot.rgt-leg .u-legend tbody')
+          legendBody!.style.height = `${plotRef.current.height}px`
+        }
       }
     }
 

@@ -26,17 +26,19 @@ export const toggleFullscreen = (u: uPlot, regularHeight: number) => {
       height: regularHeight
     })
   } else {
+    const hasRightLegend = !!document.querySelector('.uplot.rgt-leg')
     const container = document.querySelector('.qcp-container')
-    const legend = document.querySelector('.u-legend')
     const menuBar = document.querySelector('.qcp-menu-bar')
     const controlBars = document.querySelectorAll('.qcp-control-bar-outer')
     container?.requestFullscreen()
     u.setSize({
       width: u.width,
-      height: window.screen.height -
-              legend!.clientHeight -
-              menuBar!.clientHeight -
-              Array.from(controlBars).map(x => x.clientHeight).reduce((a, b) => a + b)
+      height: 0.9 * (
+        window.screen.height -
+        (!hasRightLegend ? 200 : 0) -
+        menuBar!.clientHeight -
+        Array.from(controlBars).map(x => x.clientHeight).reduce((a, b) => a + b)
+      )
     })
   }
 }

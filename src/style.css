@@ -7,6 +7,11 @@
     background-color: white;
 }
 
+.qcp-container:fullscreen .u-legend tbody {
+    height: 200px;
+    overflow-y: auto;
+}
+
 .qcp-menu-bar {
     margin-bottom: 2em;
 }
@@ -145,6 +150,10 @@
     text-align: left;
     margin-left: 0;
     margin: 0;
+}
+
+.uplot.rgt-leg .u-legend tbody {
+    overflow-y: auto;
 }
 
 .uplot.rgt-leg .u-legend,
