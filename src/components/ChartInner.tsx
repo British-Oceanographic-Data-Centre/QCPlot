@@ -109,7 +109,7 @@ export const ChartInner = ({
         case 'D':
           toggleDark(); break
         case 'B':
-          toggleFullscreen(); break
+          toggleFullscreen(plotRef.current!, height); break
         case 'Q':
           // Prev param
           nextParam(plotRef.current, allParams, activeIds, activeParams, -1); break

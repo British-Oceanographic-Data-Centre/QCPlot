@@ -1,5 +1,5 @@
 import { Button } from './Button'
-import { toggleDark, toggleFullscreen } from '@/domUtils'
+import { toggleDark } from '@/domUtils'
 
 interface MainButtonBarProps {
   flagMode: boolean
@@ -24,9 +24,6 @@ export const MainButtonBar = ({ flagMode, toggleFlagMode, onUnZoom, enableFlaggi
       </Button>
       <Button onClick={toggleDark}>
         Toggle Dark Mode
-      </Button>
-      <Button onClick={toggleFullscreen}>
-        Toggle Fullscreen
       </Button>
     </div>
   )

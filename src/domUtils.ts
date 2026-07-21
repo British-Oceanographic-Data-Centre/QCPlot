@@ -18,11 +18,26 @@ export const toggleDark = () => {
 /**
  * Toggle fullscreen mode.
  */
-export const toggleFullscreen = () => {
+export const toggleFullscreen = (u: uPlot, regularHeight: number) => {
   if (document.fullscreenElement) {
     document.exitFullscreen()
+    u.setSize({
+      width: u.width,
+      height: regularHeight
+    })
   } else {
-    document.querySelector('.qcp-container')?.requestFullscreen()
+    const container = document.querySelector('.qcp-container')
+    const legend = document.querySelector('.u-legend')
+    const menuBar = document.querySelector('.qcp-menu-bar')
+    const controlBars = document.querySelectorAll('.qcp-control-bar-outer')
+    container?.requestFullscreen()
+    u.setSize({
+      width: u.width,
+      height: window.screen.height -
+              legend!.clientHeight -
+              menuBar!.clientHeight -
+              Array.from(controlBars).map(x => x.clientHeight).reduce((a, b) => a + b)
+    })
   }
 }
 
