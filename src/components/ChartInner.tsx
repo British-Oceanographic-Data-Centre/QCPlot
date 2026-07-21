@@ -334,9 +334,9 @@ export const ChartInner = ({
             .map(s => filterFlaggedValues(s))
         ]}
         onCreate={(chart) => {
-          updateDisplayed(chart, activeIds.current, activeParams.current)
           if (!plotRef.current) {
             plotRef.current = chart
+            updateDisplayed(chart, activeIds.current, activeParams.current)
             // Only do the unzoom if this is the first time through
             onUnZoom()
           } else {
