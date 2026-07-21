@@ -40,7 +40,10 @@ export const PLOT_HELP_TEXT = `
   - Hot keys
     - F: toggle flag mode
     - R: reset zoom to default level
+    - B: fullscreen mode
     - D: toggle dark mode
+    - Q/W: prev/next parameter (if only one is selected)
+    - A/S: prev/next ID (if only one is selected)
     - Esc: Clear current flagging selection
 `
 

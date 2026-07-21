@@ -16,6 +16,34 @@ export const toggleDark = () => {
 }
 
 /**
+ * Toggle fullscreen mode.
+ */
+export const toggleFullscreen = (u: uPlot, regularHeight: number) => {
+  if (document.fullscreenElement) {
+    document.exitFullscreen()
+    u.setSize({
+      width: u.width,
+      height: regularHeight
+    })
+  } else {
+    const hasRightLegend = !!document.querySelector('.uplot.rgt-leg')
+    const container = document.querySelector('.qcp-container')
+    const menuBar = document.querySelector('.qcp-menu-bar')
+    const controlBars = document.querySelectorAll('.qcp-control-bar-outer')
+    container?.requestFullscreen()
+    u.setSize({
+      width: u.width,
+      height: 0.9 * (
+        window.screen.height -
+        (!hasRightLegend ? 200 : 0) -
+        menuBar!.clientHeight -
+        Array.from(controlBars).map(x => x.clientHeight).reduce((a, b) => a + b)
+      )
+    })
+  }
+}
+
+/**
  * Updates various UI components and uPlot properties when toggling flag mode on/off.
  */
 export const updateFlagModeState = (u: uPlot, isActive: boolean) => {
