@@ -67,7 +67,7 @@ export const nextId = (
   activeParams: RefObject<string[]>,
   direction = 1
 ) => {
-  if (activeIds.current.length === 1) {
+  if (activeIds.current.length <= 1) {
     const currentIndex = allIds.indexOf(activeIds.current[0])
     const newIndex = wrapIndex(currentIndex + direction, allIds.length)
     activeIds.current = [allIds[newIndex]]
@@ -89,7 +89,7 @@ export const nextParam = (
   activeParams: RefObject<string[]>,
   direction = 1
 ) => {
-  if (activeParams.current.length === 1) {
+  if (activeParams.current.length <= 1) {
     const currentIndex = allParams.indexOf(activeParams.current[0])
     const newIndex = wrapIndex(currentIndex + direction, allParams.length)
     activeParams.current = [allParams[newIndex]]
