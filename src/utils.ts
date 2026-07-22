@@ -16,7 +16,6 @@ export const isNil = (val: unknown) => {
  * If index exceeds the end it will wrap around to the start, likewise at the other end.
  */
 export const wrapIndex = (index: number, arrayLength: number) => {
-  console.log(index, arrayLength)
   if (index >= arrayLength) {
     return 0
   } if (index < 0) {

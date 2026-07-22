@@ -26,21 +26,28 @@ export const toggleFullscreen = (u: uPlot, regularHeight: number) => {
       height: regularHeight
     })
   } else {
-    const hasRightLegend = !!document.querySelector('.uplot.rgt-leg')
     const container = document.querySelector('.qcp-container')
-    const menuBar = document.querySelector('.qcp-menu-bar')
-    const controlBars = document.querySelectorAll('.qcp-control-bar-outer')
     container?.requestFullscreen()
-    u.setSize({
-      width: u.width,
-      height: 0.9 * (
-        window.screen.height -
-        (!hasRightLegend ? 200 : 0) -
-        menuBar!.clientHeight -
-        Array.from(controlBars).map(x => x.clientHeight).reduce((a, b) => a + b)
-      )
-    })
+    setFullscreenPlotHeight(u)
   }
+}
+
+/**
+ * Adjusts the plot canvas height for fullscreen mode to maximise its size while fitting on all other elements.
+ */
+export const setFullscreenPlotHeight = (u: uPlot) => {
+  const hasRightLegend = !!document.querySelector('.uplot.rgt-leg')
+  const menuBar = document.querySelector('.qcp-menu-bar')
+  const controlBars = document.querySelectorAll('.qcp-control-bar-outer')
+  u.setSize({
+    width: u.width,
+    height: 0.9 * (
+      window.screen.height -
+      (!hasRightLegend ? 200 : 0) -
+      menuBar!.clientHeight -
+      Array.from(controlBars).map(x => x.clientHeight).reduce((a, b) => a + b)
+    )
+  })
 }
 
 /**

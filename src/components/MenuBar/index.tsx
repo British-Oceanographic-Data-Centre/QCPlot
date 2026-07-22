@@ -1,9 +1,10 @@
-import { ReactNode, RefObject, useState } from 'react'
+import { ReactNode, RefObject, useEffect, useState } from 'react'
 
 import type uPlot from 'uplot'
 
 import { FlagList } from './FlagList'
 import { SeriesSelect } from './SeriesSelect'
+import { setFullscreenPlotHeight } from '@/domUtils'
 import { Data, FlaggedPoint } from '@/types'
 
 enum Sections {
@@ -44,6 +45,14 @@ export const MenuBar = ({
   flaggedPoints, data, zoomToRange, plotRef, colours, hideFlagTab, hideParameterSelect
 }: MenuBarProps) => {
   const [activeSection, setActiveSection] = useState<string | null>(Sections.SERIES)
+
+  useEffect(() => {
+    const u = plotRef.current
+    if (u && document.fullscreenElement) {
+      // Only do this if already in full screen
+      setFullscreenPlotHeight(u)
+    }
+  }, [activeSection])
 
   return (
     <div className='qcp-menu-bar'>
