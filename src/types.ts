@@ -9,6 +9,7 @@ export interface FlaggedPoint {
   pointIndex: number
   endIndex?: number // endIndex is inclusive
   flag: string
+  isOriginatorFlag?: boolean
 }
 
 export interface DataSeries {

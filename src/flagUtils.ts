@@ -93,7 +93,9 @@ export const updateFlags = ({ selectedPoints, flag, existingFlags, flagCallback 
     })
   }
   if (flagCallback) {
-    flagCallback(untouchedFlags.concat(combineRanges(updatedFlags)))
+    const completeFlagList = untouchedFlags.concat(combineRanges(updatedFlags))
+    // Callback should not include originator flags
+    flagCallback(completeFlagList.filter(x => !x.isOriginatorFlag))
   }
 }
 
@@ -177,7 +179,8 @@ export const combineRanges = (flaggedPoints: FlaggedPoint[]) => {
           traceName: flags[0].traceName,
           pointIndex: idxRange.start,
           endIndex: idxRange.end,
-          flag: flags[0].flag
+          flag: flags[0].flag,
+          isOriginatorFlag: flags[0].isOriginatorFlag
         })
       })
     })
@@ -197,6 +200,7 @@ export const combineFlaggedPoints = (
   }
   const splitFlaggedPoints = splitRanges(flaggedPoints)
   const splitOriginatorFlaggedPoints = splitRanges(originatorFlaggedPoints)
+  splitOriginatorFlaggedPoints.forEach(f => { f.isOriginatorFlag = true })
 
   const combinedFpKeyed: {[key: string]: FlaggedPoint} = {}
   splitOriginatorFlaggedPoints.forEach(fp => {

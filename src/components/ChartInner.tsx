@@ -271,6 +271,7 @@ export const ChartInner = ({
       <MenuBar
         data={data}
         flaggedPoints={allFlaggedPoints}
+        originatorFlaggedPoints={originatorFlaggedPoints}
         zoomToRange={zoomToRange}
         plotRef={plotRef}
         colours={colours}
