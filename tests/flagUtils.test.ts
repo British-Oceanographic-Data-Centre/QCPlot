@@ -39,12 +39,12 @@ test.each([
   { label: 'empty input', inputArr: [], expectedOutput: [] },
   {
     label: 'no end index',
-    expectedOutput: [{ traceName: 'a', pointIndex: 0, flag: 'X', endIndex: 0 }],
+    expectedOutput: [{ traceName: 'a', pointIndex: 0, flag: 'X', endIndex: 0, isOriginatorFlag: undefined }],
     inputArr: [{ traceName: 'a', pointIndex: 0, flag: 'X' }]
   },
   {
     label: 'with end index',
-    expectedOutput: [{ traceName: 'a', pointIndex: 0, endIndex: 2, flag: 'X' }],
+    expectedOutput: [{ traceName: 'a', pointIndex: 0, endIndex: 2, flag: 'X', isOriginatorFlag: undefined }],
     inputArr: [
       { traceName: 'a', pointIndex: 0, flag: 'X' },
       { traceName: 'a', pointIndex: 1, flag: 'X' },
@@ -62,8 +62,8 @@ test.each([
     inputPoints: [{ traceName: 'a', pointIndex: 1, endIndex: 2, flag: 'X' }],
     inputOriginatorPoints: [{ traceName: 'a', pointIndex: 0, endIndex: 2, flag: 'Y' }],
     expectedOutput: [
-      { traceName: 'a', pointIndex: 0, endIndex: 0, flag: 'Y' },
-      { traceName: 'a', pointIndex: 1, endIndex: 2, flag: 'X' }
+      { traceName: 'a', pointIndex: 0, endIndex: 0, flag: 'Y', isOriginatorFlag: true },
+      { traceName: 'a', pointIndex: 1, endIndex: 2, flag: 'X', isOriginatorFlag: undefined }
     ]
   }
 ])('test combineFlaggedPoints: $label', ({ inputPoints, inputOriginatorPoints, expectedOutput }) => {
