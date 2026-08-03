@@ -32,22 +32,25 @@ export const getPointsForSelection = (u: uPlot): SelectedPoints => {
   const lowerYVal = u.posToVal(isVertical ? lft : bottom, 'y')
 
   u.data.slice(1).forEach((x, seriesIndex) => {
-    const seriesName = (u.series[seriesIndex + 1] as NamedSeries).name
-    selectedPoints[seriesName] = []
-    for (let i = xStartIndex; i <= xEndIndex; i++) {
-      const xPos = u.valToPos(u.data[0][i], 'x')
-      if (
-        (isVertical && (xPos < top || xPos > bottom)) ||
-        (!isVertical && (xPos < lft || xPos > rgt))
-      ) {
-        continue
-      }
-      const val = x[i]
-      // Count nulls in the series before this, to offset correctly
-      const precedingNulls = (x as (number | null)[]).filter((v, j) => v === null && j < i)
-      if (isNil(val)) continue
-      if (val >= lowerYVal && val <= upperYVal) {
-        selectedPoints[seriesName].push(i - precedingNulls.length)
+    const series = u.series[seriesIndex + 1] as NamedSeries
+    if (series.show) { // Only select points that are currently visible
+      const seriesName = series.name
+      selectedPoints[seriesName] = []
+      for (let i = xStartIndex; i <= xEndIndex; i++) {
+        const xPos = u.valToPos(u.data[0][i], 'x')
+        if (
+          (isVertical && (xPos < top || xPos > bottom)) ||
+          (!isVertical && (xPos < lft || xPos > rgt))
+        ) {
+          continue
+        }
+        const val = x[i]
+        // Count nulls in the series before this, to offset correctly
+        const precedingNulls = (x as (number | null)[]).filter((v, j) => v === null && j < i)
+        if (isNil(val)) continue
+        if (val >= lowerYVal && val <= upperYVal) {
+          selectedPoints[seriesName].push(i - precedingNulls.length)
+        }
       }
     }
   })
