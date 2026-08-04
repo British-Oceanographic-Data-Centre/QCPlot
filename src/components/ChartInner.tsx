@@ -14,9 +14,9 @@ import { MainButtonBar } from './MainButtonBar'
 import { MenuBar } from './MenuBar'
 import { ChartContext } from '@/ChartContext'
 import { DEFAULT_COLOURS, PLOT_HELP_TEXT, PointDisplay } from '@/constants'
-import { toggleDark, updateFlagModeState } from '@/domUtils'
+import { toggleDark, toggleFullscreen, updateFlagModeState } from '@/domUtils'
 import { clearSelection, combineFlaggedPoints } from '@/flagUtils'
-import { getScatterHoverIndex, updateDisplayed } from '@/plotUtils'
+import { getScatterHoverIndex, nextId, nextParam, updateDisplayed } from '@/plotUtils'
 import { renderFlagsPlugin, scrollZoomPlugin } from '@/plugins'
 import { legendPlugin } from '@/plugins/legend'
 
@@ -24,8 +24,6 @@ const initHook = (u: uPlot, rightLegend?: boolean) => {
   if (rightLegend) {
     u.root.classList.add('rgt-leg')
   }
-
-  document.addEventListener('keydown', onKeyDown(u), true)
 }
 
 /**
@@ -47,7 +45,7 @@ export const ChartInner = ({
   yAxisLabel,
   goodFlags = []
 }: ChartProps) => {
-  const { activeIds, activeParams, totalSeriesCount } = useContext(ChartContext)
+  const { activeIds, activeParams, totalSeriesCount, allIds, allParams } = useContext(ChartContext)
 
   const [showPoints, setShowPoints] = useState<number>(PointDisplay.ALL)
   const [colours, setColours] = useState<string[]>(extendArray(plotColours || DEFAULT_COLOURS, totalSeriesCount))
@@ -85,6 +83,10 @@ export const ChartInner = ({
           width: containerRef.current?.clientWidth * clientWidthRatio,
           height: plotRef.current.height
         })
+        if (verticalMode) {
+          const legendBody = document.querySelector('.uplot.rgt-leg .u-legend tbody') as HTMLElement
+          legendBody.style.height = `${plotRef.current.height}px`
+        }
       }
     }
 
@@ -97,21 +99,30 @@ export const ChartInner = ({
 
   useEffect(() => {
     const handleKeyPress = (event: KeyboardEvent) => {
-      if (event.target && (event.target as HTMLElement).tagName === 'INPUT') {
-        // Add the check so that it doesn't interfere with any inputs fields on the page
-        return
-      }
-      if (event.key.toUpperCase() === 'F') {
-        toggleFlagMode()
-      }
-      if (event.key.toUpperCase() === 'R') {
-        onUnZoom()
-      }
-      if (event.key.toUpperCase() === 'D') {
-        toggleDark()
-      }
-      if (event.key === 'Escape') {
-        clearSelection(plotRef.current)
+      onKeyDown(plotRef.current!)(event)
+      switch (event.key.toUpperCase()) {
+        case 'F':
+          toggleFlagMode(); break
+        case 'R':
+          onUnZoom(); break
+        case 'D':
+          toggleDark(); break
+        case 'B':
+          toggleFullscreen(plotRef.current!, height); break
+        case 'Q':
+          // Prev param
+          nextParam(plotRef.current, allParams, activeIds, activeParams, -1); break
+        case 'W':
+          // next param
+          nextParam(plotRef.current, allParams, activeIds, activeParams); break
+        case 'A':
+          // prev ID
+          nextId(plotRef.current, allIds, activeIds, activeParams, -1); break
+        case 'S':
+          // next ID
+          nextId(plotRef.current, allIds, activeIds, activeParams); break
+        case 'ESCAPE':
+          clearSelection(plotRef.current); break
       }
     }
     document.addEventListener('keydown', handleKeyPress)

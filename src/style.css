@@ -3,11 +3,13 @@
     height: 100%;
 }
 
-.qcp-inner-container {
-    height: 100%;
-    position: relative;
-    display: flex;
-    max-width: 100%;
+.qcp-container:fullscreen {
+    background-color: white;
+}
+
+.qcp-container:fullscreen .u-legend tbody {
+    height: 200px;
+    overflow-y: auto;
 }
 
 .qcp-menu-bar {
@@ -148,6 +150,10 @@
     text-align: left;
     margin-left: 0;
     margin: 0;
+}
+
+.uplot.rgt-leg .u-legend tbody {
+    overflow-y: auto;
 }
 
 .uplot.rgt-leg .u-legend,
