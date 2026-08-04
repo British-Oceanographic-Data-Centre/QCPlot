@@ -2,7 +2,8 @@ import { expect, test } from 'vitest'
 
 import { FlaggedPoint } from '@/types'
 import {
-  isNil, getTraceName, getSeriesLabel, getFlagForPoint, getArrayMinMax, extendArray, nullPaddedIndexMap
+  isNil, getTraceName, getSeriesLabel, getFlagForPoint, getArrayMinMax, extendArray, nullPaddedIndexMap,
+  wrapIndex
 } from '@/utils'
 
 test.each([
@@ -92,4 +93,12 @@ test.each([
   { label: 'only nulls', inputArr: [null, null], expectedOutput: { } }
 ])('test nullPaddedIndexMap ($label)', ({ inputArr, expectedOutput }) => {
   expect(nullPaddedIndexMap(inputArr)).toStrictEqual(expectedOutput)
+})
+
+test.each([
+  { label: 'index within array', index: 0, arrayLength: 2, expectedOutput: 0 },
+  { label: 'index before start', index: -1, arrayLength: 2, expectedOutput: 1 },
+  { label: 'index after end', index: 2, arrayLength: 2, expectedOutput: 0 }
+])('test wrapIndex ($label)', ({ index, arrayLength, expectedOutput }) => {
+  expect(wrapIndex(index, arrayLength)).toStrictEqual(expectedOutput)
 })
