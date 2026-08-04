@@ -24,8 +24,6 @@ const initHook = (u: uPlot, rightLegend?: boolean) => {
   if (rightLegend) {
     u.root.classList.add('rgt-leg')
   }
-
-  document.addEventListener('keydown', onKeyDown(u), true)
 }
 
 /**
@@ -101,10 +99,7 @@ export const ChartInner = ({
 
   useEffect(() => {
     const handleKeyPress = (event: KeyboardEvent) => {
-      if (event.target && (event.target as HTMLElement).tagName === 'INPUT') {
-        // Add the check so that it doesn't interfere with any inputs fields on the page
-        return
-      }
+      onKeyDown(plotRef.current!)(event)
       switch (event.key.toUpperCase()) {
         case 'F':
           toggleFlagMode(); break

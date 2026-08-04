@@ -4,7 +4,6 @@ import uPlot from 'uplot'
  * Define key down event handling for the plot.
  */
 export const onKeyDown = (u: uPlot) => (e: KeyboardEvent) => {
-  e.preventDefault()
   const isVertical = u.scales.x.ori === 1
 
   const horizontalScale = isVertical ? 'y' : 'x'
