@@ -8,12 +8,12 @@ import UplotReact from 'uplot-react'
 import { onKeyDown } from '../eventHandlers'
 import type { ChartProps, DataSeries, InitialRange } from '../types'
 import { extendArray, getArrayMinMax, getTraceName, isNil, nullPaddedIndexMap, seriesFromData } from '../utils'
-import { Button } from './Button'
 import { FlagButtonBar } from './FlagButtonBar'
+import { HelpButton, HelpPopup } from './HelpPopup'
 import { MainButtonBar } from './MainButtonBar'
 import { MenuBar } from './MenuBar'
 import { ChartContext } from '@/ChartContext'
-import { DEFAULT_COLOURS, PLOT_HELP_TEXT, PointDisplay } from '@/constants'
+import { DEFAULT_COLOURS, PointDisplay } from '@/constants'
 import { toggleDark, toggleFullscreen, updateFlagModeState } from '@/domUtils'
 import { clearSelection, combineFlaggedPoints } from '@/flagUtils'
 import { getScatterHoverIndex, nextId, nextParam, updateDisplayed } from '@/plotUtils'
@@ -304,7 +304,8 @@ export const ChartInner = ({
           : (
               <div />
             )}
-        <Button onClick={() => alert(PLOT_HELP_TEXT)}>?</Button>
+        <HelpButton />
+        <HelpPopup />
       </div>
       <div className='qcp-control-bar-outer'>
         <MainButtonBar
