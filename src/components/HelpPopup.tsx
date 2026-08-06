@@ -2,15 +2,16 @@ import { Button } from './Button'
 
 const OPEN_CLASS = 'qcp-modal-open'
 const CLOSED_CLASS = 'qcp-modal-closed'
+const HIDDEN_CLASS = 'qcp-hidden'
 
 const toggleOpen = () => {
   const modalClassList = document.querySelector('#qcp-modal')?.classList
   if (modalClassList?.contains(OPEN_CLASS)) {
     modalClassList.replace(OPEN_CLASS, CLOSED_CLASS)
-    document.querySelector('#qcp-modal-background')?.classList.add('qcp-hidden')
+    document.querySelector('#qcp-modal-background')?.classList.add(HIDDEN_CLASS)
   } else {
     modalClassList?.replace(CLOSED_CLASS, OPEN_CLASS)
-    document.querySelector('#qcp-modal-background')?.classList.remove('qcp-hidden')
+    document.querySelector('#qcp-modal-background')?.classList.remove(HIDDEN_CLASS)
   }
 }
 
@@ -26,7 +27,7 @@ export const HelpButton = () => (
  */
 export const HelpPopup = () => (
   <>
-    <div id='qcp-modal-background' className='qcp-hidden' />
+    <div id='qcp-modal-background' className={HIDDEN_CLASS} />
     <div id='qcp-modal' className={CLOSED_CLASS}>
       <b>Plot controls</b>
       <ul>
