@@ -3,7 +3,7 @@ import { Button } from './Button'
 const OPEN_CLASS = 'qcp-modal-open'
 const CLOSED_CLASS = 'qcp-modal-closed'
 
-const tooggleOpen = () => {
+const toggleOpen = () => {
   const modalClassList = document.querySelector('#qcp-modal')?.classList
   if (modalClassList?.contains(OPEN_CLASS)) {
     modalClassList.replace(OPEN_CLASS, CLOSED_CLASS)
@@ -18,7 +18,7 @@ const tooggleOpen = () => {
  *  Button used to toggle the help popup
  */
 export const HelpButton = () => (
-  <Button onClick={tooggleOpen}>?</Button>
+  <Button onClick={toggleOpen}>?</Button>
 )
 
 /**
@@ -50,7 +50,7 @@ export const HelpPopup = () => (
       </ul>
 
       <div style={{ display: 'flex', flexDirection: 'row-reverse' }}>
-        <Button onClick={tooggleOpen}>Close</Button>
+        <Button onClick={toggleOpen}>Close</Button>
       </div>
     </div>
   </>
