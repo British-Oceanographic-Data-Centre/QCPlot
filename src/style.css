@@ -179,8 +179,13 @@
     border-bottom: 1px solid black;
 }
 
+.qcp-hotkey-table {
+    border-collapse: separate;
+}
+
 .qcp-hotkey-table tr td:nth-child(1) {
     font-weight: bold;
+    padding-right: 0.5em;
 }
 
 .qcp-hotkey-table td {
