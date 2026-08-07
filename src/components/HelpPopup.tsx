@@ -29,25 +29,27 @@ export const HelpPopup = () => (
   <>
     <div id='qcp-modal-background' className={HIDDEN_CLASS} />
     <div id='qcp-modal' className={CLOSED_CLASS}>
-      <b>Plot controls</b>
+      <div className='qcp-modal-title'>Plot Controls</div>
       <ul>
-        <li> While holding Ctrl use the mouse wheel to zoom</li>
-        <li> Drawing a box with the left mouse button:</li>
+        <li>While holding Ctrl use the mouse wheel to zoom</li>
+        <li>Drawing a box with the left mouse button:</li>
         <ul>
-          <li> If flag mode is off will zoom onto that region</li>
-          <li>  With flag mode on will select all points in that region to be flagged</li>
+          <li>If flag mode is off will zoom onto that region</li>
+          <li>With flag mode on will select all points in that region to be flagged</li>
         </ul>
-        <li> Clicking the colour boxes in the legend will allow you to customise the colours</li>
-        <li> Hot keys</li>
-        <ul>
-          <li> <b>F</b>: toggle flag mode</li>
-          <li> <b>R</b>: reset zoom to default level</li>
-          <li> <b>B</b>: fullscreen mode</li>
-          <li> <b>D</b>: toggle dark mode</li>
-          <li> <b>Q/W</b>: prev/next parameter (if only one is selected)</li>
-          <li> <b>A/S</b>: prev/next ID (if only one is selected)</li>
-          <li> <b>Esc</b>: Clear current flagging selection</li>
-        </ul>
+        <li>Clicking the colour boxes in the legend will allow you to customise the colours</li>
+        <li>Hot keys:</li>
+        <table className='qcp-hotkey-table' style={{ marginLeft: '1em' }}>
+          <tbody>
+            <tr><td>F</td><td>toggle flag mode</td></tr>
+            <tr><td>R</td><td>reset zoom to default level</td></tr>
+            <tr><td>B</td><td>fullscreen mode</td></tr>
+            <tr><td>D</td><td>toggle dark mode</td></tr>
+            <tr><td>Q/W</td><td>prev/next parameter (if only one is selected)</td></tr>
+            <tr><td>A/S</td><td>prev/next ID (if only one is selected)</td></tr>
+            <tr><td>Esc</td><td>Clear current flagging selection</td></tr>
+          </tbody>
+        </table>
       </ul>
 
       <div style={{ display: 'flex', flexDirection: 'row-reverse' }}>
