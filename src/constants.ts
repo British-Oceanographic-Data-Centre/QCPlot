@@ -30,22 +30,5 @@ export enum PointDisplay {
   HIDE_FLAGS
 }
 
-export const PLOT_HELP_TEXT = `
-  Plot controls
-  - While holding Ctrl use the mouse wheel to zoom
-  - Drawing a box with the left mouse button:
-    - If flag mode is off will zoom onto that region
-    - With flag mode on will select all points in that region to be flagged
-  - Clicking the colour boxes in the legend will allow you to customise the colours
-  - Hot keys
-    - F: toggle flag mode
-    - R: reset zoom to default level
-    - B: fullscreen mode
-    - D: toggle dark mode
-    - Q/W: prev/next parameter (if only one is selected)
-    - A/S: prev/next ID (if only one is selected)
-    - Esc: Clear current flagging selection
-`
-
 export const VOCAB_HOST = 'https://vocab.nerc.ac.uk'
 export const P01_BASE_URL = `${VOCAB_HOST}/collection/P01/current`
