@@ -39,6 +39,11 @@ export const SeriesSelect = ({ dataSeries, hideParameterSelect, plotRef }: Serie
     return uniqIds
   }, [dataSeries])
 
+  const updateSelectAllBox = (shouldBeActive: boolean, id: string) => {
+    const el = document.querySelector(`#${id}`) as HTMLInputElement
+    el.checked = shouldBeActive
+  }
+
   const onSelectAllIds = (checked: boolean) => {
     activeIds.current = checked ? uniqueIds.map(x => x.id) : []
     document.querySelectorAll('.qcp-id-check').forEach(x => {
@@ -58,11 +63,13 @@ export const SeriesSelect = ({ dataSeries, hideParameterSelect, plotRef }: Serie
   const onToggleId = (id: string) => {
     const prev = activeIds.current
     activeIds.current = prev.includes(id) ? prev.filter(x => x !== id) : prev.concat(id)
+    updateSelectAllBox(activeIds.current.length === uniqueIds.length, 'qcp-id-check-all')
     updateDisplayed(plotRef.current, activeIds.current, activeParams.current)
   }
   const onToggleParam = (param: string) => {
     const prev = activeParams.current
     activeParams.current = prev.includes(param) ? prev.filter(x => x !== param) : prev.concat(param)
+    updateSelectAllBox(activeParams.current.length === allParams.length, 'qcp-param-check-all')
     updateDisplayed(plotRef.current, activeIds.current, activeParams.current)
   }
 
@@ -93,6 +100,7 @@ export const SeriesSelect = ({ dataSeries, hideParameterSelect, plotRef }: Serie
             <CheckableLabel
               onChange={onSelectAllIds}
               defaultChecked={activeIds.current.length === uniqueIds.length}
+              inputId='qcp-id-check-all'
             >
               OID
             </CheckableLabel>
@@ -102,6 +110,7 @@ export const SeriesSelect = ({ dataSeries, hideParameterSelect, plotRef }: Serie
             <CheckableLabel
               onChange={onSelectAllParams}
               defaultChecked={activeParams?.current.length === allParams.length}
+              inputId='qcp-param-check-all'
             >
               PARAMETER
             </CheckableLabel>
