@@ -25,7 +25,7 @@ interface IdPair {
 export const SeriesSelect = ({ dataSeries, hideParameterSelect, plotRef }: SeriesSelectProps) => {
   const [paramLabels, setParamLabels] = useState<{[key: string]: string}>({})
 
-  const { activeIds, activeParams, allParams } = useContext(ChartContext)
+  const { activeIds, activeParams, allParams, idLabel } = useContext(ChartContext)
 
   const uniqueIds = useMemo(() => {
     const uniqIds: IdPair[] = []
@@ -102,7 +102,7 @@ export const SeriesSelect = ({ dataSeries, hideParameterSelect, plotRef }: Serie
               defaultChecked={activeIds.current.length === uniqueIds.length}
               inputId='qcp-id-check-all'
             >
-              OID
+              {idLabel}
             </CheckableLabel>
           </th>
 

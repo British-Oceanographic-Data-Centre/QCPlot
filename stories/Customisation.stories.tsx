@@ -25,7 +25,8 @@ export const CustomPlotColours: Story = {
 
 export const CustomBranding: Story = {
   args: {
-    data: simpleData
+    data: simpleData,
+    idLabel: 'My ID'
   },
   decorators: [
     (Story) => (
