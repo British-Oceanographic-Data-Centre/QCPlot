@@ -45,6 +45,7 @@ export interface ChartProps {
   xAxisLabel?: string
   yAxisLabel?: string
   goodFlags? : string[] // List of flags that should shouldn't display as different symbols on the plots
+  idLabel?: string
 }
 
 export interface ChartContextValue {
@@ -55,6 +56,7 @@ export interface ChartContextValue {
   activeParams: React.RefObject<string[]>
   totalSeriesCount: number
   flagset?: keyof typeof FLAGS
+  idLabel?: string
 }
 
 export interface SelectedPoints {
