@@ -13,7 +13,7 @@ import 'uplot/dist/uPlot.min.css'
  *
  * Note that this component assumes the x values of the data to be sorted, behaviour may be incorrect otherwise.
  */
-export const Chart = ({ data, flaggedPoints, defaultShowAll, ...props }: ChartProps) => {
+export const Chart = ({ data, flaggedPoints, defaultShowAll, idLabel, ...props }: ChartProps) => {
   const allIds = new Set(data.series.map(x => x.id))
   const allParams = new Set(data.series.map(x => x.parameter))
 
@@ -33,7 +33,8 @@ export const Chart = ({ data, flaggedPoints, defaultShowAll, ...props }: ChartPr
         activeIds,
         activeParams,
         totalSeriesCount: allIds.size * allParams.size,
-        flagset: contextFlagset
+        flagset: contextFlagset,
+        idLabel: idLabel || 'OID'
       }}
     >
       <ChartInner {...props} data={data} flaggedPoints={flaggedPoints} />

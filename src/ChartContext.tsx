@@ -9,5 +9,6 @@ export const ChartContext = createContext<ChartContextValue>({
   allParams: [],
   activeIds: { current: [] },
   activeParams: { current: [] },
-  flagset: FlagSets.ALPHABETICAL_FLAGS
+  flagset: FlagSets.ALPHABETICAL_FLAGS,
+  idLabel: 'OID'
 })
