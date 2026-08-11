@@ -2,7 +2,7 @@ import { RefObject } from 'react'
 
 import type uPlot from 'uplot'
 
-import { NamedSeries } from './types'
+import { ConstantLine, NamedSeries } from './types'
 import { isNil, splitTraceName, wrapIndex } from './utils'
 
 /**
@@ -99,4 +99,49 @@ export const nextParam = (
     })
     updateDisplayed(plot, activeIds.current, activeParams.current)
   }
+}
+
+/**
+ * Draws constant-value lines onto the plot.
+ */
+export const drawConstantLines = (u: uPlot, lines: ConstantLine[]) => {
+  const lineColour = '#000'
+  const ctx = u.ctx
+  ctx.save()
+
+  const xRange = [u.scales.x.min!, u.scales.x.max!]
+  const yRange = [u.scales.y.min!, u.scales.y.max!]
+
+  for (let i = 0; i < lines.length; i++) {
+    const line = lines[i]
+    let x0, y0, x1, y1
+    if (line.y !== undefined) {
+      x0 = u.valToPos(xRange[0], 'x', true)
+      y0 = u.valToPos(line.y, 'y', true)
+      x1 = u.valToPos(xRange[1], 'x', true)
+      y1 = u.valToPos(line.y, 'y', true)
+    } else if (line.x !== undefined) {
+      x0 = u.valToPos(line.x, 'x', true)
+      y0 = u.valToPos(yRange[0], 'y', true)
+      x1 = u.valToPos(line.x, 'x', true)
+      y1 = u.valToPos(yRange[1], 'y', true)
+    } else {
+      continue
+    }
+
+    ctx.beginPath()
+    ctx.strokeStyle = lineColour
+    ctx.setLineDash([5, 5])
+    ctx.moveTo(x0, y0)
+    ctx.lineTo(x1, y1)
+    ctx.stroke()
+    ctx.setLineDash([])
+    ctx.font = '12px Arial'
+    ctx.fillStyle = lineColour
+    ctx.textAlign = 'left'
+    ctx.textBaseline = 'bottom'
+    ctx.fillText(line.label, x0 + 2, y0, 1000)
+  }
+
+  ctx.restore()
 }
