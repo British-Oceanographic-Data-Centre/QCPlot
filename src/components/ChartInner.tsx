@@ -16,7 +16,7 @@ import { ChartContext } from '@/ChartContext'
 import { DEFAULT_COLOURS, PointDisplay } from '@/constants'
 import { toggleDark, toggleFullscreen, updateFlagModeState } from '@/domUtils'
 import { clearSelection, combineFlaggedPoints } from '@/flagUtils'
-import { getScatterHoverIndex, nextId, nextParam, updateDisplayed } from '@/plotUtils'
+import { drawConstantLines, getScatterHoverIndex, nextId, nextParam, updateDisplayed } from '@/plotUtils'
 import { renderFlagsPlugin, scrollZoomPlugin } from '@/plugins'
 import { legendPlugin } from '@/plugins/legend'
 
@@ -43,7 +43,8 @@ export const ChartInner = ({
   hideParameterSelect = false,
   xAxisLabel,
   yAxisLabel,
-  goodFlags = []
+  goodFlags = [],
+  constantLines = []
 }: ChartProps) => {
   const { activeIds, activeParams, totalSeriesCount, allIds, allParams } = useContext(ChartContext)
 
@@ -178,7 +179,8 @@ export const ChartInner = ({
             yMax: u.scales.y.max!
           }
         }
-      }]
+      }],
+      draw: [(u) => drawConstantLines(u, constantLines)]
     },
     plugins: [
       renderFlagsPlugin(allFlaggedPoints, showPoints, scatterMode, goodFlags),
