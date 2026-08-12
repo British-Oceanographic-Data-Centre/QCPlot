@@ -13,7 +13,7 @@ import 'uplot/dist/uPlot.min.css'
  *
  * Note that this component assumes the x values of the data to be sorted, behaviour may be incorrect otherwise.
  */
-export const Chart = ({ data, flaggedPoints, defaultShowAll, idLabel, ...props }: ChartProps) => {
+export const Chart = ({ data, flaggedPoints, defaultShowAll, idLabel, sharedFlagGroups, ...props }: ChartProps) => {
   const allIds = new Set(data.series.map(x => x.id))
   const allParams = new Set(data.series.map(x => x.parameter))
 
@@ -23,6 +23,12 @@ export const Chart = ({ data, flaggedPoints, defaultShowAll, idLabel, ...props }
 
   const activeIds = useRef<string[]>(initialActiveIds)
   const activeParams = useRef<string[]>(initialActiveParams)
+
+  // Update sharedFlagGroups from 2D array to an object, to allow faster lookups by key
+  const sharedFlagGroupsKeyed: {[key: string]: string[]} = {}
+  sharedFlagGroups?.forEach(a => {
+    a.forEach(b => { sharedFlagGroupsKeyed[b] = a.filter(i => i !== b) })
+  })
 
   return (
     <ChartContext.Provider
@@ -37,7 +43,7 @@ export const Chart = ({ data, flaggedPoints, defaultShowAll, idLabel, ...props }
         idLabel: idLabel || 'OID'
       }}
     >
-      <ChartInner {...props} data={data} flaggedPoints={flaggedPoints} />
+      <ChartInner {...props} data={data} flaggedPoints={flaggedPoints} sharedFlagGroupsKeyed={sharedFlagGroupsKeyed} />
     </ChartContext.Provider>
   )
 }

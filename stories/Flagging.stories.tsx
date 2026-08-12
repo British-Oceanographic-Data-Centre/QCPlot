@@ -127,3 +127,18 @@ export const OriginatorFlags = () => {
     />
   )
 }
+
+export const SharedFlagGroups = () => {
+  const [flags, setFlags] = useState<FlaggedPoint[]>([])
+
+  return (
+    <Chart
+      data={simpleData}
+      flaggedPoints={flags}
+      flagCallback={setFlags}
+      enableFlagging
+      defaultShowAll
+      sharedFlagGroups={[['TEMPPR01', 'PREXPR01']]}
+    />
+  )
+}

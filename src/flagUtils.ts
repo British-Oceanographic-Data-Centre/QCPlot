@@ -1,7 +1,7 @@
 import type uPlot from 'uplot'
 
 import { FlaggedPoint, SelectedPoints, NamedSeries } from './types'
-import { isNil } from './utils'
+import { isNil, splitTraceName } from './utils'
 
 /**
  * Clear current selected region on the plot.
@@ -59,12 +59,30 @@ interface updateFlagsProps {
   flag: string | null,
   existingFlags: FlaggedPoint[],
   flagCallback?: (flaggedPoints: FlaggedPoint[]) => void
+  sharedFlagGroupsKeyed: {[key: string]: string[]}
 }
 
 /**
  * Applies changes to the flagged points, passing the updated array to a callback method if provided.
  */
-export const updateFlags = ({ selectedPoints, flag, existingFlags, flagCallback }: updateFlagsProps) => {
+export const updateFlags = ({
+  selectedPoints, flag, existingFlags, flagCallback, sharedFlagGroupsKeyed
+}: updateFlagsProps) => {
+  const updatedSelectedPoints: SelectedPoints = {}
+  Object.entries(selectedPoints)
+    .filter(([_, v]) => v.length > 0)
+    .forEach(([k, v]) => {
+      updatedSelectedPoints[k] = v
+      const [id, param] = splitTraceName(k)
+      if (sharedFlagGroupsKeyed[param]) {
+        sharedFlagGroupsKeyed[param].forEach(otherParam => {
+          updatedSelectedPoints[`${id}-${otherParam}`] = v
+        })
+      }
+    })
+
+  selectedPoints = updatedSelectedPoints
+
   const modifiedTraceNames = Object.entries(selectedPoints)
     .filter(([_, v]) => v.length > 0) // Filter to keys with at least one point
     .map(([k, _]) => k)
