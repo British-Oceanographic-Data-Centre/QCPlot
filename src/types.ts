@@ -52,6 +52,13 @@ export interface ChartProps {
   goodFlags? : string[] // List of flags that should shouldn't display as different symbols on the plots
   idLabel?: string
   constantLines?: ConstantLine[]
+  // sharedFlagGroups: Each subarray is a set of params that will be mutually flagged.
+  // Note, no param should appear more than once in this whole array
+  sharedFlagGroups?: string[][]
+}
+
+export interface ChartInnerProps extends ChartProps {
+  sharedFlagGroupsKeyed: {[key: string]: string[]} // Transformed version of sharedFlagGroups for performance benefit
 }
 
 export interface ChartContextValue {

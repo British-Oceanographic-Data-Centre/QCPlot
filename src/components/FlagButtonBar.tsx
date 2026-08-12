@@ -12,12 +12,15 @@ interface FlagButtonBarProps {
   plotRef: RefObject<uPlot | null>
   clearSelection: (u: uPlot | null) => void
   flaggedPoints: FlaggedPoint[]
+  sharedFlagGroupsKeyed: {[key: string]: string[]}
 }
 
 /**
  * Container for the flag controls, only visible when flagging mode is active.
  */
-export const FlagButtonBar = ({ clearSelection, plotRef, flaggedPoints }: FlagButtonBarProps) => {
+export const FlagButtonBar = ({
+  clearSelection, plotRef, flaggedPoints, sharedFlagGroupsKeyed
+}: FlagButtonBarProps) => {
   const { flagCallback, flagset } = useContext(ChartContext)
 
   const flagSelect = useRef<HTMLSelectElement>(null)
@@ -28,13 +31,13 @@ export const FlagButtonBar = ({ clearSelection, plotRef, flaggedPoints }: FlagBu
     if (!plotRef.current) return
     const selectedPoints = getPointsForSelection(plotRef.current)
     const flag = flagSelect.current?.value || null
-    updateFlags({ selectedPoints, flag, existingFlags: flaggedPoints, flagCallback })
+    updateFlags({ selectedPoints, flag, existingFlags: flaggedPoints, flagCallback, sharedFlagGroupsKeyed })
   }
 
   const removeFlags = () => {
     if (!plotRef.current) return
     const selectedPoints = getPointsForSelection(plotRef.current)
-    updateFlags({ selectedPoints, flag: null, existingFlags: flaggedPoints, flagCallback })
+    updateFlags({ selectedPoints, flag: null, existingFlags: flaggedPoints, flagCallback, sharedFlagGroupsKeyed })
   }
 
   return (

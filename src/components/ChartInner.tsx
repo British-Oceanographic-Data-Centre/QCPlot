@@ -6,7 +6,7 @@ import type { Options } from 'uplot'
 import UplotReact from 'uplot-react'
 
 import { onKeyDown } from '../eventHandlers'
-import type { ChartProps, DataSeries, InitialRange } from '../types'
+import type { ChartInnerProps, DataSeries, InitialRange } from '../types'
 import { extendArray, getArrayMinMax, getTraceName, isNil, nullPaddedIndexMap, seriesFromData } from '../utils'
 import { FlagButtonBar } from './FlagButtonBar'
 import { HelpButton, HelpPopup } from './HelpPopup'
@@ -44,8 +44,9 @@ export const ChartInner = ({
   xAxisLabel,
   yAxisLabel,
   goodFlags = [],
-  constantLines = []
-}: ChartProps) => {
+  constantLines = [],
+  sharedFlagGroupsKeyed = {}
+}: ChartInnerProps) => {
   const { activeIds, activeParams, totalSeriesCount, allIds, allParams } = useContext(ChartContext)
 
   const [showPoints, setShowPoints] = useState<number>(PointDisplay.ALL)
@@ -320,6 +321,7 @@ export const ChartInner = ({
           clearSelection={clearSelection}
           plotRef={plotRef}
           flaggedPoints={allFlaggedPoints}
+          sharedFlagGroupsKeyed={sharedFlagGroupsKeyed}
         />
       </div>
       {/* End control bar  */}
