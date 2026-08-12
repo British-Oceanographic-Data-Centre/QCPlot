@@ -25,6 +25,12 @@ export interface Data {
   series: DataSeries[]
 }
 
+export interface ConstantLine {
+  x?: number
+  y?: number
+  label: string
+}
+
 export interface ChartProps {
   data: Data
   enableFlagging: boolean
@@ -46,6 +52,7 @@ export interface ChartProps {
   yAxisLabel?: string
   goodFlags? : string[] // List of flags that should shouldn't display as different symbols on the plots
   idLabel?: string
+  constantLines?: ConstantLine[]
 }
 
 export interface ChartContextValue {

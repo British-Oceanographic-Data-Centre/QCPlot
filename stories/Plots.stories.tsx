@@ -153,3 +153,13 @@ export const MultiOidXYScatter: Story = {
     height: 520
   }
 }
+
+export const WithMinMaxLines: Story = {
+  args: {
+    data: simpleData,
+    constantLines: [
+      { y: 1, label: 'Min value' },
+      { y: 60, label: 'Max value' }
+    ]
+  }
+}
