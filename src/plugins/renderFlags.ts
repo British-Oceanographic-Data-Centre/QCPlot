@@ -15,7 +15,7 @@ const linear = uPlot.paths.linear!()
 export const renderFlagsPlugin = (
   flaggedPoints: FlaggedPoint[] = [],
   showPoints: number,
-  scatterMode = false,
+  pointsOnly = false,
   goodFlags: string[] = []
 ): uPlot.Plugin => {
   const drawFlagMarker = (ctx: CanvasRenderingContext2D, cx: number, cy: number) => {
@@ -100,7 +100,7 @@ export const renderFlagsPlugin = (
     const series = u.series[si]
     if (!series.idxs) return linear(u, si, io, i1)
     const visiblePoints = series.idxs[1] - series.idxs[0]
-    if (visiblePoints >= POINT_THRESHOLD || !scatterMode) {
+    if (visiblePoints >= POINT_THRESHOLD || !pointsOnly) {
       return linear(u, si, io, i1)
     } else {
       return null

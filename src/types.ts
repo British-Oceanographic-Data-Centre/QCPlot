@@ -46,6 +46,7 @@ export interface ChartProps {
   showCycleNumber?: boolean
   verticalMode?: boolean
   scatterMode?: boolean
+  showScatterPointLines?: boolean // Only used if scatterMode = true. Will join the points with lines between
   hideParameterSelect?: boolean
   flagset?: keyof typeof FLAGS
   xAxisLabel?: string
