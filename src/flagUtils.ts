@@ -1,7 +1,7 @@
 import type uPlot from 'uplot'
 
 import { FlaggedPoint, SelectedPoints, NamedSeries } from './types'
-import { isNil } from './utils'
+import { isNil, unique } from './utils'
 
 /**
  * Clear current selected region on the plot.
@@ -43,11 +43,8 @@ export const getPointsForSelection = (u: uPlot): SelectedPoints => {
         continue
       }
       const val = x[i]
-      // Count nulls in the series before this, to offset correctly
-      const precedingNulls = (x as (number | null)[]).filter((v, j) => v === null && j < i)
-      if (isNil(val)) continue
-      if (val >= lowerYVal && val <= upperYVal) {
-        selectedPoints[seriesName].push(i - precedingNulls.length)
+      if (!isNil(val) && val >= lowerYVal && val <= upperYVal) {
+        selectedPoints[seriesName].push(u.data[0][i])
       }
     }
   })
@@ -71,29 +68,32 @@ export const updateFlags = ({ selectedPoints, flag, existingFlags, flagCallback 
 
   const untouchedFlags = existingFlags.filter(x => !modifiedTraceNames.includes(x.traceName))
   const modifiedTraceFlags = existingFlags.filter(x => modifiedTraceNames.includes(x.traceName))
-  let updatedFlags: FlaggedPoint[] = splitRanges(modifiedTraceFlags)
+  const updatedFlags = cleanFlaggedPoints(modifiedTraceFlags)
 
-  // Remove selected points from the current flag list
   Object.keys(selectedPoints).forEach(traceName => {
-    updatedFlags = updatedFlags.filter(x =>
-      !(x.traceName === traceName && selectedPoints[traceName].includes(x.pointIndex))
-    )
+    const traceFlaggedPoints = updatedFlags.filter(x => x.traceName === traceName)
+    traceFlaggedPoints.forEach(f => {
+      f.xValues = f.xValues.filter(x => !selectedPoints[traceName].includes(x))
+    })
   })
 
-  // Add newly flagged points to the list
   if (flag) {
     Object.keys(selectedPoints).forEach(traceName => {
-      selectedPoints[traceName].forEach(pointIndex => {
+      const matchingFP = updatedFlags.find(f => f.traceName === traceName && f.flag === flag)
+      if (matchingFP) {
+        matchingFP.xValues = unique(matchingFP.xValues.concat(selectedPoints[traceName])) as number[]
+      } else if (selectedPoints[traceName].length > 0) {
         updatedFlags.push({
           traceName,
-          pointIndex,
+          xValues: selectedPoints[traceName],
           flag
         })
-      })
+      }
     })
   }
+
   if (flagCallback) {
-    flagCallback(untouchedFlags.concat(combineRanges(updatedFlags)))
+    flagCallback(untouchedFlags.concat(cleanFlaggedPoints(updatedFlags)))
   }
 }
 
@@ -127,63 +127,80 @@ export const getPointRanges = (points: number[]) => {
  * Takes an array of flagged data and split point ranges into individual points.
  * Opposite of combineRanges.
  */
-export const splitRanges = (flaggedPoints: FlaggedPoint[]) => {
-  const splitFlags: FlaggedPoint[] = []
-  flaggedPoints.forEach(flagObj => {
-    if (isNil(flagObj.endIndex)) {
-      splitFlags.push(flagObj)
-    } else {
-      for (let i = flagObj.pointIndex; i <= flagObj.endIndex; i++) {
-        splitFlags.push({
-          ...flagObj,
-          pointIndex: i,
-          endIndex: undefined
-        })
-      }
-    }
-  })
-  return splitFlags
-}
+// export const splitRanges = (flaggedPoints: FlaggedPoint[]) => {
+//   const splitFlags: FlaggedPoint[] = []
+//   flaggedPoints.forEach(flagObj => {
+//     if (isNil(flagObj.endIndex)) {
+//       splitFlags.push(flagObj)
+//     } else {
+//       for (let i = flagObj.pointIndex; i <= flagObj.endIndex; i++) {
+//         splitFlags.push({
+//           ...flagObj,
+//           pointIndex: i,
+//           endIndex: undefined
+//         })
+//       }
+//     }
+//   })
+//   return splitFlags
+// }
 
 /**
  * Takes an array of flagged data and combine individual points into point ranges.
  * Opposite of splitRanges.
  */
-export const combineRanges = (flaggedPoints: FlaggedPoint[]) => {
-  const combined: FlaggedPoint[] = []
+// export const combineRanges = (flaggedPoints: FlaggedPoint[]) => {
+//   const combined: FlaggedPoint[] = []
 
-  const keyedBySeriesName: {[key: string]: FlaggedPoint[]} = {}
-  flaggedPoints.forEach(flag => {
-    if (!keyedBySeriesName[flag.traceName]) {
-      keyedBySeriesName[flag.traceName] = []
+//   const keyedBySeriesName: {[key: string]: FlaggedPoint[]} = {}
+//   flaggedPoints.forEach(flag => {
+//     if (!keyedBySeriesName[flag.traceName]) {
+//       keyedBySeriesName[flag.traceName] = []
+//     }
+//     keyedBySeriesName[flag.traceName].push(flag)
+//   })
+
+//   Object.values(keyedBySeriesName).forEach(seriesFlags => {
+//     const keyed: {[key: string]: FlaggedPoint[]} = {}
+//     seriesFlags.forEach(flag => {
+//       if (!keyed[flag.flag]) {
+//         keyed[flag.flag] = []
+//       }
+//       keyed[flag.flag].push(flag)
+//     })
+//     Object.values(keyed).forEach(flags => {
+//       const indices = new Set<number>()
+//       flags.forEach(x => indices.add(x.pointIndex))
+//       const ranges = getPointRanges(Array.from(indices))
+//       ranges.forEach(idxRange => {
+//         combined.push({
+//           traceName: flags[0].traceName,
+//           pointIndex: idxRange.start,
+//           endIndex: idxRange.end,
+//           flag: flags[0].flag
+//         })
+//       })
+//     })
+//   })
+
+//   return combined
+// }
+
+/**
+ *  Removes FlaggedPoints with duplicate traceName + flag (if they exist)
+ */
+export const cleanFlaggedPoints = (flaggedPoints: FlaggedPoint[]): FlaggedPoint[] => {
+  const combined: {[key: string]: FlaggedPoint} = {}
+  flaggedPoints.forEach(fp => {
+    const key = `${fp.traceName};${fp.flag}`
+    if (key in combined) {
+      combined[key].xValues = unique(combined[key].xValues.concat(fp.xValues)) as number[]
+    } else {
+      combined[key] = fp
     }
-    keyedBySeriesName[flag.traceName].push(flag)
   })
 
-  Object.values(keyedBySeriesName).forEach(seriesFlags => {
-    const keyed: {[key: string]: FlaggedPoint[]} = {}
-    seriesFlags.forEach(flag => {
-      if (!keyed[flag.flag]) {
-        keyed[flag.flag] = []
-      }
-      keyed[flag.flag].push(flag)
-    })
-    Object.values(keyed).forEach(flags => {
-      const indices = new Set<number>()
-      flags.forEach(x => indices.add(x.pointIndex))
-      const ranges = getPointRanges(Array.from(indices))
-      ranges.forEach(idxRange => {
-        combined.push({
-          traceName: flags[0].traceName,
-          pointIndex: idxRange.start,
-          endIndex: idxRange.end,
-          flag: flags[0].flag
-        })
-      })
-    })
-  })
-
-  return combined
+  return Object.values(combined).filter(x => x.xValues.length > 0)
 }
 
 /**

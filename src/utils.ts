@@ -11,6 +11,11 @@ export const isNil = (val: unknown) => {
   return val === undefined || val === null
 }
 
+export const unique = (arr: unknown[]) => {
+  const s = new Set(arr)
+  return Array.from(s)
+}
+
 /**
  * Adjusts an integer to fit within the index bounds of an array.
  * If index exceeds the end it will wrap around to the start, likewise at the other end.
@@ -52,12 +57,10 @@ export const getSeriesLabel = (series: DataSeries) => {
 /**
  * Gets the flag at a specific index from an array of FlaggedPoints
  */
-export const getFlagForPoint = (flaggedPoints: FlaggedPoint[], pointIndex: number) => {
+export const getFlagForPoint = (flaggedPoints: FlaggedPoint[], xValue: number) => {
   for (let i = 0; i < flaggedPoints.length; i++) {
     const thisFlag = flaggedPoints[i]
-    if (thisFlag.endIndex === undefined) {
-      if (thisFlag.pointIndex === pointIndex) return thisFlag.flag
-    } else if (pointIndex >= thisFlag.pointIndex && pointIndex <= thisFlag.endIndex) {
+    if (thisFlag.xValues.includes(xValue)) {
       return thisFlag.flag
     }
   }
@@ -94,11 +97,11 @@ export const seriesFromData = (
 
     const traceName = (u.series[seriesIdx] as NamedSeries).name
     const seriesFlags = flaggedPoints.filter(x => x.traceName === traceName)
-    const flag = getFlagForPoint(seriesFlags, pointIndex - precedingNulls.length)
+    const x = u.data[0][pointIndex]
+    const flag = getFlagForPoint(seriesFlags, x)
 
     let label: string
     if (scatterMode) {
-      const x = u.data[0][pointIndex]
       const y = value
       const isVertical = u.scales.x.ori === 1
       label = isVertical ? `x: ${y} y: ${x}` : `x: ${x} y: ${y}`

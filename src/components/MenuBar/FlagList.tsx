@@ -2,8 +2,9 @@ import { RefObject } from 'react'
 
 import uPlot from 'uplot'
 
+import { cleanFlaggedPoints } from '@/flagUtils'
 import { DataSeries, FlaggedPoint, NamedSeries } from '@/types'
-import { getTraceName, isNil } from '@/utils'
+import { getTraceName } from '@/utils'
 
 interface FlagListProps {
   flaggedPoints: FlaggedPoint[]
@@ -17,15 +18,6 @@ interface FlagListProps {
  * Table showing a list of all flags currently applied to the data.
  */
 export const FlagList = ({ flaggedPoints, dataSeries, zoomToRange, plotRef, colours }: FlagListProps) => {
-  const groupedFlaggedPoints: {[name: string]: FlaggedPoint[]} = {}
-  flaggedPoints.forEach(fp => {
-    const key = `${fp.traceName};${fp.flag}`
-    if (!(key in groupedFlaggedPoints)) {
-      groupedFlaggedPoints[key] = []
-    }
-    groupedFlaggedPoints[key].push(fp)
-  })
-
   const traceNameToLabel = (traceName: string) => {
     const lastSeparator = traceName.lastIndexOf('-')
     const id = traceName.substring(0, lastSeparator)
@@ -38,16 +30,12 @@ export const FlagList = ({ flaggedPoints, dataSeries, zoomToRange, plotRef, colo
     return traceName
   }
 
-  const getSeriesFromKey = (key: string) => {
-    const traceName = key.split(';')[0]
+  const getSeriesFromTraceName = (traceName: string) => {
     return plotRef.current?.series.find(x => (x as NamedSeries).name === traceName)
   }
 
-  const displayIndex = (i: number) => i + 1 // Display indices starting from 1 for user-friendliness
-
-  const getColourFromKey = (key: string) => {
+  const getColourFromTraceName = (traceName: string) => {
     if (!plotRef.current) return
-    const traceName = key.split(';')[0]
     const seriesIndex = dataSeries.findIndex(x => getTraceName(x) === traceName)
     return colours[seriesIndex] || '#ffffff'
   }
@@ -60,39 +48,39 @@ export const FlagList = ({ flaggedPoints, dataSeries, zoomToRange, plotRef, colo
             <th />
             <th>Channel</th>
             <th>Flag</th>
-            <th>Point(s)</th>
+            <th>X values</th>
           </tr>
         </thead>
         <tbody>
-          {Object.keys(groupedFlaggedPoints).sort().map(key =>
-            <tr
-              key={key}
-              className={getSeriesFromKey(key)?.show ? '' : 'qcp-faded'}
-            >
-              <td>
-                <div style={{ width: '1em', height: '1em', border: `2px solid ${getColourFromKey(key)}` }} />
-              </td>
-              <td style={{ verticalAlign: 'top' }}>
-                {traceNameToLabel(groupedFlaggedPoints[key][0].traceName)}
-              </td>
-              <td style={{ verticalAlign: 'top' }}>
-                {groupedFlaggedPoints[key][0].flag}
-              </td>
-              <td>
-                {groupedFlaggedPoints[key].sort((a, b) => a.pointIndex - b.pointIndex).map(fp =>
+          {cleanFlaggedPoints(flaggedPoints)
+            .sort((a, b) => `${a.traceName};${a.flag}`.localeCompare(`${b.traceName};${b.flag}`))
+            .map(fp =>
+              <tr
+                key={`${fp.traceName};${fp.flag}`}
+                className={getSeriesFromTraceName(fp.traceName)?.show ? '' : 'qcp-faded'}
+              >
+                <td>
+                  <div
+                    style={{ width: '1em', height: '1em', border: `2px solid ${getColourFromTraceName(fp.traceName)}` }}
+                  />
+                </td>
+                <td style={{ verticalAlign: 'top' }}>
+                  {traceNameToLabel(fp.traceName)}
+                </td>
+                <td style={{ verticalAlign: 'top' }}>
+                  {fp.flag}
+                </td>
+                <td>
                   <button
-                    key={fp.pointIndex}
                     className='qcp-link-btn'
-                    onClick={() => zoomToRange(fp.traceName, fp.pointIndex, fp.endIndex || fp.pointIndex)}
+                    onClick={() => zoomToRange(fp.traceName, Math.min(...fp.xValues), Math.max(...fp.xValues))}
                   >
-                    {isNil(fp.endIndex) || fp.pointIndex === fp.endIndex
-                      ? displayIndex(fp.pointIndex)
-                      : `${displayIndex(fp.pointIndex)}-${displayIndex(fp.endIndex)}`}
+                    {fp.xValues.sort().join(', ')}
                   </button>
-                ).map((item, index) => [index > 0 && ', ', item])}
-              </td>
-            </tr>
-          )}
+                </td>
+              </tr>
+            )
+          }
         </tbody>
       </table>
     </div>

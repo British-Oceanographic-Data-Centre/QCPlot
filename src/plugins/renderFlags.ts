@@ -1,7 +1,7 @@
 import uPlot, { Options } from 'uplot'
 
 import { FlaggedPoint, NamedSeries } from '../types'
-import { getFlagForPoint, isNil } from '../utils'
+import { getFlagForPoint } from '../utils'
 import { PointDisplay } from '@/constants'
 
 const POINT_THRESHOLD = 10_000
@@ -50,31 +50,19 @@ export const renderFlagsPlugin = (
       ctx.strokeStyle = (thisSeries as uPlot.Series & {_stroke: string})._stroke
       ctx.lineWidth = 3
 
-      const data: number[] = []
-      const xVals: number[] = []
-      let nullCountToLeft = 0 // count nulls in this series to the left of the visible range
-      // Remove null padding to ensure flags align correctly with data
-      u.data[i].forEach((x, indx) => {
-        if (!isNil(x)) {
-          data.push(x)
-          xVals.push(u.data[0][indx])
-        } else if (indx < i0) {
-          nullCountToLeft += 1
-        }
-      })
-
-      let j = i0 - nullCountToLeft // offset to ensure we loop over the correct points
+      let j = i0
 
       const seriesFlags = flaggedPoints.filter(x => x.traceName === (thisSeries as NamedSeries).name)
       while (j <= i1) {
+        const x = u.data[0][j]!
+        const flag = getFlagForPoint(seriesFlags, x)
         // Render symbol if point is flagged OR if we're displaying flagged points only
         // The FLAGS_ONLY check is a slight cheat to get round the flag indices being offset when data is filtered out
-        const flag = getFlagForPoint(seriesFlags, j)
         if (showPoints === PointDisplay.FLAGS_ONLY || (flag && !goodFlags.includes(flag))) {
-          const val = data[j]
+          const val = u.data[i][j]!
 
           if (val >= u.scales.y.min! && val <= u.scales.y.max!) {
-            let cx = Math.round(u.valToPos(xVals[j], 'x', true))
+            let cx = Math.round(u.valToPos(x, 'x', true))
             let cy = Math.round(u.valToPos(val!, 'y', true))
             const pointSizeOffset = thisSeries.points?.size ? (thisSeries.points?.size / 5) - 1 : 0
             cx += pointSizeOffset * devicePixelRatio

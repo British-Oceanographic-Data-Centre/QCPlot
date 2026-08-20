@@ -35,10 +35,10 @@ test.each([
 
 test('getFlagForPoint returns correct flag (for various cases)', () => {
   const flaggedPoints: FlaggedPoint[] = [
-    { traceName: '', pointIndex: 0, flag: 'A' },
-    { traceName: '', pointIndex: 1, endIndex: 3, flag: 'B' },
-    { traceName: '', pointIndex: 5, flag: 'X' },
-    { traceName: '', pointIndex: 5, flag: 'Y' }
+    { traceName: '', xValues: [0], flag: 'A' },
+    { traceName: '', xValues: [1, 2, 3], flag: 'B' },
+    { traceName: '', xValues: [5], flag: 'X' },
+    { traceName: '', xValues: [5], flag: 'Y' }
   ]
 
   // Flag defined for single point

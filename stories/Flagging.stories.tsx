@@ -15,10 +15,10 @@ export default meta
 
 export const FlaggingDemo = () => {
   const [flags, setFlags] = useState<FlaggedPoint[]>([
-    { traceName: 'INSTRUMENT_1-TEMPPR01', pointIndex: 3, flag: 'Z' },
-    { traceName: 'INSTRUMENT_1-PREXPR01', pointIndex: 1, flag: 'Y' },
-    { traceName: 'INSTRUMENT_1-PREXPR01', pointIndex: 2, endIndex: 3, flag: 'X' },
-    { traceName: 'INSTRUMENT_1-TEMPPR01', pointIndex: 1, flag: 'Z' }
+    { traceName: 'INSTRUMENT_1-TEMPPR01', xValues: [14], flag: 'Z' },
+    { traceName: 'INSTRUMENT_1-PREXPR01', xValues: [11], flag: 'Y' },
+    { traceName: 'INSTRUMENT_1-PREXPR01', xValues: [14, 15], flag: 'X' },
+    { traceName: 'INSTRUMENT_1-TEMPPR01', xValues: [12], flag: 'Z' }
   ])
 
   return (
@@ -119,10 +119,10 @@ export const OriginatorFlags = () => {
       enableFlagging
       defaultShowAll
       originatorFlaggedPoints={[
-        { traceName: 'INSTRUMENT_1-TEMPPR01', pointIndex: 3, flag: 'Z' },
-        { traceName: 'INSTRUMENT_1-PREXPR01', pointIndex: 1, flag: 'Y' },
-        { traceName: 'INSTRUMENT_1-PREXPR01', pointIndex: 2, endIndex: 3, flag: 'X' },
-        { traceName: 'INSTRUMENT_1-TEMPPR01', pointIndex: 1, flag: 'Z' }
+        { traceName: 'INSTRUMENT_1-TEMPPR01', xValues: [14], flag: 'Z' },
+        { traceName: 'INSTRUMENT_1-PREXPR01', xValues: [12], flag: 'Y' },
+        { traceName: 'INSTRUMENT_1-PREXPR01', xValues: [13, 14], flag: 'X' },
+        { traceName: 'INSTRUMENT_1-TEMPPR01', xValues: [12], flag: 'Z' }
       ]}
     />
   )

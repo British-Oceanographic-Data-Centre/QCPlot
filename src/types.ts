@@ -6,8 +6,7 @@ import { FLAGS } from './constants'
 
 export interface FlaggedPoint {
   traceName: string
-  pointIndex: number
-  endIndex?: number // endIndex is inclusive
+  xValues: number[]
   flag: string
 }
 
