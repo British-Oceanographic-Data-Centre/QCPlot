@@ -114,18 +114,20 @@ export const seriesFromData = (
     return label
   }
 
-  data.series.forEach((series, i) => {
-    seriesArray.push({
-      name: getTraceName(series),
-      label: getSeriesLabel(series),
-      scale: 'y',
-      value: formatLabel,
-      stroke: colours[i],
-      points: scatterMode ? { size: 7, fill: colours[i] } : undefined,
-      spanGaps: series.spanGaps,
-      show: activeIds.includes(series.id) && activeParams.includes(series.parameter)
+  data.series
+    .sort((a, b) => getTraceName(a).localeCompare(getTraceName(b)))
+    .forEach((series, i) => {
+      seriesArray.push({
+        name: getTraceName(series),
+        label: getSeriesLabel(series),
+        scale: 'y',
+        value: formatLabel,
+        stroke: colours[i],
+        points: scatterMode ? { size: 7, fill: colours[i] } : undefined,
+        spanGaps: series.spanGaps,
+        show: activeIds.includes(series.id) && activeParams.includes(series.parameter)
+      })
     })
-  })
 
   return seriesArray
 }
