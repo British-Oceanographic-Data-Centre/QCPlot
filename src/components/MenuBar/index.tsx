@@ -14,6 +14,7 @@ enum Sections {
 
 interface MenuBarProps {
   flaggedPoints: FlaggedPoint[]
+  originatorFlaggedPoints: FlaggedPoint[]
   data: Data
   zoomToRange: (traceName: string, start: number, end: number) => void
   plotRef: RefObject<uPlot | null>
@@ -42,7 +43,7 @@ const TabButton = ({
  * MenuBar component containing the series selection and flag list.
  */
 export const MenuBar = ({
-  flaggedPoints, data, zoomToRange, plotRef, colours, hideFlagTab, hideParameterSelect
+  flaggedPoints, originatorFlaggedPoints, data, zoomToRange, plotRef, colours, hideFlagTab, hideParameterSelect
 }: MenuBarProps) => {
   const [activeSection, setActiveSection] = useState<string | null>(Sections.SERIES)
 
@@ -86,6 +87,7 @@ export const MenuBar = ({
         {!hideFlagTab && activeSection === Sections.FLAG_LIST && (
           <FlagList
             flaggedPoints={flaggedPoints}
+            hasOriginatorFlags={originatorFlaggedPoints.length > 0}
             dataSeries={data.series}
             zoomToRange={zoomToRange}
             plotRef={plotRef}

@@ -121,7 +121,6 @@ export const seriesFromData = (
       scale: 'y',
       value: formatLabel,
       stroke: colours[i],
-      paths: scatterMode ? u => null : undefined,
       points: scatterMode ? { size: 7, fill: colours[i] } : undefined,
       spanGaps: series.spanGaps,
       show: activeIds.includes(series.id) && activeParams.includes(series.parameter)

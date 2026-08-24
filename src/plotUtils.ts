@@ -144,7 +144,8 @@ export const drawConstantLines = (u: uPlot, lines: ConstantLine[]) => {
     ctx.lineTo(x1, y1)
     ctx.stroke()
     ctx.setLineDash([])
-    ctx.font = '12px Arial'
+    const fontSizeEm = 0.8
+    ctx.font = `${fontSizeEm * window.devicePixelRatio}em Arial`
     ctx.fillStyle = lineColour
     ctx.textAlign = 'left'
     ctx.textBaseline = 'bottom'

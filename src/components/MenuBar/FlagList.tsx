@@ -11,12 +11,15 @@ interface FlagListProps {
   zoomToRange: (traceName: string, start: number, end: number) => void
   plotRef: RefObject<uPlot | null>
   colours: string[]
+  hasOriginatorFlags?: boolean
 }
 
 /**
  * Table showing a list of all flags currently applied to the data.
  */
-export const FlagList = ({ flaggedPoints, dataSeries, zoomToRange, plotRef, colours }: FlagListProps) => {
+export const FlagList = ({
+  flaggedPoints, dataSeries, zoomToRange, plotRef, colours, hasOriginatorFlags
+}: FlagListProps) => {
   const groupedFlaggedPoints: {[name: string]: FlaggedPoint[]} = {}
   flaggedPoints.forEach(fp => {
     const key = `${fp.traceName};${fp.flag}`
@@ -60,6 +63,9 @@ export const FlagList = ({ flaggedPoints, dataSeries, zoomToRange, plotRef, colo
             <th />
             <th>Channel</th>
             <th>Flag</th>
+            {hasOriginatorFlags &&
+              <th>Type</th>
+            }
             <th>Point(s)</th>
           </tr>
         </thead>
@@ -78,6 +84,11 @@ export const FlagList = ({ flaggedPoints, dataSeries, zoomToRange, plotRef, colo
               <td style={{ verticalAlign: 'top' }}>
                 {groupedFlaggedPoints[key][0].flag}
               </td>
+              {hasOriginatorFlags &&
+                <td>
+                  {groupedFlaggedPoints[key][0].isOriginatorFlag ? 'Originator' : 'Manual'}
+                </td>
+              }
               <td>
                 {groupedFlaggedPoints[key].sort((a, b) => a.pointIndex - b.pointIndex).map(fp =>
                   <button

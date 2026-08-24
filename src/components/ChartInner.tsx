@@ -40,6 +40,7 @@ export const ChartInner = ({
   plotColours,
   verticalMode,
   scatterMode,
+  showScatterPointLines = false,
   hideParameterSelect = false,
   xAxisLabel,
   yAxisLabel,
@@ -183,7 +184,7 @@ export const ChartInner = ({
       draw: [(u) => drawConstantLines(u, constantLines)]
     },
     plugins: [
-      renderFlagsPlugin(allFlaggedPoints, showPoints, scatterMode, goodFlags),
+      renderFlagsPlugin(allFlaggedPoints, showPoints, (scatterMode && !showScatterPointLines), goodFlags),
       scrollZoomPlugin(initialScales.current),
       legendPlugin(data.series, colours, setColours, scatterMode)
     ],
@@ -284,6 +285,7 @@ export const ChartInner = ({
       <MenuBar
         data={data}
         flaggedPoints={allFlaggedPoints}
+        originatorFlaggedPoints={originatorFlaggedPoints}
         zoomToRange={zoomToRange}
         plotRef={plotRef}
         colours={colours}
