@@ -36,7 +36,7 @@ export const SeriesSelect = ({ dataSeries, hideParameterSelect, plotRef }: Serie
         uniqIds.push({ id: x.id, formattedId: x.formattedId })
       }
     })
-    return uniqIds
+    return uniqIds.sort((a, b) => (a.formattedId || a.id).localeCompare(b.formattedId || b.id))
   }, [dataSeries])
 
   const updateSelectAllBox = (shouldBeActive: boolean, id: string) => {

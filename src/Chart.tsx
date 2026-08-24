@@ -29,7 +29,7 @@ export const Chart = ({ data, flaggedPoints, defaultShowAll, idLabel, ...props }
       value={{
         flagCallback: props.flagCallback,
         allIds: Array.from(allIds),
-        allParams: Array.from(allParams),
+        allParams: Array.from(allParams).sort(),
         activeIds,
         activeParams,
         totalSeriesCount: allIds.size * allParams.size,
